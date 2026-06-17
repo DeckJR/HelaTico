@@ -1,0 +1,63 @@
+﻿@model HelaTico.Application.DTOs.ProductoDTO
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalle</h1>
+
+<div class="row">
+    <div class="col">
+
+        @if (Model.Imagen != null)
+        {
+            <img class="card-img-top"
+                 style="max-width:460px;"
+                 src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Imagen)"
+                 alt="Imagen" />
+        }
+
+    </div>
+
+    <div class="col">
+        <h4>Producto</h4>
+        <hr />
+
+        <dl class="row">
+
+            <dt class="col-sm-3">Nombre</dt>
+            <dd class="col-sm-9">@Model.Nombre</dd>
+
+            <dt class="col-sm-3">Descripción</dt>
+            <dd class="col-sm-9">@Model.Descripcion</dd>
+
+            <dt class="col-sm-3">Precio</dt>
+            <dd class="col-sm-9">@Model.Precio</dd>
+
+            <dt class="col-sm-3">Categoría</dt>
+            <dd class="col-sm-9">@Model.Categoria</dd>
+
+        </dl>
+
+        <div>
+            <h5>Ingredientes:</h5>
+            <ul>
+                @foreach (var item in Model.Ingredientes)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<div class="btn-group mt-3" role="group">
+    <a href="@Url.Action("Edit", new { id = Model.IdProducto })" class="btn btn-warning">
+        Editar
+    </a>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Volver
+    </a>
+</div>

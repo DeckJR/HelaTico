@@ -1,0 +1,33 @@
+﻿@model IEnumerable<HelaTico.Application.DTOs.ProductoDTO>
+
+<h1>Productos</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Categoria</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Imagen</td>
+                <td>@item.Nombre</td>
+                <td>@item.Categoria</td>
+                <td>@item.Precio</td>
+
+                <td>
+                    <a asp-action="Details"
+                       asp-route-id="@item.IdProducto"
+                       class="btn btn-primary">
+                        Ver Detalles
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

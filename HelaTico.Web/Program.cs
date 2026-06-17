@@ -4,12 +4,27 @@ using Microsoft.EntityFrameworkCore;
 using Serilog.Events;
 using Serilog;
 using HelaTico.Web.Middleware;
+using HelaTico.Infraestructure.Repository.Interfaces;
+using HelaTico.Infraestructure.Repository.Implementations;
+using HelaTico.Application.Services.Interfaces;
+using HelaTico.Application.Services.Implementations;
+using HelaTico.Application.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//Configurar D.I. //Repository 
+builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
+
+//Services 
+builder.Services.AddTransient<IServiceProducto, ServiceProducto>();
+//Configurar Automapper 
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile<ProductoProfile>();
+});
 
 // Configuar Conexión a la Base de Datos SQL 
 builder.Services.AddDbContext<HelaTicoContext>(options => {
