@@ -1,0 +1,116 @@
+﻿@model HelaTico.Application.DTOs.MenuDTO
+
+<h2>@Model.Nombre</h2>
+
+<p><strong>Fecha Inicio:</strong> @Model.FechaInicio.ToShortDateString()</p>
+<p><strong>Fecha Final:</strong> @Model.FechaFinal.ToShortDateString()</p>
+<p><strong>Estado:</strong> @Model.EstadoMenu</p>
+
+<div class="row">
+
+    <!-- ✅ COMBOS ARRIBA (SIN IMAGEN) -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4>Combos</h4>
+            </div>
+
+            <div class="card-body">
+                @if (Model.Combos != null && Model.Combos.Any())
+                {
+                    <div class="row">
+                        @foreach (var combo in Model.Combos)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 shadow-sm">
+
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">@combo.Nombre</h5>
+
+                                        <p class="text-success fw-bold">
+                                            ₡@combo.Precio
+                                        </p>
+                                    </div>
+
+                                    <div class="card-footer text-center">
+                                        <button class="btn btn-success btn-sm">
+                                            Agregar
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>No hay combos disponibles.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ PRODUCTOS ABAJO -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4>Productos</h4>
+            </div>
+
+            <div class="card-body">
+                @if (Model.Productos != null && Model.Productos.Any())
+                {
+                    <div class="row">
+                        @foreach (var producto in Model.Productos)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 shadow-sm">
+
+                                    @if (producto.Imagen != null && producto.Imagen.Length > 0)
+                                    {
+                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(producto.Imagen)"
+                                             class="card-img-top"
+                                             style="height:200px; object-fit:cover;"
+                                             alt="Imagen producto" />
+                                    }
+                                    else
+                                    {
+                                        <img src="/images/default.png"
+                                             class="card-img-top"
+                                             style="height:200px; object-fit:cover;"
+                                             alt="Sin imagen" />
+                                    }
+
+                                    <div class="card-body">
+                                        <h5 class="card-title">@producto.Nombre</h5>
+
+                                        <p class="card-text">
+                                            <strong>Categoría:</strong> @producto.Categoria
+                                        </p>
+
+                                        <p class="text-success fw-bold">
+                                            ₡@producto.Precio
+                                        </p>
+                                    </div>
+
+                                    <div class="card-footer text-center">
+                                        <button class="btn btn-primary btn-sm">
+                                            Agregar
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>No hay productos en este menú.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -20,5 +20,6 @@ namespace HelaTico.Application.DTOs
 
         public byte[] Imagen { get; set; }
 
+        public string EstadoProducto { get; init; }
     }
 }

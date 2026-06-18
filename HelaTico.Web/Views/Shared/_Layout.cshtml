@@ -3,38 +3,56 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HelaTico.Web</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - HelaTico</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <!--SweetAlert-->
     <link rel="stylesheet" href="~/css/sweetalert2.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HelaTico.Web.styles.css" asp-append-version="true" />
 </head>
-<body>
+
+<body style="background-color:#FAF3DD; min-height:100vh; display:flex; flex-direction:column;">
+
+    <!-- NAVBAR -->
+
     <header>
         @await Html.PartialAsync("_Menu")
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <!-- CONTENIDO -->
+    <div class="container mt-4 flex-grow-1" >
+        <main role="main"
+              class="p-4 rounded-4 shadow-lg"
+              style="background:#FFFDF7;">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- FOOTER -->
+    <footer class="text-white text-center p-3 mt-4"
+            style="background:#1B4332;">
         <div class="container">
-            &copy; 2026 - HelaTico.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <small>
+                © 2026 HelaTico 🍦 |
+                Sistema de Reservaciones |
+                <a class="text-white"
+                   asp-controller="Home"
+                   asp-action="Privacy">
+                    Privacidad
+                </a>
+            </small>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
     @if (ViewBag.NotificationMessage != null)
     {
         <script>
-            @Html.Raw(@ViewBag.NotificationMessage);
+            @Html.Raw(ViewBag.NotificationMessage)
         </script>
     }
 

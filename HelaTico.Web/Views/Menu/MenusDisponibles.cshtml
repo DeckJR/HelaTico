@@ -1,0 +1,87 @@
+﻿@model IEnumerable<HelaTico.Application.DTOs.MenuDTO>
+
+
+<h2 class="text-center mb-4"
+    style="color: #0a1f44; font-weight: bold;">
+     Menú Disponible
+</h2>
+
+<div class="container">
+
+    @foreach (var menu in Model)
+    {
+        <div class="mb-5 p-4 rounded"
+             style="background: linear-gradient(to right, #ffffff, #e6f0ff); box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+
+            <h3 class="text-primary">@menu.Nombre</h3>
+
+            <p class="text-muted">
+                Disponible:
+                <strong>@menu.FechaInicio.ToShortDateString()</strong> -
+                <strong>@menu.FechaFinal.ToShortDateString()</strong>
+            </p>
+
+            <!-- PRODUCTOS -->
+            <h5 class="mt-4 border-bottom pb-2">Productos</h5>
+
+            <div class="row">
+                @foreach (var p in menu.Productos)
+                {
+                    <div class="col-md-4 mb-3">
+
+                        <div style="background: white; padding:15px; border-radius:15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align:center;">
+
+                            <!-- IMAGEN -->
+                            @if (p.Imagen != null)
+                            {
+                                var base64 = Convert.ToBase64String(p.Imagen);
+                                var imgSrc = String.Format("data:image/png;base64,{0}", base64);
+
+                                <img src="@imgSrc"
+                                     style="width:100%; height:150px; object-fit:cover; border-radius:10px; margin-bottom:10px;" />
+                            }
+                            else
+                            {
+                                <img src="/images/no-image.png"
+                                     style="width:100%; height:150px; object-fit:cover; border-radius:10px; margin-bottom:10px;" />
+                            }
+
+                            <h6 class="text-primary">@p.Nombre</h6>
+
+                            <p>₡@p.Precio</p>
+
+                            <p class="small text-muted">@p.Descripcion</p>
+
+                        </div>
+                        ``
+
+                    </div>
+                }
+            </div>
+
+            <!-- COMBOS -->
+            <h5 class="mt-4 border-bottom pb-2">🥤 Combos</h5>
+
+            <div class="row">
+                @foreach (var c in menu.Combos)
+                {
+                    <div class="col-md-4 mb-3">
+
+                        <div style="background: white; padding:15px; border-radius:15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+
+                            <h6 class="text-success">@c.Nombre</h6>
+
+                            <p>₡@c.Precio</p>
+
+                            <p class="small text-muted">@c.Descripcion</p>
+
+                        </div>
+
+                    </div>
+                }
+            </div>
+
+        </div>
+    }
+
+</div>

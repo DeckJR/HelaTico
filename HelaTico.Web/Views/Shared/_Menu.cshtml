@@ -1,31 +1,93 @@
-﻿<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+﻿<nav class="navbar navbar-expand-lg navbar-dark shadow"
+     style="background:#1B4332;">
     <div class="container-fluid">
         <a class="navbar-brand" href="@Url.Action("Index","Home")">HelaTico</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target=".navbar-collapse"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" >
             <ul class="navbar-nav flex-grow-1">
+
+                <!-- Inicio -->
                 <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-wrench"></i> Mantenimientos
+                    <a class="nav-link"
+                       asp-controller="Home"
+                       asp-action="Index">
+                        Inicio
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" asp-controller="Producto" asp-action="Index">Producto</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                </li>
+
+                <!-- Procesos -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle"
+                       href="#"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        <i class="bi bi-arrow-repeat"></i> Procesos
+                    </a>
+
+                    <ul class="dropdown-menu"
+                        style="background-color: #FFF3CD;;">
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Pedido"
+                               asp-action="Index">
+                                Pedidos
+                            </a>
+                        </li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Menu"
+                               asp-action="MenusDisponibles">
+                                Menús Disponibles
+                            </a>
+                        </li>
                     </ul>
                 </li>
+
+                <!-- Mantenimientos -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle"
+                       href="#"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        <i class="bi bi-wrench"></i> Mantenimientos
+                    </a>
+
+                    <ul class="dropdown-menu"
+                        style="background-color: #FFF3CD;;">
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Producto"
+                               asp-action="Index">
+                                Productos
+                            </a>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Menu"
+                               asp-action="Index">
+                                Menús
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
             </ul>
         </div>
     </div>
 </nav>
-

@@ -17,14 +17,23 @@ builder.Services.AddControllersWithViews();
 
 //Configurar D.I. //Repository 
 builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
+builder.Services.AddTransient<IRepositoryMenu, RepositoryMenu>();
+
 
 //Services 
 builder.Services.AddTransient<IServiceProducto, ServiceProducto>();
+builder.Services.AddTransient<IServiceMenu, ServiceMenu>();
+
 //Configurar Automapper 
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile<ProductoProfile>();
+    config.AddProfile<MenuProfile>();
+    config.AddProfile<ComboProfile>(); 
+
+
 });
+
 
 // Configuar Conexión a la Base de Datos SQL 
 builder.Services.AddDbContext<HelaTicoContext>(options => {

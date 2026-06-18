@@ -1,0 +1,52 @@
+﻿@model IEnumerable<HelaTico.Application.DTOs.MenuDTO>
+
+<h1>Menús</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Final</th>
+            <th>Estado</th>
+            <th>Productos</th>
+            <th>Combos</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Nombre</td>
+                <td>@item.FechaInicio.ToShortDateString()</td>
+                <td>@item.FechaFinal.ToShortDateString()</td>
+                <td>@item.EstadoMenu</td>
+
+                <!-- Productos -->
+                <td>
+                    @foreach (var p in item.Productos.Take(3)) 
+                    {
+                        <div>@p.Nombre</div>
+                    }
+                </td>
+
+                <!-- Combos -->
+                <td>
+                    @foreach (var c in item.Combos.Take(3)) 
+                    {
+                        <div>@c.Nombre</div>
+                    }
+                </td>
+
+                <td>
+                    <a asp-action="Details"
+                       asp-route-id="@item.IdMenu"
+                       class="btn btn-info">
+                        Detalles
+                    </a>
+             </tr>
+        }
+    </tbody>
+</table>
