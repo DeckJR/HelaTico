@@ -1,0 +1,35 @@
+﻿@model HelaTico.Application.DTOs.PreparacionDTO
+@{
+    ViewData["Title"] = "Detalle del Proceso de Preparación";
+}
+<h1>Detalle del Proceso de Preparación</h1>
+<dl class="row">
+    <dt class="col-sm-3">Producto</dt>
+    <dd class="col-sm-9">@Model.NombreProducto</dd>
+
+    <dt class="col-sm-3">Cantidad de Pasos</dt>
+    <dd class="col-sm-9">@Model.CantidadPasos</dd>
+</dl>
+
+<h5>Estaciones del proceso:</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Orden</th>
+            <th>Estación</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var paso in Model.Pasos)
+        {
+            <tr>
+                <td>@paso.Orden</td>
+                <td>@paso.NombreEstacion</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">
+    Volver
+</a>

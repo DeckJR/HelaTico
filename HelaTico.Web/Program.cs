@@ -19,12 +19,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
 builder.Services.AddTransient<IRepositoryCombo, RepositoryCombo>();
 builder.Services.AddTransient<IRepositoryMenu, RepositoryMenu>();
-
+builder.Services.AddScoped<IRepositoryPreparacion, RepositoryPreparacion>();
 
 //Services 
 builder.Services.AddTransient<IServiceProducto, ServiceProducto>();
 builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
 builder.Services.AddTransient<IServiceMenu, ServiceMenu>();
+builder.Services.AddScoped<IServicePreparacion, ServicePreparacion>();
 
 //Configurar Automapper 
 builder.Services.AddAutoMapper(config =>
@@ -32,7 +33,7 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<ProductoProfile>();
     config.AddProfile<ComboProfile>();
     config.AddProfile<MenuProfile>();
-
+    config.AddProfile<PreparacionProfile>();
 });
 
 

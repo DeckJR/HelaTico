@@ -1,0 +1,30 @@
+﻿@model IEnumerable<HelaTico.Application.DTOs.PreparacionDTO>
+@{
+    ViewData["Title"] = "Procesos de Preparación";
+}
+<h1>Procesos de Preparación</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad de Pasos</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.NombreProducto</td>
+                <td>@item.CantidadPasos</td>
+                <td>
+                    <a asp-action="Details"
+                       asp-route-id="@item.IdProducto"
+                       class="btn btn-primary">
+                        Ver Detalles
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
