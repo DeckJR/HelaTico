@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<HelaTico.Application.DTOs.ProductoDTO>
 
 <h1>Productos</h1>
+
 <table class="table">
     <thead>
         <tr>
@@ -11,14 +12,30 @@
             <th>Acciones</th>
         </tr>
     </thead>
+
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Imagen</td>
+                <td>
+                    @if (item.Imagen != null)
+                    {
+                        var base64 = Convert.ToBase64String(item.Imagen);
+                        var imgSrc = $"data:image/png;base64,{base64}";
+
+                        <img src="@imgSrc"
+                             style="width:80px; height:80px; object-fit:cover; border-radius:8px;" />
+                    }
+                    else
+                    {
+                        <img src="/images/no-image.png"
+                             style="width:80px; height:80px; object-fit:cover; border-radius:8px;" />
+                    }
+                </td>
+
                 <td>@item.Nombre</td>
                 <td>@item.Categoria</td>
-                <td>@item.Precio</td>
+                <td>₡@item.Precio</td>
 
                 <td>
                     <a asp-action="Details"

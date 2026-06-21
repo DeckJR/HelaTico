@@ -1,0 +1,57 @@
+﻿@model IEnumerable<HelaTico.Application.DTOs.ProductoDTO>
+
+<h1 class="text-center mb-4">Productos</h1>
+
+<div class="container">
+    <div class="row">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+
+                <div class="card shadow-sm" style="border-radius: 15px; overflow:hidden;">
+
+                    @if (item.Imagen != null)
+                    {
+                        var base64 = Convert.ToBase64String(item.Imagen);
+                        var imgSrc = $"data:image/png;base64,{base64}";
+
+                        <img src="@imgSrc"
+                             class="card-img-top"
+                             style="height:200px; object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <img src="/images/no-image.png"
+                             class="card-img-top"
+                             style="height:200px; object-fit:cover;" />
+                    }
+
+                    <div class="card-body text-center">
+
+                        <h5 class="card-title text-primary">
+                            @item.Nombre
+                        </h5>
+
+                        <p class="text-muted">
+                            @item.Categoria
+                        </p>
+
+                        <h6 class="text-success">
+                            ₡@item.Precio
+                        </h6>
+
+                        <a asp-action="Details"
+                           asp-route-id="@item.IdProducto"
+                           class="btn btn-primary btn-sm mt-2">
+                            Ver detalles
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>

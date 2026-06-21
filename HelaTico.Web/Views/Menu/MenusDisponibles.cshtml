@@ -1,9 +1,8 @@
 ﻿@model IEnumerable<HelaTico.Application.DTOs.MenuDTO>
 
-
 <h2 class="text-center mb-4"
     style="color: #0a1f44; font-weight: bold;">
-     Menú Disponible
+    Menú Disponible
 </h2>
 
 <div class="container">
@@ -25,37 +24,39 @@
             <h5 class="mt-4 border-bottom pb-2">Productos</h5>
 
             <div class="row">
-                @foreach (var p in menu.Productos)
+                @if (menu.Productos != null)
                 {
-                    <div class="col-md-4 mb-3">
+                    foreach (var p in menu.Productos)
+                    {
+                        <div class="col-md-4 mb-3">
 
-                        <div style="background: white; padding:15px; border-radius:15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align:center;">
+                            <div style="background: white; padding:15px; border-radius:15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align:center;">
 
-                            <!-- IMAGEN -->
-                            @if (p.Imagen != null)
-                            {
-                                var base64 = Convert.ToBase64String(p.Imagen);
-                                var imgSrc = String.Format("data:image/png;base64,{0}", base64);
+                                <!-- IMAGEN PRODUCTO -->
+                                @if (p.Imagen != null)
+                                {
+                                    var base64 = Convert.ToBase64String(p.Imagen);
+                                    var imgSrc = String.Format("data:image/png;base64,{0}", base64);
 
-                                <img src="@imgSrc"
-                                     style="width:100%; height:150px; object-fit:cover; border-radius:10px; margin-bottom:10px;" />
-                            }
-                            else
-                            {
-                                <img src="/images/no-image.png"
-                                     style="width:100%; height:150px; object-fit:cover; border-radius:10px; margin-bottom:10px;" />
-                            }
+                                    <img src="@imgSrc"
+                                         style="width:100%; height:150px; object-fit:cover; border-radius:10px; margin-bottom:10px;" />
+                                }
+                                else
+                                {
+                                    <img src="/images/no-image.png"
+                                         style="width:100%; height:150px; object-fit:cover; border-radius:10px; margin-bottom:10px;" />
+                                }
 
-                            <h6 class="text-primary">@p.Nombre</h6>
+                                <h6 class="text-primary">@p.Nombre</h6>
 
-                            <p>₡@p.Precio</p>
+                                <p>₡@p.Precio</p>
 
-                            <p class="small text-muted">@p.Descripcion</p>
+                                <p class="small text-muted">@p.Descripcion</p>
+
+                            </div>
 
                         </div>
-                        ``
-
-                    </div>
+                    }
                 }
             </div>
 
@@ -63,21 +64,39 @@
             <h5 class="mt-4 border-bottom pb-2">🥤 Combos</h5>
 
             <div class="row">
-                @foreach (var c in menu.Combos)
+                @if (menu.Combos != null)
                 {
-                    <div class="col-md-4 mb-3">
+                    foreach (var c in menu.Combos)
+                    {
+                        <div class="col-md-4 mb-3">
 
-                        <div style="background: white; padding:15px; border-radius:15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                            <div style="background: white; padding:15px; border-radius:15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align:center;">
 
-                            <h6 class="text-success">@c.Nombre</h6>
+                                <!-- IMAGEN COMBO -->
+                                @if (c.Imagen != null)
+                                {
+                                    var base64 = Convert.ToBase64String(c.Imagen);
+                                    var imgSrc = String.Format("data:image/png;base64,{0}", base64);
 
-                            <p>₡@c.Precio</p>
+                                    <img src="@imgSrc"
+                                         style="width:100%; height:150px; object-fit:cover; border-radius:10px; margin-bottom:10px;" />
+                                }
+                                else
+                                {
+                                    <img src="/images/no-image.png"
+                                         style="width:100%; height:150px; object-fit:cover; border-radius:10px; margin-bottom:10px;" />
+                                }
 
-                            <p class="small text-muted">@c.Descripcion</p>
+                                <h6 class="text-success">@c.Nombre</h6>
+
+                                <p>₡@c.Precio</p>
+
+                                <p class="small text-muted">@c.Descripcion</p>
+
+                            </div>
 
                         </div>
-
-                    </div>
+                    }
                 }
             </div>
 

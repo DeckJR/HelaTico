@@ -26,5 +26,11 @@ namespace HelaTico.Web.Controllers
             var @object = await _serviceProducto.FindByIdAsync(id);
             return View(@object);
         }
+
+        public async Task<ActionResult> ProductoCards()
+        {
+            var lista = await _serviceProducto.ListAsync();
+            return View(lista);
+        }
     }
 }
