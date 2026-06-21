@@ -1,0 +1,51 @@
+﻿@model HelaTico.Application.DTOs.ComboDTO
+@{
+    ViewData["Title"] = "Detalle del Combo";
+}
+<h1>Detalle del Combo</h1>
+<div class="row">
+    <div class="col">
+        @if (Model.Imagen != null)
+        {
+            <img class="card-img-top"
+                 style="max-width:460px;"
+                 src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Imagen)"
+                 alt="Imagen" />
+        }
+    </div>
+    <div class="col">
+        <h4>Combo</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">Nombre</dt>
+            <dd class="col-sm-9">@Model.Nombre</dd>
+
+            <dt class="col-sm-3">Descripción</dt>
+            <dd class="col-sm-9">@Model.Descripcion</dd>
+
+            <dt class="col-sm-3">Precio</dt>
+            <dd class="col-sm-9">₡@Model.Precio.ToString("N2")</dd>
+
+            <dt class="col-sm-3">Estado</dt>
+            <dd class="col-sm-9">
+                <span class="badge @(Model.EstadoCombo == "Disponible" ? "bg-success" : "bg-secondary")">
+                    @Model.EstadoCombo
+                </span>
+            </dd>
+        </dl>
+        <div>
+            <h5>Productos incluidos (@Model.Productos.Count):</h5>
+            <ul>
+                @foreach (var producto in Model.Productos)
+                {
+                    <li>@producto.Cantidad x @producto.Nombre</li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="btn-group mt-3" role="group">
+    <a asp-action="Index" class="btn btn-secondary">
+        Volver
+    </a>
+</div>

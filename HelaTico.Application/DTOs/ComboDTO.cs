@@ -8,11 +8,13 @@ namespace HelaTico.Application.DTOs
 {
     public record ComboDTO
     {
-        public int IdCombo { get; init; }
-        public string Nombre { get; init; }
-        public string Descripcion { get; init; }
-        public decimal Precio { get; init; }
+        public int IdCombo { get; set; }
+        public string Nombre { get; set; }
+        public string Descripcion { get; set; }
+        public decimal Precio { get; set; }
         public byte[] Imagen { get; set; }
-
+        public string EstadoCombo { get; init; }
+        public int CantidadProductos { get; set; }
+        public List<ComboProductoDTO> Productos { get; set; } = new();
     }
 }

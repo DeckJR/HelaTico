@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace HelaTico.Application.Enums;
 
-public enum EstadoProducto
+public enum EstadoCombo
 {
     [Display(Name = "Disponible")]
     Disponible = 1,

@@ -1,0 +1,30 @@
+﻿@model IEnumerable<HelaTico.Application.DTOs.ComboDTO>
+@{
+    ViewData["Title"] = "Combos";
+}
+<h1>Combos</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                @if (item.Imagen != null)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Imagen)"
+                         class="card-img-top"
+                         style="height:200px;object-fit:cover;"
+                         alt="@item.Nombre" />
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@item.Nombre</h5>
+                    <p class="card-text mb-1"><strong>Precio:</strong> ₡@item.Precio.ToString("N2")</p>
+                    <p class="card-text"><strong>Productos incluidos:</strong> @item.CantidadProductos</p>
+                    <a asp-action="Details" asp-route-id="@item.IdCombo" class="btn btn-primary">
+                        Ver Detalles
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

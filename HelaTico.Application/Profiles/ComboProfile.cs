@@ -1,34 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using HelaTico.Application.DTOs;
+﻿using AutoMapper;
 using HelaTico.Infraestructure.Models;
+using HelaTico.Application.DTOs;
+using HelaTico.Application.Enums;
+using System.Linq;
 
 namespace HelaTico.Application.Profiles
 {
-
     public class ComboProfile : Profile
     {
         public ComboProfile()
         {
-            CreateMap<Combo, ComboDTO>()
-
-                // ✅ Map básico (AutoMapper lo hace automático)
-                .ForMember(dest => dest.IdCombo,
-                    opt => opt.MapFrom(src => src.IdCombo))
-
+            CreateMap<ComboProducto, ComboProductoDTO>()
                 .ForMember(dest => dest.Nombre,
-                    opt => opt.MapFrom(src => src.Nombre))
+                    opt => opt.MapFrom(src => src.IdProductoNavigation.Nombre))
+                .ForMember(dest => dest.Cantidad,
+                    opt => opt.MapFrom(src => src.CantidadProducto));
 
-                .ForMember(dest => dest.Descripcion,
-                    opt => opt.MapFrom(src => src.Descripcion))
-
-                .ForMember(dest => dest.Precio,
-                    opt => opt.MapFrom(src => src.Precio));
-
+            CreateMap<Combo, ComboDTO>()
+                .ForMember(dest => dest.Productos,
+                    opt => opt.MapFrom(src => src.ComboProducto))
+                .ForMember(dest => dest.CantidadProductos,
+                    opt => opt.MapFrom(src =>
+                        src.ComboProducto != null ? src.ComboProducto.Count : 0
+                    ))
+                .ForMember(dest => dest.EstadoCombo,
+                    opt => opt.MapFrom(src =>
+                        ((EstadoCombo)src.Estado)
+                        .ToString()
+                        .Replace("_", " ")
+                    ))
+                .ForMember(dest => dest.Imagen,
+                    opt => opt.MapFrom(src => src.Imagen));
         }
     }
 }

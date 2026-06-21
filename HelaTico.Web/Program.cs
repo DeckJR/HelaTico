@@ -17,20 +17,21 @@ builder.Services.AddControllersWithViews();
 
 //Configurar D.I. //Repository 
 builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
+builder.Services.AddTransient<IRepositoryCombo, RepositoryCombo>();
 builder.Services.AddTransient<IRepositoryMenu, RepositoryMenu>();
 
 
 //Services 
 builder.Services.AddTransient<IServiceProducto, ServiceProducto>();
+builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
 builder.Services.AddTransient<IServiceMenu, ServiceMenu>();
 
 //Configurar Automapper 
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile<ProductoProfile>();
+    config.AddProfile<ComboProfile>();
     config.AddProfile<MenuProfile>();
-    config.AddProfile<ComboProfile>(); 
-
 
 });
 

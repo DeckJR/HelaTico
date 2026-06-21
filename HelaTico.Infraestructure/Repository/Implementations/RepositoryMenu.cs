@@ -64,7 +64,7 @@ namespace HelaTico.Infraestructure.Repository.Implementations
                          && m.FechaFinal >= hoy)
 
                 .OrderByDescending(m => m.FechaInicio)
-                .ToListAsync(); // ✅ ahora devuelve lista
+                .ToListAsync(); 
         }
 
 
