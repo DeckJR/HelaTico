@@ -12,14 +12,12 @@ namespace HelaTico.Web.Controllers
             _servicePreparacion = servicePreparacion;
         }
 
-        // GET: ProcesoPreparacionController
         public async Task<ActionResult> Index()
         {
             var lista = await _servicePreparacion.ListAsync();
             return View(lista);
         }
 
-        // GET: ProcesoPreparacionController/Details/5
         public async Task<ActionResult> Details(int id)
         {
             var @object = await _servicePreparacion.FindByIdAsync(id);

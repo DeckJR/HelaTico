@@ -42,7 +42,7 @@ namespace HelaTico.Infraestructure.Repository.Implementations
                 .Include(m => m.IdCombo)
                 .Include(m => m.IdProducto)
                     .ThenInclude(p => p.IdCategoriaNavigation)
-                .OrderByDescending(m => m.FechaInicio) // orden requerido
+                .OrderByDescending(m => m.FechaInicio) 
                 .ToListAsync();
 
             return collection;

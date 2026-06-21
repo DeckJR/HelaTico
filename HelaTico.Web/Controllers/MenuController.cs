@@ -20,7 +20,6 @@ namespace HelaTico.Web.Controllers
             return View(lista);
         }
 
-        // GET: LibroController/Details/5
         public async Task<ActionResult> Details(int id)
         {
             var @object = await _serviceMenu.FindByIdAsync(id);

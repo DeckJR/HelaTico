@@ -1,3 +1,32 @@
 ﻿@{
     ViewData["Title"] = "Inicio";
 }
+
+<div class="text-center mx-auto py-4 px-2 px-md-4" style="max-width:900px;">
+    <h1 class="fw-bold mb-4" style="text-transform:uppercase; letter-spacing:1px;">
+        Bienvenidos a Helatico
+    </h1>
+
+    <p class="mb-4" style="font-size:1.05rem; text-transform:uppercase;">
+        En Helatico nos dedicamos a crear experiencias refrescantes y llenas de sabor para nuestros clientes.
+        Somos una heladería costarricense comprometida con la calidad, la innovación y la satisfacción de
+        quienes disfrutan nuestros productos.
+    </p>
+
+    <p class="mb-4" style="font-size:1.05rem; text-transform:uppercase;">
+        Nuestro objetivo es ofrecer helados elaborados con ingredientes seleccionados cuidadosamente,
+        manteniendo altos estándares de calidad en cada etapa de preparación. Contamos con un equipo
+        apasionado por brindar un servicio excepcional y crear momentos especiales para cada visitante.
+    </p>
+
+    <p class="mb-4" style="font-size:1.05rem; text-transform:uppercase;">
+        Te invitamos a descubrir nuestra variedad de sabores y a formar parte de la experiencia Helatico,
+        donde cada helado está hecho para compartir felicidad.
+    </p>
+
+    <a asp-controller="Producto" asp-action="ProductoCards"
+       class="btn rounded-pill px-5 py-2 mt-2"
+       style="background-color:#82ba54; color:#fff; font-weight:600;">
+        Ver Productos
+    </a>
+</div>
