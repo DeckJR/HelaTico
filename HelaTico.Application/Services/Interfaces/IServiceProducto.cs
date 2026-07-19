@@ -10,7 +10,13 @@ namespace HelaTico.Application.Services.Interfaces
     public interface IServiceProducto
     {
         Task<ICollection<ProductoDTO>> ListAsync();
+
         Task<ProductoDTO> FindByIdAsync(int id);
 
+        Task<int> AddAsync(ProductoDTO dto);
+
+        Task UpdateAsync(int id, ProductoDTO dto);
+
+        Task<bool> ExisteNombreAsync(string nombre);
     }
 }

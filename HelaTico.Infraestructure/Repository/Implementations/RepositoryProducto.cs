@@ -36,5 +36,60 @@ namespace HelaTico.Infraestructure.Repository.Implementations
                     .ToListAsync();
             return collection;
         }
+        public async Task<int> AddAsync(Producto entity, int[] idsIngredientes)
+        {
+            //Relación de muchos a muchos solo con llave primaria compuesta
+            var ingredientes = await getIngredientes(idsIngredientes);
+            entity.IdIngrediente = ingredientes;
+
+            await _context.Set<Producto>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity.IdProducto;
+        }
+        public async Task UpdateAsync(Producto entity, int[] idsIngredientes)
+        {
+            var producto = await _context.Producto
+                .Include(p => p.IdIngrediente)
+                .FirstOrDefaultAsync(p => p.IdProducto == entity.IdProducto);
+
+            if (producto == null)
+            {
+                throw new Exception("Producto no encontrado");
+            }
+
+            producto.Nombre = entity.Nombre;
+            producto.Descripcion = entity.Descripcion;
+            producto.Precio = entity.Precio;
+            producto.IdCategoria = entity.IdCategoria;
+            producto.EstadoProducto = entity.EstadoProducto;
+            producto.Imagen = entity.Imagen;
+
+            producto.IdIngrediente.Clear();
+
+            var nuevosIngredientes = await getIngredientes(idsIngredientes);
+
+            foreach (var ingrediente in nuevosIngredientes)
+            {
+                producto.IdIngrediente.Add(ingrediente);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task<ICollection<Ingrediente>> getIngredientes(int[] idsIngredientes)
+        {
+            // Buscar o crear ingredientes
+            var ingredientes = await _context.Set<Ingrediente>()
+                .Where(i => idsIngredientes.Contains(i.IdIngrediente))
+                .ToListAsync();
+            return ingredientes;
+        }
+        public async Task<bool> ExisteNombreAsync(string nombre)
+        {
+            nombre = nombre.Trim().ToUpper();
+
+            return await _context.Producto
+                .AnyAsync(p => p.Nombre.Trim().ToUpper() == nombre);
+        }
     }
 }

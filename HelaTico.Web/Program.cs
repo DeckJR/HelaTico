@@ -20,17 +20,24 @@ builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
 builder.Services.AddTransient<IRepositoryCombo, RepositoryCombo>();
 builder.Services.AddTransient<IRepositoryMenu, RepositoryMenu>();
 builder.Services.AddScoped<IRepositoryPreparacion, RepositoryPreparacion>();
+builder.Services.AddTransient<IRepositoryCategoria, RepositoryCategoria>();
+builder.Services.AddTransient<IRepositoryIngrediente, RepositoryIngrediente>();
 
 //Services 
 builder.Services.AddTransient<IServiceProducto, ServiceProducto>();
 builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
 builder.Services.AddTransient<IServiceMenu, ServiceMenu>();
 builder.Services.AddScoped<IServicePreparacion, ServicePreparacion>();
+builder.Services.AddTransient<IServiceCategoria, ServiceCategoria>();
+builder.Services.AddTransient<IServiceIngrediente, ServiceIngrediente>();
+
 
 //Configurar Automapper 
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile<ProductoProfile>();
+    config.AddProfile<CategoriaProfile>();
+    config.AddProfile<IngredienteProfile>();
     config.AddProfile<ComboProfile>();
     config.AddProfile<MenuProfile>();
     config.AddProfile<PreparacionProfile>();

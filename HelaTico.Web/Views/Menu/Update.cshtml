@@ -1,0 +1,157 @@
+﻿@model HelaTico.Application.DTOs.MenuDTO
+@{
+    ViewData["Title"] = "Editar Menú";
+}
+
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Editar Menú</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</div>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+        }
+
+        <form asp-action="Update" method="post" id="formMenu">
+            <input type="hidden" asp-for="IdMenu" />
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="FechaInicio" class="form-label"></label>
+                    <input asp-for="FechaInicio" type="date" class="form-control" id="fechaInicio"
+                           value="@Model.FechaInicio.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="FechaInicio" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="FechaFinal" class="form-label"></label>
+                    <input asp-for="FechaFinal" type="date" class="form-control" id="fechaFinal"
+                           value="@Model.FechaFinal.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="FechaFinal" class="text-danger"></span>
+                </div>
+            </div>
+            <span id="errorFechas" class="text-danger mb-3" style="display:none;">
+                La fecha de inicio no puede ser mayor a la fecha final
+            </span>
+
+            <div class="mb-3">
+                <label class="form-label">Estado</label>
+                <div>
+                    @foreach (var item in Html.GetEnumSelectList<HelaTico.Application.Enums.EstadoMenu>())
+                    {
+                        <div class="form-check form-check-inline">
+                            <input type="radio"
+                                   class="form-check-input"
+                                   id="estado_@item.Value"
+                                   name="EstadoMenuId"
+                                   value="@item.Value"
+                                   checked="@(Model.EstadoMenuId.ToString() == item.Value)" />
+                            <label class="form-check-label" for="estado_@item.Value">@item.Text</label>
+                        </div>
+                    }
+                </div>
+                <span asp-validation-for="EstadoMenuId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Productos incluidos</label>
+                <small class="text-muted d-block mb-2">
+                    Seleccione los productos que formarán parte de este menú.
+                </small>
+                <table class="table table-sm table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:80px;">Incluir</th>
+                            <th>Producto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in (MultiSelectList)ViewBag.ListProductos)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox"
+                                           name="IdProducto"
+                                           value="@item.Value"
+                                           class="form-check-input"
+                                           checked="@item.Selected" />
+                                </td>
+                                <td>@item.Text</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <span asp-validation-for="IdProducto" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Combos incluidos</label>
+                <small class="text-muted d-block mb-2">
+                    Seleccione los combos que formarán parte de este menú (opcional).
+                </small>
+                <table class="table table-sm table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:80px;">Incluir</th>
+                            <th>Combo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in (MultiSelectList)ViewBag.ListCombos)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox"
+                                           name="IdCombo"
+                                           value="@item.Value"
+                                           class="form-check-input"
+                                           checked="@item.Selected" />
+                                </td>
+                                <td>@item.Text</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <span asp-validation-for="IdCombo" class="text-danger"></span>
+            </div>
+
+            <div class="btn-group mt-3" role="group">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-save"></i> Guardar cambios
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('formMenu').addEventListener('submit', function (e) {
+            const inicio = document.getElementById('fechaInicio').value;
+            const final = document.getElementById('fechaFinal').value;
+            const errorFechas = document.getElementById('errorFechas');
+            if (inicio && final && inicio > final) {
+                e.preventDefault();
+                errorFechas.style.display = 'block';
+            } else {
+                errorFechas.style.display = 'none';
+            }
+        });
+    </script>
+}
