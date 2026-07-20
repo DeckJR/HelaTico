@@ -11,6 +11,8 @@ namespace HelaTico.Application.Profiles
         public ComboProfile()
         {
             CreateMap<ComboProducto, ComboProductoDTO>()
+                .ForMember(dest => dest.IdProducto,
+                    opt => opt.MapFrom(src => src.IdProducto))
                 .ForMember(dest => dest.Nombre,
                     opt => opt.MapFrom(src => src.IdProductoNavigation.Nombre))
                 .ForMember(dest => dest.Cantidad,
@@ -21,14 +23,12 @@ namespace HelaTico.Application.Profiles
                     opt => opt.MapFrom(src => src.ComboProducto))
                 .ForMember(dest => dest.CantidadProductos,
                     opt => opt.MapFrom(src =>
-                        src.ComboProducto != null ? src.ComboProducto.Count : 0
-                    ))
+                        src.ComboProducto != null ? src.ComboProducto.Count : 0))
                 .ForMember(dest => dest.EstadoCombo,
                     opt => opt.MapFrom(src =>
                         ((EstadoCombo)src.Estado)
                         .ToString()
-                        .Replace("_", " ")
-                    ))
+                        .Replace("_", " ")))
                 .ForMember(dest => dest.Imagen,
                     opt => opt.MapFrom(src => src.Imagen));
         }

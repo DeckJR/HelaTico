@@ -37,5 +37,19 @@ namespace HelaTico.Infraestructure.Repository.Implementations
                     .ToListAsync();
             return collection;
         }
+
+        public async Task AddPreparacionAsync(Preparacion preparacion)
+        {
+            await _context.Preparacion.AddAsync(preparacion);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteByProductoAsync(int idProducto)
+        {
+            var pasos = _context.Preparacion
+                .Where(p => p.IdProducto == idProducto);
+            _context.Preparacion.RemoveRange(pasos);
+            await _context.SaveChangesAsync();
+        }
     }
 }

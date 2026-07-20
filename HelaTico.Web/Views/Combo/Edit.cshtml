@@ -1,0 +1,166 @@
+﻿@model HelaTico.Application.DTOs.ComboDTO
+@using HelaTico.Application.DTOs
+@{
+    ViewData["Title"] = "Editar Combo";
+    var listaProductos = (IEnumerable<ProductoDTO>)ViewBag.ListaProductos;
+    var productosDelCombo = (IEnumerable<ComboProductoDTO>)ViewBag.ProductosDelCombo;
+    var dicProductos = productosDelCombo?.ToDictionary(p => p.IdProducto, p => p.Cantidad)
+                            ?? new Dictionary<int, int>();
+}
+
+<h1>Editar Combo</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit" asp-route-id="@Model.IdCombo"
+              method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Descripcion" class="form-label"></label>
+                <input asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Precio" class="form-label"></label>
+                <div class="input-group">
+                    <span class="input-group-text">₡</span>
+                    <input asp-for="Precio" class="form-control" type="number" step="0.01" min="0.01" />
+                </div>
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label d-block">Estado</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"
+                           name="Estado" id="estadoDisponible"
+                           value="1" @(Model.Estado == 1 ? "checked" : "") />
+                    <label class="form-check-label" for="estadoDisponible">
+                        Disponible
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"
+                           name="Estado" id="estadoNoDisponible"
+                           value="2" @(Model.Estado == 2 ? "checked" : "") />
+                    <label class="form-check-label" for="estadoNoDisponible">
+                        No Disponible
+                    </label>
+                </div>
+                <span asp-validation-for="Estado" class="text-danger d-block"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Imagen actual</label>
+                <div>
+                    @if (Model.Imagen != null && Model.Imagen.Length > 0)
+                    {
+                        <img id="imagenActual"
+                             src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Imagen)"
+                             style="max-width:200px; border-radius:8px;" alt="Imagen actual" />
+                    }
+                    else
+                    {
+                        <p class="text-muted">Sin imagen registrada.</p>
+                    }
+                </div>
+                <label class="form-label mt-2">Cambiar imagen (opcional)</label>
+                <input type="file" name="imagenFile" class="form-control" accept="image/*"
+                       onchange="previsualizarImagen(this)" />
+                <div class="mt-2">
+                    <img id="previewImagen" src="#" alt="Nueva imagen"
+                         style="max-width:200px; display:none; border-radius:8px;" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Productos del Combo</label>
+                <small class="text-muted d-block mb-2">
+                    Seleccione los productos e indique la cantidad de cada uno.
+                    Los que ya pertenecen al combo aparecen marcados.
+                </small>
+
+                <table class="table table-sm table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Seleccionar</th>
+                            <th>Producto</th>
+                            <th>Precio Unitario</th>
+                            <th style="width:120px;">Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var producto in listaProductos)
+                        {
+                            var estaSeleccionado = dicProductos.ContainsKey(producto.IdProducto);
+                            var cantidadActual = estaSeleccionado ? dicProductos[producto.IdProducto] : 1;
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox"
+                                           name="productosSeleccionados"
+                                           value="@producto.IdProducto"
+                                           class="form-check-input chk-producto"
+                                           onchange="toggleCantidad(this)"
+                                    @(estaSeleccionado ? "checked" : "") />
+                                </td>
+                                <td>@producto.Nombre</td>
+                                <td>₡@producto.Precio.ToString("N2")</td>
+                                <td>
+                                    <input type="number"
+                                           name="cantidad_@producto.IdProducto"
+                                           value="@cantidadActual"
+                                           min="1"
+                                           max="99"
+                                           class="form-control form-control-sm"
+                                    @(!estaSeleccionado ? "disabled" : "") />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="btn-group mt-3" role="group">
+                <button type="submit" class="btn btn-warning">
+                    <i class="bi bi-save"></i> Guardar Cambios
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="history.back()">
+                    <i class="bi bi-arrow-left"></i> Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function toggleCantidad(checkbox) {
+            const fila = checkbox.closest('tr');
+            const inputCantidad = fila.querySelector('input[type="number"]');
+            inputCantidad.disabled = !checkbox.checked;
+            if (!checkbox.checked) inputCantidad.value = 1;
+        }
+
+        function previsualizarImagen(input) {
+            const preview = document.getElementById('previewImagen');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

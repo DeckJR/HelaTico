@@ -22,6 +22,7 @@ builder.Services.AddTransient<IRepositoryMenu, RepositoryMenu>();
 builder.Services.AddScoped<IRepositoryPreparacion, RepositoryPreparacion>();
 builder.Services.AddTransient<IRepositoryCategoria, RepositoryCategoria>();
 builder.Services.AddTransient<IRepositoryIngrediente, RepositoryIngrediente>();
+builder.Services.AddScoped<IRepositoryEstacion, RepositoryEstacion>();
 
 //Services 
 builder.Services.AddTransient<IServiceProducto, ServiceProducto>();
@@ -30,6 +31,7 @@ builder.Services.AddTransient<IServiceMenu, ServiceMenu>();
 builder.Services.AddScoped<IServicePreparacion, ServicePreparacion>();
 builder.Services.AddTransient<IServiceCategoria, ServiceCategoria>();
 builder.Services.AddTransient<IServiceIngrediente, ServiceIngrediente>();
+builder.Services.AddScoped<IServiceEstacion, ServiceEstacion>();
 
 
 //Configurar Automapper 

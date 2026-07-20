@@ -36,5 +36,40 @@ namespace HelaTico.Infraestructure.Repository.Implementations
                     .ToListAsync();
             return collection;
         }
+
+        public async Task<int> AddAsync(Combo entity)
+        {
+            await _context.Combo.AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity.IdCombo;
+        }
+
+        public async Task UpdateAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteComboProductosAsync(int idCombo)
+        {
+            var items = _context.ComboProducto
+                .Where(cp => cp.IdCombo == idCombo);
+            _context.ComboProducto.RemoveRange(items);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddComboProductoAsync(ComboProducto comboProducto)
+        {
+            await _context.ComboProducto.AddAsync(comboProducto);
+            await _context.SaveChangesAsync();
+        }
+        public async Task DeleteAsync(int id)
+        {
+            var combo = await _context.Combo.FindAsync(id);
+            if (combo != null)
+            {
+                combo.Estado = 2; 
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

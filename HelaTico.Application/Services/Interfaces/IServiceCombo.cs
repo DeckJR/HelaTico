@@ -11,5 +11,8 @@ namespace HelaTico.Application.Services.Interfaces
     {
         Task<ICollection<ComboDTO>> ListAsync();
         Task<ComboDTO> FindByIdAsync(int id);
+        Task AddAsync(ComboDTO dto, int[] productosIds, int[] cantidades);
+        Task UpdateAsync(int id, ComboDTO dto, int[] productosIds, int[] cantidades);
+        Task DeleteAsync(int id);
     }
 }

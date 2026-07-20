@@ -35,8 +35,9 @@ namespace HelaTico.Web.Controllers
 
         public async Task<ActionResult> MenusDisponibles()
         {
-            var lista = await _serviceMenu.GetMenusDisponiblesAsync();
-            return View(lista);
+            var menu = await _serviceMenu.GetMenusDisponiblesAsync();
+            // Si no hay menú activo hoy, la vista recibe null y muestra un aviso
+            return View(menu);
         }
 
         // GET: MenuController/Create
@@ -53,12 +54,13 @@ namespace HelaTico.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                string errors = string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
+                string errors = string.Join("; ", ModelState.Values
+                    .SelectMany(x => x.Errors)
+                    .Select(x => x.ErrorMessage));
                 await CargarListas();
                 ViewBag.ErrorMessage = errors;
                 return View(dto);
             }
-
             try
             {
                 await _serviceMenu.AddAsync(dto);
@@ -87,12 +89,13 @@ namespace HelaTico.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                string errors = string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
+                string errors = string.Join("; ", ModelState.Values
+                    .SelectMany(x => x.Errors)
+                    .Select(x => x.ErrorMessage));
                 await CargarListas(dto.IdProducto, dto.IdCombo);
                 ViewBag.ErrorMessage = errors;
                 return View(dto);
             }
-
             try
             {
                 await _serviceMenu.UpdateAsync(id, dto);
@@ -106,10 +109,17 @@ namespace HelaTico.Web.Controllers
             }
         }
 
-        private async Task CargarListas(int[]? idsProductosSeleccionados = null, int[]? idsCombosSeleccionados = null)
+        private async Task CargarListas(
+            int[]? idsProductosSeleccionados = null,
+            int[]? idsCombosSeleccionados = null)
         {
-            ViewBag.ListProductos = new MultiSelectList(await _serviceProducto.ListAsync(), "IdProducto", "Nombre", idsProductosSeleccionados);
-            ViewBag.ListCombos = new MultiSelectList(await _serviceCombo.ListAsync(), "IdCombo", "Nombre", idsCombosSeleccionados);
+            ViewBag.ListProductos = new MultiSelectList(
+                await _serviceProducto.ListAsync(), "IdProducto", "Nombre",
+                idsProductosSeleccionados);
+
+            ViewBag.ListCombos = new MultiSelectList(
+                await _serviceCombo.ListAsync(), "IdCombo", "Nombre",
+                idsCombosSeleccionados);
         }
     }
 }

@@ -50,22 +50,24 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Estado</label>
-                <div>
-                    @foreach (var item in Html.GetEnumSelectList<HelaTico.Application.Enums.EstadoProducto>())
-                    {
-                        <div class="form-check form-check-inline">
-                            <input type="radio"
-                                   class="form-check-input"
-                                   id="estado_@item.Value"
-                                   name="@Html.NameFor(m => m.EstadoProductoId)"
-                                   value="@item.Value"
-                            @(Model?.EstadoProductoId.ToString() == item.Value ? "checked" : "") />
-                            <label class="form-check-label" for="estado_@item.Value">@item.Text</label>
-                        </div>
-                    }
+                <label class="form-label d-block">Estado</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"
+                           name="Estado" id="estadoDisponible"
+                           value="1" checked />
+                    <label class="form-check-label" for="estadoDisponible">
+                        Disponible
+                    </label>
                 </div>
-                <span asp-validation-for="EstadoProductoId" class="text-danger"></span>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"
+                           name="Estado" id="estadoNoDisponible"
+                           value="2" />
+                    <label class="form-check-label" for="estadoNoDisponible">
+                        No Disponible
+                    </label>
+                </div>
+                <span asp-validation-for="EstadoProducto" class="text-danger d-block"></span>
             </div>
 
             <div class="mb-3">

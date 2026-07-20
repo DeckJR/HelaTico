@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using HelaTico.Application.DTOs;
 using HelaTico.Application.Services.Interfaces;
+using HelaTico.Infraestructure.Models;
 using HelaTico.Infraestructure.Repository.Interfaces;
 
 namespace HelaTico.Application.Services.Implementations
@@ -33,6 +34,36 @@ namespace HelaTico.Application.Services.Implementations
             var list = await _repository.ListAsync();
             var collection = _mapper.Map<ICollection<PreparacionDTO>>(list);
             return collection;
+        }
+
+        public async Task AddAsync(int idProducto, int[] estacionIds, int[] ordenes)
+        {
+            for (int i = 0; i < estacionIds.Length; i++)
+            {
+                var paso = new Preparacion
+                {
+                    IdProducto = idProducto,
+                    IdEstacion = estacionIds[i],
+                    Orden = ordenes[i]
+                };
+                await _repository.AddPreparacionAsync(paso);
+            }
+        }
+
+        public async Task UpdateAsync(int idProducto, int[] estacionIds, int[] ordenes)
+        {
+            await _repository.DeleteByProductoAsync(idProducto);
+
+            for (int i = 0; i < estacionIds.Length; i++)
+            {
+                var paso = new Preparacion
+                {
+                    IdProducto = idProducto,
+                    IdEstacion = estacionIds[i],
+                    Orden = ordenes[i]
+                };
+                await _repository.AddPreparacionAsync(paso);
+            }
         }
     }
 }

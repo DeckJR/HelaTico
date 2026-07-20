@@ -11,5 +11,7 @@ namespace HelaTico.Application.Services.Interfaces
     {
         Task<ICollection<PreparacionDTO>> ListAsync();
         Task<PreparacionDTO> FindByIdAsync(int idProducto);
+        Task AddAsync(int idProducto, int[] estacionIds, int[] ordenes);
+        Task UpdateAsync(int idProducto, int[] estacionIds, int[] ordenes);
     }
 }

@@ -8,34 +8,37 @@ using HelaTico.Application.DTOs;
 using HelaTico.Application.Services.Interfaces;
 using HelaTico.Infraestructure.Models;
 using HelaTico.Infraestructure.Repository.Interfaces;
+
 namespace HelaTico.Application.Services.Implementations
 {
     public class ServiceMenu : IServiceMenu
     {
         private readonly IRepositoryMenu _repository;
         private readonly IMapper _mapper;
+
         public ServiceMenu(IRepositoryMenu repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
+
         public async Task<MenuDTO> FindByIdAsync(int id)
         {
             var @object = await _repository.FindByIdAsync(id);
-            var objectMapped = _mapper.Map<MenuDTO>(@object);
-            return objectMapped;
+            return _mapper.Map<MenuDTO>(@object);
         }
-        public async Task<ICollection<MenuDTO>> GetMenusDisponiblesAsync()
+
+        public async Task<MenuDTO?> GetMenusDisponiblesAsync()
         {
-            var list = await _repository.GetMenusDisponiblesAsync();
-            var collection = _mapper.Map<ICollection<MenuDTO>>(list);
-            return collection;
+            var menu = await _repository.GetMenusDisponiblesAsync();
+            if (menu == null) return null;
+            return _mapper.Map<MenuDTO>(menu);
         }
+
         public async Task<ICollection<MenuDTO>> ListAsync()
         {
             var list = await _repository.ListAsync();
-            var collection = _mapper.Map<ICollection<MenuDTO>>(list);
-            return collection;
+            return _mapper.Map<ICollection<MenuDTO>>(list);
         }
 
         public async Task<int> AddAsync(MenuDTO dto)

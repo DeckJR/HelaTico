@@ -7,15 +7,12 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace HelaTico.Application.DTOs
 {
-    public record PasoPreparacionDTO
+    public record EstacionDTO
     {
         [ValidateNever]
         public int IdEstacion { get; set; }
 
         [ValidateNever]
-        public string NombreEstacion { get; set; }
-
-        [ValidateNever]
-        public int Orden { get; set; }
+        public string Descripcion { get; set; }
     }
 }

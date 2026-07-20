@@ -10,7 +10,7 @@ namespace HelaTico.Application.Services.Interfaces
     {
         Task<ICollection<MenuDTO>> ListAsync();
         Task<MenuDTO> FindByIdAsync(int id);
-        Task<ICollection<MenuDTO>> GetMenusDisponiblesAsync();
+        Task<MenuDTO?> GetMenusDisponiblesAsync();
         Task<int> AddAsync(MenuDTO dto);
         Task UpdateAsync(int id, MenuDTO dto);
         Task<bool> ExisteNombreAsync(string nombre, int idMenuExcluir = 0);

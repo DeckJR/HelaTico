@@ -1,0 +1,211 @@
+﻿@model HelaTico.Application.DTOs.PreparacionDTO
+@using HelaTico.Application.DTOs
+@{
+    ViewData["Title"] = "Editar Proceso de Preparación";
+    var listaEstaciones = (IEnumerable<EstacionDTO>)ViewBag.ListaEstaciones;
+    var pasosActuales = (IEnumerable<PasoPreparacionDTO>)ViewBag.PasosActuales;
+    const int ESTACION_FINAL_ID = 5;
+    var estacionFinal = listaEstaciones.FirstOrDefault(e => e.IdEstacion == ESTACION_FINAL_ID);
+
+    // Pasos sin la estación final, ordenados — los precargamos en el array JS
+    var pasosSinFinal = pasosActuales
+        .Where(p => p.IdEstacion != ESTACION_FINAL_ID)
+        .OrderBy(p => p.Orden)
+        .ToList();
+
+    var pasosJson = System.Text.Json.JsonSerializer.Serialize(
+        pasosSinFinal.Select(p => new { idEstacion = p.IdEstacion, nombre = p.NombreEstacion })
+    );
+}
+
+<h1>Editar Proceso de Preparación</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-10">
+        <form asp-action="Edit" asp-route-id="@Model.IdProducto"
+              method="post" id="formPreparacion">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Producto</label>
+                <input type="text" class="form-control" value="@Model.NombreProducto" readonly />
+                <input type="hidden" name="idProducto" value="@Model.IdProducto" />
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header fw-bold">Agregar Estación al Proceso</div>
+                <div class="card-body">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-8">
+                            <label class="form-label">Estación</label>
+                            <select id="selectEstacion" class="form-select">
+                                <option value="0">-- Seleccione --</option>
+                                @foreach (var e in listaEstaciones.Where(e => e.IdEstacion != ESTACION_FINAL_ID))
+                                {
+                                    <option value="@e.IdEstacion" data-nombre="@e.Descripcion">
+                                        @e.Descripcion
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-success w-100"
+                                    onclick="agregarEstacion()">
+                                <i class="bi bi-plus-circle"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                    <div id="errorAgregar" class="text-danger mt-2" style="display:none;"></div>
+                </div>
+            </div>
+
+            <h5>Proceso actual</h5>
+            <small class="text-muted d-block mb-2">
+                Las estaciones se ejecutan en el orden mostrado.
+                Para cambiar el orden, elimine la estación y agréguela de nuevo en la posición deseada.
+            </small>
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width:80px;">Paso</th>
+                        <th>Estación</th>
+                        <th style="width:100px;">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="bodyEstaciones">
+                </tbody>
+                <tfoot>
+                    <tr class="table-warning">
+                        <td class="text-center fw-bold">
+                            <i class="bi bi-lock-fill"></i>
+                        </td>
+                        <td>
+                            @(estacionFinal?.Descripcion ?? "Empaque y Entrega")
+                            <small class="text-muted">(siempre último — se agrega automáticamente)</small>
+                        </td>
+                        <td class="text-center text-muted">—</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div id="hiddenInputs"></div>
+
+            <div class="btn-group mt-3" role="group">
+                <button type="submit" class="btn btn-warning" onclick="return prepararEnvio()">
+                    <i class="bi bi-save"></i> Guardar Cambios
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="history.back()">
+                    <i class="bi bi-arrow-left"></i> Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const ESTACION_FINAL_ID = @ESTACION_FINAL_ID;
+        let pasos = @Html.Raw(pasosJson);
+
+        function mostrarError(msg) {
+            const el = document.getElementById('errorAgregar');
+            el.textContent = msg;
+            el.style.display = msg ? 'block' : 'none';
+        }
+
+        function agregarEstacion() {
+            mostrarError('');
+            const sel    = document.getElementById('selectEstacion');
+            const id     = parseInt(sel.value);
+            const nombre = sel.options[sel.selectedIndex]?.dataset.nombre ?? '';
+
+            if (!id || id === 0) {
+                mostrarError('Seleccione una estación.'); return;
+            }
+            if (pasos.find(p => p.idEstacion === id)) {
+                mostrarError('Esta estación ya fue agregada al proceso.'); return;
+            }
+
+            pasos.push({ idEstacion: id, nombre });
+            renderTabla();
+            actualizarDropdown();
+            sel.value = '0';
+        }
+
+        function eliminarEstacion(idEstacion) {
+            pasos = pasos.filter(p => p.idEstacion !== idEstacion);
+            renderTabla();
+            actualizarDropdown();
+        }
+
+        function renderTabla() {
+            const tbody = document.getElementById('bodyEstaciones');
+            tbody.innerHTML = '';
+
+            pasos.forEach((p, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="text-center fw-bold">${index + 1}</td>
+                    <td>${p.nombre}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-danger btn-sm"
+                                onclick="eliminarEstacion(${p.idEstacion})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function actualizarDropdown() {
+            const sel = document.getElementById('selectEstacion');
+            const idsAgregados = new Set(pasos.map(p => p.idEstacion));
+
+            Array.from(sel.options).forEach(opt => {
+                const id = parseInt(opt.value);
+                if (id && id !== ESTACION_FINAL_ID) {
+                    opt.disabled    = idsAgregados.has(id);
+                    opt.style.color = idsAgregados.has(id) ? '#aaa' : '';
+                }
+            });
+        }
+
+        function prepararEnvio() {
+            if (pasos.length === 0) {
+                mostrarError('Debe agregar al menos una estación al proceso.');
+                return false;
+            }
+
+            const todosLosPasos = [
+                ...pasos.map((p, i) => ({ idEstacion: p.idEstacion, orden: i + 1 })),
+                { idEstacion: ESTACION_FINAL_ID, orden: pasos.length + 1 }
+            ];
+
+            const container = document.getElementById('hiddenInputs');
+            container.innerHTML = '';
+
+            todosLosPasos.forEach(p => {
+                const inputId        = document.createElement('input');
+                inputId.type         = 'hidden';
+                inputId.name         = 'estacionIds';
+                inputId.value        = p.idEstacion;
+                container.appendChild(inputId);
+
+                const inputOrden     = document.createElement('input');
+                inputOrden.type      = 'hidden';
+                inputOrden.name      = 'ordenes';
+                inputOrden.value     = p.orden;
+                container.appendChild(inputOrden);
+            });
+
+            return true;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTabla();
+            actualizarDropdown();
+        });
+    </script>
+}

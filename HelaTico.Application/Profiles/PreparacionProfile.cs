@@ -9,7 +9,15 @@ namespace HelaTico.Application.Profiles
     {
         public PreparacionProfile()
         {
+            CreateMap<Estacion, EstacionDTO>()
+                .ForMember(dest => dest.IdEstacion,
+                    opt => opt.MapFrom(src => src.IdEstacion))
+                .ForMember(dest => dest.Descripcion,
+                    opt => opt.MapFrom(src => src.Descripcion));
+
             CreateMap<Preparacion, PasoPreparacionDTO>()
+                .ForMember(dest => dest.IdEstacion,
+                    opt => opt.MapFrom(src => src.IdEstacion))
                 .ForMember(dest => dest.NombreEstacion,
                     opt => opt.MapFrom(src => src.IdEstacionNavigation.Descripcion))
                 .ForMember(dest => dest.Orden,

@@ -35,9 +35,11 @@ namespace HelaTico.Infraestructure.Repository.Implementations
                 .ToListAsync();
             return collection;
         }
-        public async Task<ICollection<Menu>> GetMenusDisponiblesAsync()
+
+        public async Task<Menu?> GetMenusDisponiblesAsync()
         {
-            var hoy = DateTime.Now;
+            var hoy = DateTime.Today;
+
             return await _context.Menu
                 .Include(m => m.IdProducto)
                     .ThenInclude(p => p.IdCategoriaNavigation)
@@ -46,8 +48,10 @@ namespace HelaTico.Infraestructure.Repository.Implementations
                          && m.FechaInicio <= hoy
                          && m.FechaFinal >= hoy)
                 .OrderByDescending(m => m.FechaInicio)
-                .ToListAsync();
+                .ThenByDescending(m => m.IdMenu)
+                .FirstOrDefaultAsync();
         }
+
 
         public async Task<int> AddAsync(Menu entity, int[] idsProductos, int[] idsCombos)
         {
