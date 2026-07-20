@@ -19,8 +19,11 @@
 
             <div class="mb-3">
                 <label asp-for="Nombre" class="form-label"></label>
-                <input asp-for="Nombre" class="form-control" />
+                <input asp-for="Nombre" class="form-control" id="nombreInput" autocomplete="off" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
+                <span id="nombreDuplicado" class="text-danger" style="display:none;">
+                    Ya existe otro producto con este nombre.
+                </span>
             </div>
 
             <div class="mb-3">
@@ -126,13 +129,12 @@
             </div>
 
             <div class="btn-group mt-3" role="group">
-                <button type="button" class="btn btn-secondary" onclick="history.back()">
-                    Volver
-                </button>
                 <button type="submit" class="btn btn-success">
                     <i class="bi bi-save"></i> Guardar cambios
                 </button>
-               
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Cancelar
+                </a>
             </div>
         </form>
     </div>
@@ -152,5 +154,24 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        const idProductoActual = @Model.IdProducto;
+        const nombreInput = document.getElementById('nombreInput');
+        const avisoDuplicado = document.getElementById('nombreDuplicado');
+        let timeoutNombre;
+
+        nombreInput.addEventListener('input', function () {
+            clearTimeout(timeoutNombre);
+            const nombre = this.value.trim();
+            if (nombre.length < 3) {
+                avisoDuplicado.style.display = 'none';
+                return;
+            }
+            timeoutNombre = setTimeout(async () => {
+                const respuesta = await fetch(`/Producto/ExisteNombre?nombre=${encodeURIComponent(nombre)}&id=${idProductoActual}`);
+                const existe = await respuesta.json();
+                avisoDuplicado.style.display = existe ? 'block' : 'none';
+            }, 400);
+        });
     </script>
 }

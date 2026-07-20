@@ -13,6 +13,6 @@ namespace HelaTico.Infraestructure.Repository.Interfaces
         Task<Producto> FindByIdAsync(int id);
         Task<int> AddAsync(Producto entity, int[] idsIngredientes);
         Task UpdateAsync(Producto entity, int[] idsIngredientes);
-        Task<bool> ExisteNombreAsync(string nombre);
+        Task<bool> ExisteNombreAsync(string nombre, int id);
     }
 }

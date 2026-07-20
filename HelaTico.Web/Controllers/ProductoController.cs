@@ -101,7 +101,7 @@ namespace HelaTico.Web.Controllers
             else
             {
                 var actual = await _serviceProducto.FindByIdAsync(id);
-                dto.Imagen = actual.Imagen; 
+                dto.Imagen = actual.Imagen;
             }
 
             if (!ModelState.IsValid)
@@ -123,6 +123,17 @@ namespace HelaTico.Web.Controllers
                 ViewBag.ErrorMessage = ex.Message;
                 return View(dto);
             }
+        }
+
+        // GET: ProductoController/ExisteNombre?nombre=...&id=...
+        [HttpGet]
+        public async Task<JsonResult> ExisteNombre(string nombre, int id = 0)
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                return Json(false);
+
+            bool existe = await _serviceProducto.ExisteNombreAsync(nombre, id);
+            return Json(existe);
         }
 
         private async Task CargarListas(int? idCategoriaSeleccionada = null, int[]? idsIngredientesSeleccionados = null)

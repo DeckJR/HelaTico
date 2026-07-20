@@ -17,6 +17,6 @@ namespace HelaTico.Application.Services.Interfaces
 
         Task UpdateAsync(int id, ProductoDTO dto);
 
-        Task<bool> ExisteNombreAsync(string nombre);
+        Task<bool> ExisteNombreAsync(string nombre, int id);
     }
 }
