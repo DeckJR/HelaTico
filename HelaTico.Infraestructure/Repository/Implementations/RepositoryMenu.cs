@@ -117,5 +117,14 @@ namespace HelaTico.Infraestructure.Repository.Implementations
                 .ToListAsync();
             return combos;
         }
+        public async Task ActualizarEstadoAsync(Menu entity)
+        {
+            var menu = await _context.Menu.FindAsync(entity.IdMenu);
+            if (menu != null)
+            {
+                menu.EstadoMenu = entity.EstadoMenu;
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

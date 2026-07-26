@@ -9,6 +9,9 @@ using HelaTico.Infraestructure.Repository.Implementations;
 using HelaTico.Application.Services.Interfaces;
 using HelaTico.Application.Services.Implementations;
 using HelaTico.Application.Profiles;
+using Hangfire;
+using HelaTico.Application.Jobs.Interfaces;
+using HelaTico.Web.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,8 +76,28 @@ var logger = new LoggerConfiguration()
 builder.Host.UseSerilog(logger);
 //***************************
 
+// Registrar Hangfire con SQL Server
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("SqlServerDataBase")));
+
+builder.Services.AddHangfireServer();
+
+// Registrar el Job
+builder.Services.AddScoped<IMenuStatusJob, MenuStatusJob>();
 
 var app = builder.Build();
+
+// Activar el Dashboard de Hangfire
+app.UseHangfireDashboard("/hangfire");
+
+// Registrar el Recurring Job — se ejecuta cada minuto
+RecurringJob.AddOrUpdate<IMenuStatusJob>(
+    "actualizar-estado-menus",
+    job => job.EjecutarAsync(),
+    Cron.Minutely());
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

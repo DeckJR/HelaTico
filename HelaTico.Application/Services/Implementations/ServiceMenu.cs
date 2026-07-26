@@ -74,5 +74,22 @@ namespace HelaTico.Application.Services.Implementations
         {
             return await _repository.ExisteNombreAsync(nombre, idMenuExcluir);
         }
+
+        public async Task ActualizarEstadoMenuAsync()
+        {
+            var hoy = DateTime.Today;
+            var menus = await _repository.ListAsync();
+
+            foreach (var menu in menus)
+            {
+                int nuevoEstado = (menu.FechaInicio <= hoy && menu.FechaFinal >= hoy) ? 1 : 2;
+
+                if (menu.EstadoMenu != nuevoEstado)
+                {
+                    menu.EstadoMenu = nuevoEstado;
+                    await _repository.ActualizarEstadoAsync(menu);
+                }
+            }
+        }
     }
 }

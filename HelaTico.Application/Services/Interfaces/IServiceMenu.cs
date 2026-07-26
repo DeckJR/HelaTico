@@ -14,5 +14,6 @@ namespace HelaTico.Application.Services.Interfaces
         Task<int> AddAsync(MenuDTO dto);
         Task UpdateAsync(int id, MenuDTO dto);
         Task<bool> ExisteNombreAsync(string nombre, int idMenuExcluir = 0);
+        Task ActualizarEstadoMenuAsync();
     }
 }

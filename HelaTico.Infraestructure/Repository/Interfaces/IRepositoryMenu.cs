@@ -14,5 +14,6 @@ namespace HelaTico.Infraestructure.Repository.Interfaces
         Task<int> AddAsync(Menu entity, int[] idsProductos, int[] idsCombos);
         Task UpdateAsync(Menu entity, int[] idsProductos, int[] idsCombos);
         Task<bool> ExisteNombreAsync(string nombre, int idMenuExcluir = 0);
+        Task ActualizarEstadoAsync(Menu entity);
     }
 }
