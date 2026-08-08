@@ -1,21 +1,26 @@
-﻿@model IEnumerable<HelaTico.Application.DTOs.ProductoDTO>
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizerFactory LocalizerFactory
 
-<h1 class="text-center mb-4">Productos</h1>
+@model IEnumerable<HelaTico.Application.DTOs.ProductoDTO>
 
+@{
+    var SharedLocalizer =
+        LocalizerFactory.Create("Views.Shared.SharedResource", "HelaTico.Web");
+    var ProductoLocalizer =
+        LocalizerFactory.Create("Views.Producto.ProductoResource", "HelaTico.Web");
+}
+
+<h1 class="text-center mb-4">@ProductoLocalizer["ProdTitulo"]</h1>
 <div class="container">
     <div class="row">
-
         @foreach (var item in Model)
         {
             <div class="col-md-4 mb-4">
-
                 <div class="card shadow-sm" style="border-radius: 15px; overflow:hidden;">
-
                     @if (item.Imagen != null)
                     {
                         var base64 = Convert.ToBase64String(item.Imagen);
                         var imgSrc = $"data:image/png;base64,{base64}";
-
                         <img src="@imgSrc"
                              class="card-img-top"
                              style="height:200px; object-fit:cover;" />
@@ -26,32 +31,24 @@
                              class="card-img-top"
                              style="height:200px; object-fit:cover;" />
                     }
-
                     <div class="card-body text-center">
-
                         <h5 class="card-title text-primary">
                             @item.Nombre
                         </h5>
-
                         <p class="text-muted">
                             @item.Categoria
                         </p>
-
                         <h6 class="text-success">
                             ₡@item.Precio.ToString("N2")
                         </h6>
-
                         <a asp-action="Details"
                            asp-route-id="@item.IdProducto"
                            class="btn btn-primary btn-sm mt-2">
-                            Ver detalles
+                            @SharedLocalizer["BtnViewDetails"]
                         </a>
-
                     </div>
                 </div>
-
             </div>
         }
-
     </div>
 </div>

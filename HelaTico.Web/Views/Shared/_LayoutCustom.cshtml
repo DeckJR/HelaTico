@@ -1,4 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizerFactory LocalizerFactory
+
+@{
+    var SharedLocalizer =
+        LocalizerFactory.Create(
+            "Views.Shared.SharedResource",
+            "HelaTico.Web");
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,11 +18,10 @@
     <link rel="stylesheet" href="~/HelaTico.Web.styles.css" asp-append-version="true" />
 </head>
 <body style="background-color:#fdfbd4; background-image:url('/images/fondo.jpg'); background-size:cover; background-position:center; background-attachment:fixed; background-repeat:no-repeat; min-height:100vh; display:flex; flex-direction:column;">
-    
+
     <header>
         @await Html.PartialAsync("_Menu")
     </header>
-
     <div class="container mt-4 flex-grow-1">
         <main role="main"
               class="p-4 rounded-4 shadow-lg"
@@ -21,17 +29,15 @@
             @RenderBody()
         </main>
     </div>
-
     <footer class="text-white text-center p-3 mt-4"
             style="background:#c3342d;">
         <div class="container">
             <small>
-                © 2026 HelaTico 🍦 |
-                Heladería |
+                &copy; 2026 HelaTico 🍦 | @SharedLocalizer["FooterHeladeria"] |
                 <a class="text-white"
                    asp-controller="Home"
                    asp-action="Privacy">
-                    Privacidad
+                    @SharedLocalizer["FooterPrivacidad"]
                 </a>
             </small>
         </div>

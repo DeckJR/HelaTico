@@ -1,22 +1,22 @@
 ﻿@model HelaTico.Application.DTOs.PreparacionDTO
 @{
-    ViewData["Title"] = "Detalle del Proceso de Preparación";
+    ViewData["Title"] = Localizer["ViewTitle"];
 }
-<h1>Detalle del Proceso de Preparación</h1>
+<h1>@Localizer["ViewTitle"]</h1>
 <dl class="row">
-    <dt class="col-sm-3">Producto</dt>
+    <dt class="col-sm-3">@Localizer["LblProducto"]</dt>
     <dd class="col-sm-9">@Model.NombreProducto</dd>
 
-    <dt class="col-sm-3">Cantidad de Pasos</dt>
+    <dt class="col-sm-3">@Localizer["LblCantidadPasos"]</dt>
     <dd class="col-sm-9">@Model.CantidadPasos</dd>
 </dl>
 
-<h5>Estaciones del proceso:</h5>
+<h5>@Localizer["HeadingEstaciones"]</h5>
 <table class="table">
     <thead>
         <tr>
-            <th>Orden</th>
-            <th>Estación</th>
+            <th>@Localizer["ColOrden"]</th>
+            <th>@Localizer["ColEstacion"]</th>
         </tr>
     </thead>
     <tbody>
@@ -31,5 +31,5 @@
 </table>
 
 <button type="button" class="btn btn-secondary" onclick="history.back()">
-    Volver
+    @Localizer["BtnVolver"]
 </button>

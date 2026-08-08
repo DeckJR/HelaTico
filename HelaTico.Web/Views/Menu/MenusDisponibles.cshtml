@@ -1,17 +1,17 @@
 ﻿@model HelaTico.Application.DTOs.MenuDTO?
 @{
-    ViewData["Title"] = "Menú Disponible";
+    ViewData["Title"] = Localizer["ViewTitle"];
 }
 
 <h2 class="text-center mb-4" style="color: #0a1f44; font-weight: bold;">
-    Menú Disponible
+    @Localizer["ViewTitle"]
 </h2>
 
 @if (Model == null)
 {
     <div class="text-center mt-5">
         <i class="bi bi-calendar-x" style="font-size:3rem; color:#aaa;"></i>
-        <p class="mt-3 text-muted fs-5">No hay ningún menú disponible para el día de hoy.</p>
+        <p class="mt-3 text-muted fs-5">@Localizer["MsgSinMenu"]</p>
     </div>
 }
 else
@@ -23,7 +23,7 @@ else
 
             <h3 class="text-primary">@Model.Nombre</h3>
             <p class="text-muted">
-                Disponible:
+                @Localizer["LblDisponible"]
                 <strong>@Model.FechaInicio.ToShortDateString()</strong> -
                 <strong>@Model.FechaFinal.ToShortDateString()</strong>
             </p>
@@ -66,11 +66,11 @@ else
             }
             else
             {
-                <p class="text-muted mt-3">Este menú no tiene productos asignados.</p>
+                <p class="text-muted mt-3">@Localizer["MsgSinProductosAsignados"]</p>
             }
 
             @* ── Combos ── *@
-            <h5 class="mt-4 border-bottom pb-2">🥤 Combos</h5>
+            <h5 class="mt-4 border-bottom pb-2">@Localizer["HeaderCombos"]</h5>
             @if (Model.Combos != null && Model.Combos.Any())
             {
                 <div class="row">
@@ -101,7 +101,7 @@ else
             }
             else
             {
-                <p class="text-muted">Este menú no tiene combos asignados.</p>
+                <p class="text-muted">@Localizer["MsgSinCombosAsignados"]</p>
             }
 
         </div>

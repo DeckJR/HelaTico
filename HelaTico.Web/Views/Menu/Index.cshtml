@@ -1,20 +1,20 @@
 ﻿@model IEnumerable<HelaTico.Application.DTOs.MenuDTO>
-<h1>Menús</h1>
+<h1>@Localizer["Heading"]</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-success">Crear Nuevo</a>
+    <a asp-action="Create" class="btn btn-success">@Localizer["BtnCrearNuevo"]</a>
 </p>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Nombre</th>
-            <th>Fecha Inicio</th>
-            <th>Fecha Final</th>
-            <th>Estado</th>
-            <th>Productos</th>
-            <th>Combos</th>
-            <th>Acciones</th>
+            <th>@Localizer["ColNombre"]</th>
+            <th>@Localizer["ColFechaInicio"]</th>
+            <th>@Localizer["ColFechaFinal"]</th>
+            <th>@Localizer["ColEstado"]</th>
+            <th>@Localizer["ColProductos"]</th>
+            <th>@Localizer["ColCombos"]</th>
+            <th>@Localizer["ColAcciones"]</th>
         </tr>
     </thead>
     <tbody>
@@ -41,12 +41,12 @@
                     <a asp-action="Details"
                        asp-route-id="@item.IdMenu"
                        class="btn btn-info">
-                        Detalles
+                        @Localizer["BtnDetalles"]
                     </a>
                     <a asp-action="Update"
                        asp-route-id="@item.IdMenu"
                        class="btn btn-warning">
-                        Editar
+                        @Localizer["BtnEditar"]
                     </a>
                 </td>
             </tr>

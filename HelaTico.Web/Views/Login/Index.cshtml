@@ -1,0 +1,116 @@
+﻿@model HelaTico.Web.ViewModels.ViewModelLogin
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height:85vh;">
+
+    <div class="card border-0 shadow-lg"
+         style="
+            width:650px;
+            border-radius:25px;
+            overflow:hidden;
+            box-shadow:0 20px 50px rgba(0,0,0,.25) !important;">
+
+        <!-- Encabezado -->
+        <div class="text-center text-white"
+             style="
+                background:linear-gradient(180deg,#0d47a1,#1565c0);
+                padding:55px 30px;">
+
+            <h1 class="fw-bold mb-2" style="font-size:3rem;">
+                HelaTico
+            </h1>
+
+            <p class="mb-0" style="font-size:1.35rem;">
+                Iniciar Sesión
+            </p>
+
+        </div>
+
+        <!-- Contenido -->
+        <div class="card-body" style="padding:55px;">
+
+            <form asp-controller="Login"
+                  asp-action="Index"
+                  method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger mb-4">
+                </div>
+
+                <div class="mb-4">
+
+                    <label asp-for="Correo"
+                           class="form-label fw-bold"
+                           style="
+                                color:#0d47a1;
+                                font-size:1.15rem;">
+                    </label>
+
+                    <input asp-for="Correo"
+                           autocomplete="off"
+                           placeholder="Ingrese su correo"
+                           class="form-control"
+                           style="
+                                height:58px;
+                                font-size:18px;
+                                border-radius:12px;" />
+
+                    <span asp-validation-for="Correo"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="mb-5">
+
+                    <label asp-for="Contrasenna"
+                           class="form-label fw-bold"
+                           style="
+                                color:#0d47a1;
+                                font-size:1.15rem;">
+
+                        Contraseña
+
+                    </label>
+
+                    <input asp-for="Contrasenna"
+                           placeholder="Ingrese su contraseña"
+                           class="form-control"
+                           style="
+                                height:58px;
+                                font-size:18px;
+                                border-radius:12px;" />
+
+                    <span asp-validation-for="Contrasenna"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <button type="submit"
+                        class="btn w-100 text-white fw-bold"
+                        style="
+                            background:linear-gradient(180deg,#1565c0,#0d47a1);
+                            border:none;
+                            height:60px;
+                            border-radius:12px;
+                            font-size:22px;">
+
+                    Iniciar sesión
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

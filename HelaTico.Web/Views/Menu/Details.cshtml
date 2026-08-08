@@ -2,16 +2,16 @@
 
 <h2>@Model.Nombre</h2>
 
-<p><strong>Fecha Inicio:</strong> @Model.FechaInicio.ToShortDateString()</p>
-<p><strong>Fecha Final:</strong> @Model.FechaFinal.ToShortDateString()</p>
-<p><strong>Estado:</strong> @Model.EstadoMenu</p>
+<p><strong>@Localizer["LblFechaInicio"]</strong> @Model.FechaInicio.ToShortDateString()</p>
+<p><strong>@Localizer["LblFechaFinal"]</strong> @Model.FechaFinal.ToShortDateString()</p>
+<p><strong>@Localizer["LblEstado"]</strong> @Model.EstadoMenu</p>
 
 <div class="row">
 
     <div class="col-12 mb-4">
         <div class="card">
             <div class="card-header bg-success text-white">
-                <h4>Combos</h4>
+                <h4>@Localizer["HeaderCombos"]</h4>
             </div>
 
             <div class="card-body">
@@ -48,7 +48,7 @@
 
                                     <div class="card-footer text-center">
                                         <button class="btn btn-success btn-sm">
-                                            Agregar
+                                            @Localizer["BtnAgregar"]
                                         </button>
                                     </div>
 
@@ -59,7 +59,7 @@
                 }
                 else
                 {
-                    <p>No hay combos disponibles.</p>
+                    <p>@Localizer["MsgSinCombos"]</p>
                 }
             </div>
         </div>
@@ -68,7 +68,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h4>Productos</h4>
+                <h4>@Localizer["HeaderProductos"]</h4>
             </div>
 
             <div class="card-body">
@@ -99,7 +99,7 @@
                                         <h5 class="card-title">@producto.Nombre</h5>
 
                                         <p class="card-text">
-                                            <strong>Categoría:</strong> @producto.Categoria
+                                            <strong>@Localizer["LblCategoria"]</strong> @producto.Categoria
                                         </p>
 
                                         <p class="text-success fw-bold">
@@ -109,7 +109,7 @@
 
                                     <div class="card-footer text-center">
                                         <button class="btn btn-primary btn-sm">
-                                            Agregar
+                                            @Localizer["BtnAgregar"]
                                         </button>
                                     </div>
 
@@ -120,7 +120,7 @@
                 }
                 else
                 {
-                    <p>No hay productos en este menú.</p>
+                    <p>@Localizer["MsgSinProductos"]</p>
                 }
             </div>
         </div>

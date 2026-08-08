@@ -1,14 +1,21 @@
-﻿@model HelaTico.Application.DTOs.ProductoDTO
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizerFactory LocalizerFactory
+
+@model HelaTico.Application.DTOs.ProductoDTO
 
 @{
-    ViewData["Title"] = "Details";
+    var SharedLocalizer =
+        LocalizerFactory.Create("Views.Shared.SharedResource", "HelaTico.Web");
+    var ProductoLocalizer =
+        LocalizerFactory.Create("Views.Producto.ProductoResource", "HelaTico.Web");
+
+    ViewData["Title"] = ProductoLocalizer["ProdTituloDetalle"];
 }
 
-<h1>Detalle</h1>
+<h1>@ProductoLocalizer["ProdTituloDetalle"]</h1>
 
 <div class="row">
     <div class="col">
-
         @if (Model.Imagen != null)
         {
             <img class="card-img-top"
@@ -16,35 +23,31 @@
                  src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Imagen)"
                  alt="Imagen" />
         }
-
     </div>
 
     <div class="col">
-        <h4>Producto</h4>
+        <h4>@ProductoLocalizer["ProdEtiquetaProducto"]</h4>
         <hr />
 
         <dl class="row">
-
-            <dt class="col-sm-3">Nombre</dt>
+            <dt class="col-sm-3">@ProductoLocalizer["ProdEtiquetaNombre"]</dt>
             <dd class="col-sm-9">@Model.Nombre</dd>
 
-            <dt class="col-sm-3">Descripción</dt>
+            <dt class="col-sm-3">@ProductoLocalizer["ProdEtiquetaDescripcion"]</dt>
             <dd class="col-sm-9">@Model.Descripcion</dd>
 
-            <dt class="col-sm-3">Precio</dt>
+            <dt class="col-sm-3">@ProductoLocalizer["ProdEtiquetaPrecio"]</dt>
             <dd class="col-sm-9">₡@Model.Precio.ToString("N2")</dd>
 
-            <dt class="col-sm-3">Categoría</dt>
+            <dt class="col-sm-3">@ProductoLocalizer["ProdEtiquetaCategoria"]</dt>
             <dd class="col-sm-9">@Model.Categoria</dd>
 
-            <dt class="col-sm-3">Estado</dt>
+            <dt class="col-sm-3">@ProductoLocalizer["ProdEtiquetaEstado"]</dt>
             <dd class="col-sm-9">@Model.EstadoProducto</dd>
-
-
         </dl>
 
         <div>
-            <h5>Ingredientes:</h5>
+            <h5>@ProductoLocalizer["ProdEtiquetaIngredientes"]</h5>
             <ul>
                 @foreach (var item in Model.Ingredientes)
                 {
@@ -52,16 +55,15 @@
                 }
             </ul>
         </div>
-
     </div>
 </div>
 
 <div class="btn-group mt-3" role="group">
-    <a href="@Url.Action("Edit", new { id = Model.IdProducto })" class="btn btn-warning">
-        Editar
+    <a asp-action="Update" asp-route-id="@Model.IdProducto" class="btn btn-warning">
+        @SharedLocalizer["BtnEdit"]
     </a>
 
     <button type="button" class="btn btn-secondary" onclick="history.back()">
-        Volver
+        @ProductoLocalizer["ProdBtnVolver"]
     </button>
 </div>

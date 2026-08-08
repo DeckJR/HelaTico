@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ViewTitle" xml:space="preserve"><value>Edit Preparation Process</value></data>
+  <data name="LblProducto" xml:space="preserve"><value>Product</value></data>
+  <data name="CardAgregarEstacion" xml:space="preserve"><value>Add Station to Process</value></data>
+  <data name="LblEstacion" xml:space="preserve"><value>Station</value></data>
+  <data name="OptSeleccione" xml:space="preserve"><value>-- Select --</value></data>
+  <data name="BtnAgregar" xml:space="preserve"><value>Add</value></data>
+  <data name="HeadingProcesoActual" xml:space="preserve"><value>Current process</value></data>
+  <data name="HintProceso" xml:space="preserve"><value>Stations run in the order shown. To change the order, remove a station and add it again in the desired position.</value></data>
+  <data name="ColPaso" xml:space="preserve"><value>Step</value></data>
+  <data name="ColEstacion" xml:space="preserve"><value>Station</value></data>
+  <data name="ColAccion" xml:space="preserve"><value>Action</value></data>
+  <data name="LblEstacionFinalDefault" xml:space="preserve"><value>Packing and Delivery</value></data>
+  <data name="HintSiempreUltimo" xml:space="preserve"><value>(always last — added automatically)</value></data>
+  <data name="BtnGuardarCambios" xml:space="preserve"><value>Save Changes</value></data>
+  <data name="BtnCancelar" xml:space="preserve"><value>Cancel</value></data>
+  <data name="ErrSeleccioneEstacion" xml:space="preserve"><value>Select a station.</value></data>
+  <data name="ErrEstacionYaAgregada" xml:space="preserve"><value>This station has already been added to the process.</value></data>
+  <data name="ErrDebeAgregarEstacion" xml:space="preserve"><value>You must add at least one station to the process.</value></data>
+</root>

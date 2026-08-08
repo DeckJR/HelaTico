@@ -1,18 +1,29 @@
-﻿@model IEnumerable<HelaTico.Application.DTOs.ProductoDTO>
-<h1>Productos</h1>
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizerFactory LocalizerFactory
+
+@model IEnumerable<HelaTico.Application.DTOs.ProductoDTO>
+
+@{
+    var SharedLocalizer =
+        LocalizerFactory.Create("Views.Shared.SharedResource", "HelaTico.Web");
+    var ProductoLocalizer =
+        LocalizerFactory.Create("Views.Producto.ProductoResource", "HelaTico.Web");
+}
+
+<h1>@ProductoLocalizer["ProdTitulo"]</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-success">Crear Nuevo</a>
+    <a asp-action="Create" class="btn btn-success">@SharedLocalizer["BtnCreateNew"]</a>
 </p>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Categoria</th>
-            <th>Precio</th>
-            <th>Acciones</th>
+            <th>@ProductoLocalizer["ProdColImagen"]</th>
+            <th>@ProductoLocalizer["ProdColNombre"]</th>
+            <th>@ProductoLocalizer["ProdColCategoria"]</th>
+            <th>@ProductoLocalizer["ProdColPrecio"]</th>
+            <th>@ProductoLocalizer["ProdColAcciones"]</th>
         </tr>
     </thead>
     <tbody>
@@ -40,12 +51,12 @@
                     <a asp-action="Details"
                        asp-route-id="@item.IdProducto"
                        class="btn btn-primary">
-                        Ver Detalles
+                        @SharedLocalizer["BtnViewDetails"]
                     </a>
                     <a asp-action="Update"
                        asp-route-id="@item.IdProducto"
                        class="btn btn-warning">
-                        Editar
+                        @SharedLocalizer["BtnEdit"]
                     </a>
                 </td>
             </tr>

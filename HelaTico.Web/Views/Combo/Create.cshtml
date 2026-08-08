@@ -1,11 +1,11 @@
 ﻿@model HelaTico.Application.DTOs.ComboDTO
 @using HelaTico.Application.DTOs
 @{
-    ViewData["Title"] = "Crear Combo";
+    ViewData["Title"] = Localizer["ViewTitle"];
     var listaProductos = (IEnumerable<ProductoDTO>)ViewBag.ListaProductos;
 }
 
-<h1>Crear Combo</h1>
+<h1>@Localizer["ViewTitle"]</h1>
 <hr />
 
 <div class="row">
@@ -15,13 +15,13 @@
 
             <div class="mb-3">
                 <label asp-for="Nombre" class="form-label"></label>
-                <input asp-for="Nombre" class="form-control" placeholder="Ej: Combo Tropical" />
+                <input asp-for="Nombre" class="form-control" placeholder="@Localizer["PlaceholderNombre"]" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Descripcion" class="form-label"></label>
-                <input asp-for="Descripcion" class="form-control" placeholder="Descripción del combo" />
+                <input asp-for="Descripcion" class="form-control" placeholder="@Localizer["PlaceholderDescripcion"]" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
 
@@ -35,13 +35,13 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label d-block">Estado</label>
+                <label class="form-label d-block">@Localizer["LblEstado"]</label>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio"
                            name="Estado" id="estadoDisponible"
                            value="1" checked />
                     <label class="form-check-label" for="estadoDisponible">
-                        Disponible
+                        @Localizer["EstadoDisponible"]
                     </label>
                 </div>
                 <div class="form-check form-check-inline">
@@ -49,14 +49,14 @@
                            name="Estado" id="estadoNoDisponible"
                            value="2" />
                     <label class="form-check-label" for="estadoNoDisponible">
-                        No Disponible
+                        @Localizer["EstadoNoDisponible"]
                     </label>
                 </div>
                 <span asp-validation-for="Estado" class="text-danger d-block"></span>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Imagen del Combo</label>
+                <label class="form-label">@Localizer["LblImagenCombo"]</label>
                 <input type="file" name="imagenFile" class="form-control" accept="image/*"
                        onchange="previsualizarImagen(this)" />
                 <div class="mt-2">
@@ -66,18 +66,18 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label fw-bold">Productos del Combo</label>
+                <label class="form-label fw-bold">@Localizer["LblProductosCombo"]</label>
                 <small class="text-muted d-block mb-2">
-                    Seleccione los productos e indique la cantidad de cada uno.
+                    @Localizer["HintProductos"]
                 </small>
 
                 <table class="table table-sm table-bordered">
                     <thead class="table-light">
                         <tr>
-                            <th>Seleccionar</th>
-                            <th>Producto</th>
-                            <th>Precio Unitario</th>
-                            <th style="width:120px;">Cantidad</th>
+                            <th>@Localizer["ColSeleccionar"]</th>
+                            <th>@Localizer["ColProducto"]</th>
+                            <th>@Localizer["ColPrecioUnitario"]</th>
+                            <th style="width:120px;">@Localizer["ColCantidad"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,10 +116,10 @@
 
             <div class="btn-group mt-3" role="group">
                 <button type="submit" class="btn btn-success">
-                    <i class="bi bi-save"></i> Guardar
+                    <i class="bi bi-save"></i> @Localizer["BtnGuardar"]
                 </button>
                 <button type="button" class="btn btn-secondary" onclick="history.back()">
-                    <i class="bi bi-arrow-left"></i> Cancelar
+                    <i class="bi bi-arrow-left"></i> @Localizer["BtnCancelar"]
                 </button>
             </div>
         </form>

@@ -23,4 +23,8 @@
     <ProjectReference Include="..\HelaTico.Infraestructure\HelaTico.Infraestructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\Views\Menu\" />
+  </ItemGroup>
+
 </Project>

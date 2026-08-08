@@ -1,10 +1,10 @@
 ﻿@model HelaTico.Application.DTOs.MenuDTO
 @{
-    ViewData["Title"] = "Editar Menú";
+    ViewData["Title"] = Localizer["ViewTitle"];
 }
 
 <div class="d-flex justify-content-between align-items-center">
-    <h1>Editar Menú</h1>
+    <h1>@Localizer["ViewTitle"]</h1>
 </div>
 <hr />
 
@@ -40,11 +40,11 @@
                 </div>
             </div>
             <span id="errorFechas" class="text-danger mb-3" style="display:none;">
-                La fecha de inicio no puede ser mayor a la fecha final
+                @Localizer["ErrorFechas"]
             </span>
 
             <div class="mb-3">
-                <label class="form-label">Estado</label>
+                <label class="form-label">@Localizer["LblEstado"]</label>
                 <div>
                     @foreach (var item in Html.GetEnumSelectList<HelaTico.Application.Enums.EstadoMenu>())
                     {
@@ -63,15 +63,15 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label fw-bold">Productos incluidos</label>
+                <label class="form-label fw-bold">@Localizer["LblProductosIncluidos"]</label>
                 <small class="text-muted d-block mb-2">
-                    Seleccione los productos que formarán parte de este menú.
+                    @Localizer["HintProductos"]
                 </small>
                 <table class="table table-sm table-bordered">
                     <thead class="table-light">
                         <tr>
-                            <th style="width:80px;">Incluir</th>
-                            <th>Producto</th>
+                            <th style="width:80px;">@Localizer["ColIncluir"]</th>
+                            <th>@Localizer["ColProducto"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,15 +94,15 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label fw-bold">Combos incluidos</label>
+                <label class="form-label fw-bold">@Localizer["LblCombosIncluidos"]</label>
                 <small class="text-muted d-block mb-2">
-                    Seleccione los combos que formarán parte de este menú (opcional).
+                    @Localizer["HintCombos"]
                 </small>
                 <table class="table table-sm table-bordered">
                     <thead class="table-light">
                         <tr>
-                            <th style="width:80px;">Incluir</th>
-                            <th>Combo</th>
+                            <th style="width:80px;">@Localizer["ColIncluir"]</th>
+                            <th>@Localizer["ColCombo"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -126,10 +126,10 @@
 
             <div class="btn-group mt-3" role="group">
                 <button type="submit" class="btn btn-success">
-                    <i class="bi bi-save"></i> Guardar cambios
+                    <i class="bi bi-save"></i> @Localizer["BtnGuardarCambios"]
                 </button>
                 <a asp-action="Index" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Cancelar
+                    <i class="bi bi-arrow-left"></i> @Localizer["BtnCancelar"]
                 </a>
             </div>
         </form>

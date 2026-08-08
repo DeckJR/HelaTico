@@ -1,9 +1,18 @@
-﻿@model HelaTico.Application.DTOs.ProductoDTO
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizerFactory LocalizerFactory
+
+@model HelaTico.Application.DTOs.ProductoDTO
+
 @{
-    ViewData["Title"] = "Editar Producto";
+    var SharedLocalizer =
+        LocalizerFactory.Create("Views.Shared.SharedResource", "HelaTico.Web");
+    var ProductoLocalizer =
+        LocalizerFactory.Create("Views.Producto.ProductoResource", "HelaTico.Web");
+
+    ViewData["Title"] = ProductoLocalizer["ProdTituloEditar"];
 }
 
-<h1>Editar Producto</h1>
+<h1>@ProductoLocalizer["ProdTituloEditar"]</h1>
 <hr />
 
 <div class="row">
@@ -18,22 +27,22 @@
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <div class="mb-3">
-                <label asp-for="Nombre" class="form-label"></label>
+                <label asp-for="Nombre" class="form-label">@ProductoLocalizer["ProdEtiquetaNombre"]</label>
                 <input asp-for="Nombre" class="form-control" id="nombreInput" autocomplete="off" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
                 <span id="nombreDuplicado" class="text-danger" style="display:none;">
-                    Ya existe otro producto con este nombre.
+                    @ProductoLocalizer["ProdNombreDuplicadoEditar"]
                 </span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Descripcion" class="form-label"></label>
+                <label asp-for="Descripcion" class="form-label">@ProductoLocalizer["ProdEtiquetaDescripcion"]</label>
                 <input asp-for="Descripcion" class="form-control" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Precio" class="form-label"></label>
+                <label asp-for="Precio" class="form-label">@ProductoLocalizer["ProdEtiquetaPrecio"]</label>
                 <div class="input-group">
                     <span class="input-group-text">₡</span>
                     <input asp-for="Precio" class="form-control" type="number" step="0.01" min="0.01" />
@@ -42,7 +51,7 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="IdCategoria" class="form-label">Categoría</label>
+                <label asp-for="IdCategoria" class="form-label">@ProductoLocalizer["ProdEtiquetaCategoria"]</label>
                 @Html.DropDownListFor(m => m.IdCategoria,
                          (SelectList)ViewBag.ListCategorias,
                          new { @class = "form-select" })
@@ -50,7 +59,7 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Estado</label>
+                <label class="form-label">@ProductoLocalizer["ProdEtiquetaEstado"]</label>
                 <div>
                     @foreach (var item in Html.GetEnumSelectList<HelaTico.Application.Enums.EstadoProducto>())
                     {
@@ -69,8 +78,8 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label fw-bold">Ingredientes</label>
-                <small class="text-muted d-block mb-2">Seleccione los ingredientes de este producto.</small>
+                <label class="form-label fw-bold">@ProductoLocalizer["ProdEtiquetaIngredientesForm"]</label>
+                <small class="text-muted d-block mb-2">@ProductoLocalizer["ProdAyudaIngredientes"]</small>
                 <div class="border rounded p-3">
                     <div class="row">
                         @{
@@ -113,12 +122,12 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Imagen</label>
+                <label class="form-label">@ProductoLocalizer["ProdEtiquetaImagen"]</label>
                 @if (Model.Imagen != null)
                 {
                     <div class="mb-2">
                         <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Imagen)" alt="Imagen actual" style="max-width:200px; border-radius:8px;" />
-                        <small class="text-muted d-block">Imagen actual. Sube un archivo nuevo solo si quieres reemplazarla.</small>
+                        <small class="text-muted d-block">@ProductoLocalizer["ProdImagenActualNota"]</small>
                     </div>
                 }
                 <input type="file" id="imageFile" name="imageFile" class="form-control" accept="image/*" onchange="previsualizarImagen(this)" />
@@ -130,10 +139,10 @@
 
             <div class="btn-group mt-3" role="group">
                 <button type="submit" class="btn btn-success">
-                    <i class="bi bi-save"></i> Guardar cambios
+                    <i class="bi bi-save"></i> @ProductoLocalizer["ProdBtnGuardarCambios"]
                 </button>
                 <a asp-action="Index" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Cancelar
+                    <i class="bi bi-arrow-left"></i> @ProductoLocalizer["ProdBtnCancelar"]
                 </a>
             </div>
         </form>

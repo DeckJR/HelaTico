@@ -1,14 +1,14 @@
 ﻿@model HelaTico.Application.DTOs.PreparacionDTO
 @using HelaTico.Application.DTOs
 @{
-    ViewData["Title"] = "Crear Proceso de Preparación";
+    ViewData["Title"] = Localizer["ViewTitle"];
     var listaEstaciones = (IEnumerable<EstacionDTO>)ViewBag.ListaEstaciones;
     var productosSinProceso = (IEnumerable<ProductoDTO>)ViewBag.ProductosSinProceso;
     const int ESTACION_FINAL_ID = 5;
     var estacionFinal = listaEstaciones.FirstOrDefault(e => e.IdEstacion == ESTACION_FINAL_ID);
 }
 
-<h1>Crear Proceso de Preparación</h1>
+<h1>@Localizer["ViewTitle"]</h1>
 <hr />
 
 <div class="row">
@@ -17,9 +17,9 @@
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <div class="mb-3">
-                <label asp-for="IdProducto" class="form-label"></label>
+                <label class="form-label">@Localizer["LblProducto"]</label>
                 <select asp-for="IdProducto" class="form-select">
-                    <option value="0">-- Seleccione un producto --</option>
+                    <option value="0">@Localizer["OptSeleccioneProducto"]</option>
                     @foreach (var p in productosSinProceso)
                     {
                         <option value="@p.IdProducto">@p.Nombre</option>
@@ -29,13 +29,13 @@
             </div>
 
             <div class="card mb-3">
-                <div class="card-header fw-bold">Agregar Estación al Proceso</div>
+                <div class="card-header fw-bold">@Localizer["CardAgregarEstacion"]</div>
                 <div class="card-body">
                     <div class="row g-2 align-items-end">
                         <div class="col-md-8">
-                            <label class="form-label">Estación</label>
+                            <label class="form-label">@Localizer["LblEstacion"]</label>
                             <select id="selectEstacion" class="form-select">
-                                <option value="0">-- Seleccione --</option>
+                                <option value="0">@Localizer["OptSeleccione"]</option>
                                 @foreach (var e in listaEstaciones.Where(e => e.IdEstacion != ESTACION_FINAL_ID))
                                 {
                                     <option value="@e.IdEstacion" data-nombre="@e.Descripcion">
@@ -47,7 +47,7 @@
                         <div class="col-md-4">
                             <button type="button" class="btn btn-success w-100"
                                     onclick="agregarEstacion()">
-                                <i class="bi bi-plus-circle"></i> Agregar
+                                <i class="bi bi-plus-circle"></i> @Localizer["BtnAgregar"]
                             </button>
                         </div>
                     </div>
@@ -55,17 +55,16 @@
                 </div>
             </div>
 
-            <h5>Proceso actual</h5>
+            <h5>@Localizer["HeadingProcesoActual"]</h5>
             <small class="text-muted d-block mb-2">
-                Las estaciones se agregan en el orden en que las seleccione.
-                Para cambiar el orden, elimine la estación y agréguela de nuevo en la posición deseada.
+                @Localizer["HintProceso"]
             </small>
             <table class="table table-bordered">
                 <thead class="table-light">
                     <tr>
-                        <th style="width:80px;">Paso</th>
-                        <th>Estación</th>
-                        <th style="width:100px;">Acción</th>
+                        <th style="width:80px;">@Localizer["ColPaso"]</th>
+                        <th>@Localizer["ColEstacion"]</th>
+                        <th style="width:100px;">@Localizer["ColAccion"]</th>
                     </tr>
                 </thead>
                 <tbody id="bodyEstaciones">
@@ -76,8 +75,8 @@
                             <i class="bi bi-lock-fill"></i>
                         </td>
                         <td>
-                            @(estacionFinal?.Descripcion ?? "Empaque y Entrega")
-                            <small class="text-muted">(siempre último — se agrega automáticamente)</small>
+                            @(estacionFinal?.Descripcion ?? Localizer["LblEstacionFinalDefault"].Value)
+                            <small class="text-muted">@Localizer["HintSiempreUltimo"]</small>
                         </td>
                         <td class="text-center text-muted">—</td>
                     </tr>
@@ -88,10 +87,10 @@
 
             <div class="btn-group mt-3" role="group">
                 <button type="submit" class="btn btn-success" onclick="return prepararEnvio()">
-                    <i class="bi bi-save"></i> Guardar
+                    <i class="bi bi-save"></i> @Localizer["BtnGuardar"]
                 </button>
                 <button type="button" class="btn btn-secondary" onclick="history.back()">
-                    <i class="bi bi-arrow-left"></i> Cancelar
+                    <i class="bi bi-arrow-left"></i> @Localizer["BtnCancelar"]
                 </button>
             </div>
         </form>
@@ -103,6 +102,12 @@
     <script>
         const ESTACION_FINAL_ID = @ESTACION_FINAL_ID;
         let pasos = [];
+
+        const i18nPrep = {
+            seleccioneEstacion: '@Localizer["ErrSeleccioneEstacion"]',
+            estacionYaAgregada: '@Localizer["ErrEstacionYaAgregada"]',
+            debeAgregarEstacion: '@Localizer["ErrDebeAgregarEstacion"]'
+        };
 
         function mostrarError(msg) {
             const el = document.getElementById('errorAgregar');
@@ -117,10 +122,10 @@
             const nombre = sel.options[sel.selectedIndex]?.dataset.nombre ?? '';
 
             if (!id || id === 0) {
-                mostrarError('Seleccione una estación.'); return;
+                mostrarError(i18nPrep.seleccioneEstacion); return;
             }
             if (pasos.find(p => p.idEstacion === id)) {
-                mostrarError('Esta estación ya fue agregada al proceso.'); return;
+                mostrarError(i18nPrep.estacionYaAgregada); return;
             }
 
             pasos.push({ idEstacion: id, nombre });
@@ -169,10 +174,10 @@
 
         function prepararEnvio() {
             if (pasos.length === 0) {
-                mostrarError('Debe agregar al menos una estación al proceso.');
+                mostrarError(i18nPrep.debeAgregarEstacion);
                 return false;
             }
-          
+
             const todosLosPasos = [
                 ...pasos.map((p, i) => ({ idEstacion: p.idEstacion, orden: i + 1 })),
                 { idEstacion: ESTACION_FINAL_ID, orden: pasos.length + 1 }

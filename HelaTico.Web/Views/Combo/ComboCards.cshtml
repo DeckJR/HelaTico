@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<HelaTico.Application.DTOs.ComboDTO>
 @{
-    ViewData["Title"] = "Combos";
+    ViewData["Title"] = Localizer["Heading"];
 }
-<h1>Combos</h1>
+<h1>@Localizer["Heading"]</h1>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
     @foreach (var item in Model)
@@ -18,10 +18,10 @@
                 }
                 <div class="card-body">
                     <h5 class="card-title">@item.Nombre</h5>
-                    <p class="card-text mb-1"><strong>Precio:</strong> ₡@item.Precio.ToString("N2")</p>
-                    <p class="card-text"><strong>Productos incluidos:</strong> @item.CantidadProductos</p>
+                    <p class="card-text mb-1"><strong>@Localizer["LblPrecio"]</strong> ₡@item.Precio.ToString("N2")</p>
+                    <p class="card-text"><strong>@Localizer["LblProductosIncluidos"]</strong> @item.CantidadProductos</p>
                     <a asp-action="Details" asp-route-id="@item.IdCombo" class="btn btn-primary">
-                        Ver Detalles
+                        @Localizer["BtnVerDetalles"]
                     </a>
                 </div>
             </div>

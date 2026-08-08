@@ -1,8 +1,8 @@
 ﻿@model HelaTico.Application.DTOs.ComboDTO
 @{
-    ViewData["Title"] = "Detalle del Combo";
+    ViewData["Title"] = Localizer["ViewTitle"];
 }
-<h1>Detalle del Combo</h1>
+<h1>@Localizer["ViewTitle"]</h1>
 <div class="row">
     <div class="col">
         @if (Model.Imagen != null)
@@ -14,19 +14,19 @@
         }
     </div>
     <div class="col">
-        <h4>Combo</h4>
+        <h4>@Localizer["LblCombo"]</h4>
         <hr />
         <dl class="row">
-            <dt class="col-sm-3">Nombre</dt>
+            <dt class="col-sm-3">@Localizer["LblNombre"]</dt>
             <dd class="col-sm-9">@Model.Nombre</dd>
 
-            <dt class="col-sm-3">Descripción</dt>
+            <dt class="col-sm-3">@Localizer["LblDescripcion"]</dt>
             <dd class="col-sm-9">@Model.Descripcion</dd>
 
-            <dt class="col-sm-3">Precio</dt>
+            <dt class="col-sm-3">@Localizer["LblPrecio"]</dt>
             <dd class="col-sm-9">₡@Model.Precio.ToString("N2")</dd>
 
-            <dt class="col-sm-3">Estado</dt>
+            <dt class="col-sm-3">@Localizer["LblEstado"]</dt>
             <dd class="col-sm-9">
                 <span class="badge @(Model.EstadoCombo == "Disponible" ? "bg-success" : "bg-secondary")">
                     @Model.EstadoCombo
@@ -34,7 +34,7 @@
             </dd>
         </dl>
         <div>
-            <h5>Productos incluidos (@Model.Productos.Count):</h5>
+            <h5>@string.Format(Localizer["LblProductosIncluidos"].Value, Model.Productos.Count)</h5>
             <ul>
                 @foreach (var producto in Model.Productos)
                 {
@@ -46,6 +46,6 @@
 </div>
 <div class="btn-group mt-3" role="group">
     <button type="button" class="btn btn-secondary" onclick="history.back()">
-        Volver
+        @Localizer["BtnVolver"]
     </button>
 </div>

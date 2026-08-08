@@ -1,10 +1,10 @@
 ﻿@model HelaTico.Application.DTOs.MenuDTO
 @{
-    ViewData["Title"] = "Crear Menú";
+    ViewData["Title"] = Localizer["ViewTitle"];
 }
 
 <div class="d-flex justify-content-between align-items-center">
-    <h1>Crear Menú</h1>   
+    <h1>@Localizer["ViewTitle"]</h1>
 </div>
 <hr />
 
@@ -20,7 +20,7 @@
 
             <div class="mb-3">
                 <label asp-for="Nombre" class="form-label"></label>
-                <input asp-for="Nombre" class="form-control" placeholder="Ej: Menú de verano" />
+                <input asp-for="Nombre" class="form-control" placeholder="@Localizer["PlaceholderNombre"]" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
 
@@ -37,17 +37,17 @@
                 </div>
             </div>
             <span id="errorFechas" class="text-danger mb-3" style="display:none;">
-                La fecha de inicio no puede ser mayor a la fecha final
+                @Localizer["ErrorFechas"]
             </span>
 
             <div class="mb-3">
-                <label class="form-label d-block">Estado</label>
+                <label class="form-label d-block">@Localizer["LblEstado"]</label>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio"
                            name="Estado" id="estadoDisponible"
                            value="1" checked />
                     <label class="form-check-label" for="estadoDisponible">
-                        Disponible
+                        @Localizer["EstadoDisponible"]
                     </label>
                 </div>
                 <div class="form-check form-check-inline">
@@ -55,22 +55,22 @@
                            name="Estado" id="estadoNoDisponible"
                            value="2" />
                     <label class="form-check-label" for="estadoNoDisponible">
-                        No Disponible
+                        @Localizer["EstadoNoDisponible"]
                     </label>
                 </div>
                 <span asp-validation-for="EstadoMenu" class="text-danger d-block"></span>
             </div>
 
             <div class="mb-3">
-                <label class="form-label fw-bold">Productos incluidos</label>
+                <label class="form-label fw-bold">@Localizer["LblProductosIncluidos"]</label>
                 <small class="text-muted d-block mb-2">
-                    Seleccione los productos que formarán parte de este menú.
+                    @Localizer["HintProductos"]
                 </small>
                 <table class="table table-sm table-bordered">
                     <thead class="table-light">
                         <tr>
-                            <th style="width:80px;">Incluir</th>
-                            <th>Producto</th>
+                            <th style="width:80px;">@Localizer["ColIncluir"]</th>
+                            <th>@Localizer["ColProducto"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,15 +93,15 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label fw-bold">Combos incluidos</label>
+                <label class="form-label fw-bold">@Localizer["LblCombosIncluidos"]</label>
                 <small class="text-muted d-block mb-2">
-                    Seleccione los combos que formarán parte de este menú (opcional).
+                    @Localizer["HintCombos"]
                 </small>
                 <table class="table table-sm table-bordered">
                     <thead class="table-light">
                         <tr>
-                            <th style="width:80px;">Incluir</th>
-                            <th>Combo</th>
+                            <th style="width:80px;">@Localizer["ColIncluir"]</th>
+                            <th>@Localizer["ColCombo"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,10 +125,10 @@
 
             <div class="btn-group mt-3" role="group">
                 <button type="button" class="btn btn-secondary" onclick="history.back()">
-                    Volver
+                    @Localizer["BtnVolver"]
                 </button>
                 <button type="submit" class="btn btn-success">
-                    <i class="bi bi-save"></i> Guardar cambios
+                    <i class="bi bi-save"></i> @Localizer["BtnGuardarCambios"]
                 </button>
             </div>
         </form>

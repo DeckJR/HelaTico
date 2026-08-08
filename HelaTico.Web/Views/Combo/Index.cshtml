@@ -1,25 +1,25 @@
 ﻿@model IEnumerable<HelaTico.Application.DTOs.ComboDTO>
 @{
-    ViewData["Title"] = "Mantenimiento de Combos";
+    ViewData["Title"] = Localizer["ViewTitle"];
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Combos</h1>
+    <h1>@Localizer["Heading"]</h1>
     <a asp-action="Create" class="btn btn-success">
-        <i class="bi bi-plus-circle"></i> Nuevo Combo
+        <i class="bi bi-plus-circle"></i> @Localizer["BtnNuevoCombo"]
     </a>
 </div>
 
 <table class="table table-striped table-hover">
     <thead>
         <tr>
-            <th># Combo</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Estado</th>
-            <th>Productos</th>
-            <th>Acciones</th>
+            <th>@Localizer["ColNumCombo"]</th>
+            <th>@Localizer["ColNombre"]</th>
+            <th>@Localizer["ColDescripcion"]</th>
+            <th>@Localizer["ColPrecio"]</th>
+            <th>@Localizer["ColEstado"]</th>
+            <th>@Localizer["ColProductos"]</th>
+            <th>@Localizer["ColAcciones"]</th>
         </tr>
     </thead>
     <tbody>
@@ -32,7 +32,7 @@
                 <td>₡@item.Precio.ToString("N2")</td>
                 <td>
                     <span class="badge @(item.EstadoCombo == "Disponible" ? "bg-success" : "bg-secondary")">
-                        @item.EstadoCombo
+                        @(item.EstadoCombo == "Disponible" ? Localizer["EstadoDisponible"] : Localizer["EstadoNoDisponible"])
                     </span>
                 </td>
                 <td>@item.CantidadProductos</td>
@@ -41,17 +41,17 @@
                         <a asp-action="Details"
                            asp-route-id="@item.IdCombo"
                            class="btn btn-primary btn-sm">
-                            <i class="bi bi-eye"></i> Detalle
+                            <i class="bi bi-eye"></i> @Localizer["BtnDetalle"]
                         </a>
                         <a asp-action="Edit"
                            asp-route-id="@item.IdCombo"
                            class="btn btn-warning btn-sm">
-                            <i class="bi bi-pencil"></i> Editar
+                            <i class="bi bi-pencil"></i> @Localizer["BtnEditar"]
                         </a>
                         <button type="button"
                                 class="btn btn-danger btn-sm"
                                 onclick="confirmarEliminar(@item.IdCombo, '@item.Nombre')">
-                            <i class="bi bi-trash"></i> Eliminar
+                            <i class="bi bi-trash"></i> @Localizer["BtnEliminar"]
                         </button>
                     </div>
 
@@ -71,16 +71,24 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        const i18nCombo = {
+            title: '@Localizer["ConfirmTitle"]',
+            prefix: '@Localizer["ConfirmHtmlPrefix"]',
+            suffix: '@Localizer["ConfirmHtmlSuffix"]',
+            confirmBtn: '@Localizer["ConfirmYes"]',
+            cancelBtn: '@Localizer["ConfirmCancel"]'
+        };
+
         function confirmarEliminar(id, nombre) {
             Swal.fire({
-                title: '¿Eliminar combo?',
-                html: `El combo <strong>${nombre}</strong> pasará a estado <strong>No Disponible</strong>.`,
+                title: i18nCombo.title,
+                html: `${i18nCombo.prefix} <strong>${nombre}</strong> ${i18nCombo.suffix}`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#c3342d',
                 cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
+                confirmButtonText: i18nCombo.confirmBtn,
+                cancelButtonText: i18nCombo.cancelBtn
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById(`formEliminar_${id}`).submit();

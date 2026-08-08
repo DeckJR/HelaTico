@@ -12,12 +12,40 @@ using HelaTico.Application.Profiles;
 using Hangfire;
 using HelaTico.Application.Jobs.Interfaces;
 using HelaTico.Web.Jobs;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using HelaTico.Web.Resources.Views.Shared;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using HelaTico.Application.Config;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization(options =>
+    {
+        options.DataAnnotationLocalizerProvider = (type, factory) =>
+            factory.Create(typeof(SharedResource));
+    });
 
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+var supportedCultures = new[] { "es", "en" };
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.SetDefaultCulture(supportedCultures[0])
+        .AddSupportedCultures(supportedCultures)
+        .AddSupportedUICultures(supportedCultures);
+
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        new CookieRequestCultureProvider(),
+        new AcceptLanguageHeaderRequestCultureProvider()
+    };
+});
 //Configurar D.I. //Repository 
 builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
 builder.Services.AddTransient<IRepositoryCombo, RepositoryCombo>();
@@ -26,6 +54,7 @@ builder.Services.AddScoped<IRepositoryPreparacion, RepositoryPreparacion>();
 builder.Services.AddTransient<IRepositoryCategoria, RepositoryCategoria>();
 builder.Services.AddTransient<IRepositoryIngrediente, RepositoryIngrediente>();
 builder.Services.AddScoped<IRepositoryEstacion, RepositoryEstacion>();
+builder.Services.AddTransient<IRepositoryUsuario, RepositoryUsuario>();
 
 //Services 
 builder.Services.AddTransient<IServiceProducto, ServiceProducto>();
@@ -35,6 +64,7 @@ builder.Services.AddScoped<IServicePreparacion, ServicePreparacion>();
 builder.Services.AddTransient<IServiceCategoria, ServiceCategoria>();
 builder.Services.AddTransient<IServiceIngrediente, ServiceIngrediente>();
 builder.Services.AddScoped<IServiceEstacion, ServiceEstacion>();
+builder.Services.AddTransient<IServiceUsuario, ServiceUsuario>();
 
 
 //Configurar Automapper 
@@ -46,6 +76,7 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<ComboProfile>();
     config.AddProfile<MenuProfile>();
     config.AddProfile<PreparacionProfile>();
+    config.AddProfile<UsuarioProfile>();
 });
 
 
@@ -88,7 +119,21 @@ builder.Services.AddHangfireServer();
 // Registrar el Job
 builder.Services.AddScoped<IMenuStatusJob, MenuStatusJob>();
 
+
+builder.Services.Configure<AppConfig>(builder.Configuration);
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login/Index";
+        options.AccessDeniedPath = "/Login/Forbidden";
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+        options.SlidingExpiration = true;
+    });
+
 var app = builder.Build();
+
+
 
 // Activar el Dashboard de Hangfire
 app.UseHangfireDashboard("/hangfire");
@@ -118,8 +163,13 @@ app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
+//Empieza el traductor
+var localizationOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
+app.UseRequestLocalization(localizationOptions);
+
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Activar Antiforgery  
