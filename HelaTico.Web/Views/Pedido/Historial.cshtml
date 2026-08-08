@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Historial de Pedidos";
+}
+
+<h1>Historial de Pedidos</h1>
+
+<div class="row mb-3 g-2">
+    <div class="col-md-3">
+        <label class="form-label">Fecha</label>
+        <input type="date" id="filtroFecha" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Estado</label>
+        <select id="filtroEstado" class="form-select">
+            <option value="">Todos</option>
+            <option value="1">Pendiente de pago</option>
+            <option value="2">Aceptada</option>
+            <option value="3">Preparación</option>
+            <option value="4">Procesando</option>
+            <option value="5">Entregada</option>
+        </select>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button id="btnLimpiar" class="btn btn-secondary">Limpiar filtros</button>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Encargado</th>
+            <th>Estado</th>
+            <th>Total</th>
+            <th>Detalle</th>
+        </tr>
+    </thead>
+    <tbody id="bodyPedidos">
+        <tr><td colspan="7" class="text-center text-muted">Cargando...</td></tr>
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        const filtroFecha = document.getElementById('filtroFecha');
+        const filtroEstado = document.getElementById('filtroEstado');
+        const btnLimpiar = document.getElementById('btnLimpiar');
+        const bodyPedidos = document.getElementById('bodyPedidos');
+
+        async function cargarPedidos() {
+            bodyPedidos.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Cargando...</td></tr>';
+
+            const params = new URLSearchParams();
+            if (filtroFecha.value) params.append('fecha', filtroFecha.value);
+            if (filtroEstado.value) params.append('estado', filtroEstado.value);
+
+            const response = await fetch(`/Pedido/HistorialData?${params.toString()}`);
+            const pedidos = await response.json();
+
+            if (pedidos.length === 0) {
+                bodyPedidos.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No hay pedidos.</td></tr>';
+                return;
+            }
+
+            bodyPedidos.innerHTML = pedidos.map(p => `
+                <tr>
+                    <td>${p.idPedido}</td>
+                    <td>${new Date(p.fecha).toLocaleDateString()}</td>
+                    <td>${p.nombreCliente}</td>
+                    <td>${p.nombreEmpleado}</td>
+                    <td><span class="badge bg-info">${p.estadoPedidoTexto}</span></td>
+                    <td>₡${Number(p.total).toLocaleString('es-CR', {minimumFractionDigits: 2})}</td>
+                    <td>
+                        <a href="/Pedido/Detalle/${p.idPedido}" class="btn btn-primary btn-sm">
+                            Ver Detalle
+                        </a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        filtroFecha.addEventListener('change', cargarPedidos);
+        filtroEstado.addEventListener('change', cargarPedidos);
+        btnLimpiar.addEventListener('click', () => {
+            filtroFecha.value = '';
+            filtroEstado.value = '';
+            cargarPedidos();
+        });
+
+        cargarPedidos();
+    </script>
+}

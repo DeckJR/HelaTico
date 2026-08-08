@@ -171,4 +171,7 @@
   <data name="btnLogout" xml:space="preserve">
     <value>Log Out</value>
   </data>
+  <data name="NavHistorialPedidos" xml:space="preserve">
+    <value>Purchase history</value>
+  </data>
 </root>

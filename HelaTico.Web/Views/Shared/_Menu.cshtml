@@ -140,6 +140,17 @@
                     </ul>
                 </li>
 
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           asp-controller="Pedido"
+                           asp-action="Historial">
+                            <i class="bi bi-receipt"></i> @SharedLocalizer["NavHistorialPedidos"]
+                        </a>
+                    </li>
+                }
+
             </ul>
 
             <div class="d-flex align-items-center ms-auto">
