@@ -33,6 +33,20 @@ namespace HelaTico.Infraestructure.Repository.Implementations
             return await query.OrderByDescending(p => p.Fecha).ToListAsync();
         }
 
+        public async Task<Pedido?> FindByIdAsync(int id)
+        {
+            return await _context.Pedido
+                .Include(p => p.IdClienteNavigation)
+                .Include(p => p.IdEmpleadoNavigation)
+                .Include(p => p.IdTipoEntregaNavigation)
+                .Include(p => p.DetallePedido)
+                    .ThenInclude(d => d.IdProductoNavigation)
+                .Include(p => p.DetallePedido)
+                    .ThenInclude(d => d.IdComboNavigation)
+                .Include(p => p.Pago)
+                .FirstOrDefaultAsync(p => p.IdPedido == id);
+        }
+
         private IQueryable<Pedido> BaseQuery()
         {
             return _context.Pedido
@@ -49,11 +63,8 @@ namespace HelaTico.Infraestructure.Repository.Implementations
                 var fin = fecha.Value.ToDateTime(TimeOnly.MaxValue);
                 query = query.Where(p => p.Fecha >= inicio && p.Fecha <= fin);
             }
-
             if (estadoPedido.HasValue)
-            {
                 query = query.Where(p => p.EstadoPedido == estadoPedido.Value);
-            }
 
             return query;
         }

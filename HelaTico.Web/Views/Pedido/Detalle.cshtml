@@ -1,0 +1,147 @@
+﻿@model HelaTico.Application.DTOs.PedidoDetalleDTO
+@{
+    ViewData["Title"] = "Detalle del Pedido #" + Model.IdPedido;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Pedido #@Model.IdPedido</h1>
+    <button type="button" class="btn btn-secondary" onclick="history.back()">
+        <i class="bi bi-arrow-left"></i> Volver
+    </button>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header text-white d-flex justify-content-between align-items-center"
+         style="background:#0a4195;">
+        <span class="fw-bold fs-5">🍦 HelaTico — Comprobante de Pedido</span>
+        <span class="badge bg-light text-dark fs-6">@Model.EstadoPedidoTexto</span>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h6 class="fw-bold text-muted">DATOS DEL CLIENTE</h6>
+                <p class="mb-1"><strong>Nombre:</strong> @Model.NombreCliente</p>
+                <p class="mb-1"><strong>Correo:</strong> @Model.CorreoCliente</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <h6 class="fw-bold text-muted">DATOS DEL PEDIDO</h6>
+                <p class="mb-1"><strong>Fecha:</strong> @Model.Fecha.ToString("dd/MM/yyyy HH:mm")</p>
+                @if (!string.IsNullOrEmpty(Model.NombreEmpleado))
+                {
+                    <p class="mb-1"><strong>Atendido por:</strong> @Model.NombreEmpleado</p>
+                }
+                <p class="mb-1"><strong>Tipo de entrega:</strong> @Model.TipoEntrega</p>
+                @if (!string.IsNullOrWhiteSpace(Model.DireccionEntrega) && Model.TipoEntrega == "Domicilio")
+                {
+                    <p class="mb-1"><strong>Dirección:</strong> @Model.DireccionEntrega</p>
+                }
+            </div>
+        </div>
+
+        <hr />
+
+        <h6 class="fw-bold text-muted mb-3">DETALLE</h6>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered align-middle">
+                <thead style="background:#0a4195; color:white;">
+                    <tr>
+                        <th>Artículo</th>
+                        <th>Tipo</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-end">Subtotal</th>
+                        <th class="text-end">Impuesto</th>
+                        <th class="text-end">Total Línea</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var linea in Model.Detalle)
+                    {
+                        <tr>
+                            <td>@linea.NombreItem</td>
+                            <td>
+                                <span class="badge @(linea.TipoItem == "Producto" ? "bg-primary" : "bg-success")">
+                                    @linea.TipoItem
+                                </span>
+                            </td>
+                            <td class="text-center">@linea.Cantidad</td>
+                            <td class="text-end">₡@linea.SubTotal.ToString("N2")</td>
+                            <td class="text-end">₡@linea.Impuesto.ToString("N2")</td>
+                            <td class="text-end fw-bold">₡@linea.TotalLinea.ToString("N2")</td>
+                            <td class="text-muted small">@linea.Observaciones</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row justify-content-end mt-3">
+            <div class="col-md-4">
+                <table class="table table-sm">
+                    <tbody>
+                        <tr>
+                            <td class="text-muted">Subtotal</td>
+                            <td class="text-end">₡@Model.SubTotal.ToString("N2")</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Impuesto</td>
+                            <td class="text-end">₡@Model.Impuesto.ToString("N2")</td>
+                        </tr>
+                        @if (Model.CuotaServicio > 0)
+                        {
+                            <tr>
+                                <td class="text-muted">Cuota de servicio</td>
+                                <td class="text-end">₡@Model.CuotaServicio.ToString("N2")</td>
+                            </tr>
+                        }
+                        @if (Model.CostoEnvio > 0)
+                        {
+                            <tr>
+                                <td class="text-muted">Costo de envío</td>
+                                <td class="text-end">₡@Model.CostoEnvio.ToString("N2")</td>
+                            </tr>
+                        }
+                        <tr class="table-dark fw-bold fs-6">
+                            <td>TOTAL</td>
+                            <td class="text-end">₡@Model.Total.ToString("N2")</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        @if (Model.Pago != null)
+        {
+            <hr />
+            <h6 class="fw-bold text-muted mb-3">PAGO</h6>
+            <div class="row">
+                <div class="col-md-4">
+                    <p class="mb-1">
+                        <strong>Método:</strong>
+                        <span class="badge @(Model.Pago.MetodoPagoTexto == "Efectivo" ? "bg-success" : "bg-primary")">
+                            @Model.Pago.MetodoPagoTexto
+                        </span>
+                    </p>
+                    <p class="mb-1"><strong>Monto pagado:</strong> ₡@Model.Pago.Monto.ToString("N2")</p>
+                    @if (Model.Pago.MetodoPagoTexto == "Efectivo" && Model.Pago.Vuelto > 0)
+                    {
+                        <p class="mb-1"><strong>Vuelto:</strong> ₡@Model.Pago.Vuelto.ToString("N2")</p>
+                    }
+                    <p class="mb-1 text-muted small">
+                        Procesado el @Model.Pago.Fecha.ToString("dd/MM/yyyy HH:mm")
+                    </p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning mt-3">
+                <i class="bi bi-exclamation-triangle"></i>
+                Este pedido aún no tiene pago registrado.
+            </div>
+        }
+
+    </div>
+</div>

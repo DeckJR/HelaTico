@@ -30,5 +30,26 @@ namespace HelaTico.Web.Controllers
 
             return Json(resultado);
         }
+        public async Task<IActionResult> Detalle(int id)
+        {
+            var detalle = await _servicePedido.ObtenerDetalleAsync(id);
+
+            if (detalle == null)
+                return NotFound();
+
+            // Un cliente solo puede ver sus propios pedidos 
+            if (User.IsInRole("Cliente"))
+            {
+                int idLogueado = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                var pedidoCliente = (await _servicePedido.ObtenerHistorialAsync(
+                    idLogueado, true, null, null))
+                    .Any(p => p.IdPedido == id);
+
+                if (!pedidoCliente)
+                    return Forbid();
+            }
+
+            return View(detalle);
+        }
     }
 }
