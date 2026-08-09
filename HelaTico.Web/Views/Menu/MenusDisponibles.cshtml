@@ -7,6 +7,8 @@
     @Localizer["ViewTitle"]
 </h2>
 
+@Html.AntiForgeryToken()
+
 @if (Model == null)
 {
     <div class="text-center mt-5">
@@ -41,8 +43,17 @@ else
                         @foreach (var p in grupo)
                         {
                             <div class="col-md-4 mb-3">
-                                <div style="background:white; padding:15px; border-radius:15px;
-                                            box-shadow:0 3px 10px rgba(0,0,0,0.1); text-align:center;">
+                                <div class="carta-item"
+                                     style="background:white; padding:15px; border-radius:15px;
+                                            box-shadow:0 3px 10px rgba(0,0,0,0.1); text-align:center; cursor:pointer;"
+                                     data-bs-toggle="modal"
+                                     data-bs-target="#modalItem"
+                                     data-tipo="Producto"
+                                     data-id="@p.IdProducto"
+                                     data-nombre="@p.Nombre"
+                                     data-precio="@p.Precio.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                     data-descripcion="@p.Descripcion"
+                                     data-imagen="@(p.Imagen != null && p.Imagen.Length > 0 ? "data:image/png;base64," + Convert.ToBase64String(p.Imagen) : "/images/no-image.png")">
                                     @if (p.Imagen != null && p.Imagen.Length > 0)
                                     {
                                         <img src="data:image/png;base64,@Convert.ToBase64String(p.Imagen)"
@@ -77,8 +88,17 @@ else
                     @foreach (var c in Model.Combos)
                     {
                         <div class="col-md-4 mb-3">
-                            <div style="background:white; padding:15px; border-radius:15px;
-                                        box-shadow:0 3px 10px rgba(0,0,0,0.1); text-align:center;">
+                            <div class="carta-item"
+                                 style="background:white; padding:15px; border-radius:15px;
+                                        box-shadow:0 3px 10px rgba(0,0,0,0.1); text-align:center; cursor:pointer;"
+                                 data-bs-toggle="modal"
+                                 data-bs-target="#modalItem"
+                                 data-tipo="Combo"
+                                 data-id="@c.IdCombo"
+                                 data-nombre="@c.Nombre"
+                                 data-precio="@c.Precio.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                 data-descripcion="@c.Descripcion"
+                                 data-imagen="@(c.Imagen != null && c.Imagen.Length > 0 ? "data:image/png;base64," + Convert.ToBase64String(c.Imagen) : "/images/no-image.png")">
                                 @if (c.Imagen != null && c.Imagen.Length > 0)
                                 {
                                     <img src="data:image/png;base64,@Convert.ToBase64String(c.Imagen)"
@@ -106,4 +126,99 @@ else
 
         </div>
     </div>
+}
+
+@* ── Modal de detalle + agregar al carrito ── *@
+<div class="modal fade" id="modalItem" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalItemNombre"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalItemImagen" src="" style="width:100%; max-height:220px; object-fit:cover; border-radius:10px;" />
+                <p id="modalItemDescripcion" class="text-muted mt-3"></p>
+                <h5 id="modalItemPrecio" class="text-success"></h5>
+
+                <div class="d-flex justify-content-center align-items-center mt-3">
+                    <button type="button" class="btn btn-outline-secondary" id="btnRestar">-</button>
+                    <input type="number" id="inputCantidad" class="form-control text-center mx-2" style="width:70px;" value="1" min="1" />
+                    <button type="button" class="btn btn-outline-secondary" id="btnSumar">+</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnAgregarCarrito">
+                    <i class="bi bi-cart-plus"></i> Agregar al carrito
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const modalEl = document.getElementById('modalItem');
+        const modalNombre = document.getElementById('modalItemNombre');
+        const modalImagen = document.getElementById('modalItemImagen');
+        const modalDescripcion = document.getElementById('modalItemDescripcion');
+        const modalPrecio = document.getElementById('modalItemPrecio');
+        const inputCantidad = document.getElementById('inputCantidad');
+        const btnAgregarCarrito = document.getElementById('btnAgregarCarrito');
+
+        let itemActual = null;
+
+        modalEl.addEventListener('show.bs.modal', function (event) {
+            const card = event.relatedTarget;
+
+            itemActual = {
+                tipo: card.dataset.tipo,
+                id: card.dataset.id,
+                nombre: card.dataset.nombre,
+                precio: card.dataset.precio
+            };
+
+            modalNombre.textContent = card.dataset.nombre;
+            modalImagen.src = card.dataset.imagen;
+            modalDescripcion.textContent = card.dataset.descripcion;
+            modalPrecio.textContent = '₡' + Number(card.dataset.precio).toLocaleString('es-CR', { minimumFractionDigits: 2 });
+            inputCantidad.value = 1;
+        });
+
+        document.getElementById('btnSumar').addEventListener('click', () => {
+            inputCantidad.value = parseInt(inputCantidad.value) + 1;
+        });
+
+        document.getElementById('btnRestar').addEventListener('click', () => {
+            const actual = parseInt(inputCantidad.value);
+            if (actual > 1) inputCantidad.value = actual - 1;
+        });
+
+        btnAgregarCarrito.addEventListener('click', async () => {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            const formData = new URLSearchParams();
+            formData.append('tipo', itemActual.tipo);
+            formData.append('id', itemActual.id);
+            formData.append('nombre', itemActual.nombre);
+            formData.append('precio', itemActual.precio);
+            formData.append('cantidad', inputCantidad.value);
+            formData.append('imagenUrl', modalImagen.src);
+            if (token) formData.append('__RequestVerificationToken', token);
+
+            const response = await fetch('/Carrito/Agregar', { method: 'POST', body: formData });
+            const data = await response.json();
+
+            if (data.exito) {
+                actualizarBadgeCarrito(data.cantidadTotal);
+                bootstrap.Modal.getInstance(modalEl).hide();
+            }
+        });
+
+        function actualizarBadgeCarrito(cantidad) {
+            const badge = document.getElementById('badgeCarrito');
+            if (badge) badge.textContent = cantidad;
+        }
+    </script>
 }

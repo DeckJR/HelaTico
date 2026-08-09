@@ -1,10 +1,13 @@
 ﻿@using Microsoft.Extensions.Localization
+@using HelaTico.Web.Helpers
 @inject IStringLocalizerFactory LocalizerFactory
 @{
     var SharedLocalizer =
         LocalizerFactory.Create(
             "Views.Shared.SharedResource",
             "HelaTico.Web");
+
+    var cantidadCarrito = CarritoSessionHelper.ObtenerCantidadTotal(Context.Session);
 }
 
 <style>
@@ -167,6 +170,13 @@
                         <option value="en" selected="@(currentCulture == "en")">English</option>
                     </select>
                 </form>
+
+                <a asp-controller="Carrito" asp-action="Ver" class="btn btn-outline-light btn-sm me-3 position-relative">
+                    <i class="bi bi-cart3"></i>
+                    <span id="badgeCarrito" class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">
+                        @cantidadCarrito
+                    </span>
+                </a>
 
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {

@@ -1,0 +1,150 @@
+﻿@model HelaTico.Application.DTOs.CarritoResumenDTO
+@{
+    ViewData["Title"] = "Carrito de Compras";
+}
+
+<h1 class="mb-4">Carrito de Compras</h1>
+
+@Html.AntiForgeryToken()
+
+<div id="contenedorCarritoVacio" style="display:@(Model.Items.Any() ? "none" : "block");">
+    <div class="text-center mt-5">
+        <i class="bi bi-cart-x" style="font-size:3rem; color:#aaa;"></i>
+        <p class="mt-3 text-muted fs-5">Tu carrito está vacío.</p>
+        <a asp-controller="Menu" asp-action="MenusDisponibles" class="btn btn-primary">Ver Menú</a>
+    </div>
+</div>
+
+<div id="contenedorCarritoConItems" style="display:@(Model.Items.Any() ? "block" : "none");">
+    <div class="row">
+        <div class="col-md-8">
+            <div id="listaItemsCarrito">
+                @foreach (var item in Model.Items)
+                {
+                    <div class="card mb-3 item-carrito" data-tipo="@item.Tipo" data-id="@item.Id" data-precio="@item.Precio.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                        <div class="card-body d-flex align-items-center">
+                            <img src="@item.ImagenUrl" style="width:80px; height:80px; object-fit:cover; border-radius:10px;" class="me-3" />
+
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">@item.Nombre</h6>
+                                <p class="text-muted mb-0">₡@item.Precio.ToString("N2") c/u</p>
+                            </div>
+
+                            <div class="d-flex align-items-center me-3">
+                                <button type="button" class="btn btn-outline-secondary btn-sm btn-restar">-</button>
+                                <input type="number" class="form-control form-control-sm text-center mx-2 input-cantidad-item"
+                                       style="width:60px;" value="@item.Cantidad" min="1" />
+                                <button type="button" class="btn btn-outline-secondary btn-sm btn-sumar">+</button>
+                            </div>
+
+                            <div class="text-end me-3" style="min-width:100px;">
+                                <strong class="subtotal-linea">₡@((item.Precio * item.Cantidad).ToString("N2"))</strong>
+                            </div>
+
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-eliminar">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <strong>Resumen</strong>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span id="resumenSubTotal">₡@Model.SubTotal.ToString("N2")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Impuesto (13%):</span>
+                        <span id="resumenImpuesto">₡@Model.Impuesto.ToString("N2")</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between fw-bold fs-5">
+                        <span>Total:</span>
+                        <span id="resumenTotal">₡@Model.Total.ToString("N2")</span>
+                    </div>
+
+                    <button type="button" class="btn btn-success w-100 mt-3" disabled title="Pantalla de registro de pedido pendiente">
+                        Pagar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        function actualizarBadgeCarrito(cantidad) {
+            const badge = document.getElementById('badgeCarrito');
+            if (badge) badge.textContent = cantidad;
+        }
+
+        function actualizarResumen(data) {
+            document.getElementById('resumenSubTotal').textContent = '₡' + Number(data.subTotal).toLocaleString('es-CR', { minimumFractionDigits: 2 });
+            document.getElementById('resumenImpuesto').textContent = '₡' + Number(data.impuesto).toLocaleString('es-CR', { minimumFractionDigits: 2 });
+            document.getElementById('resumenTotal').textContent = '₡' + Number(data.total).toLocaleString('es-CR', { minimumFractionDigits: 2 });
+            actualizarBadgeCarrito(data.cantidadTotal);
+        }
+
+        function mostrarCarritoVacio() {
+            document.getElementById('contenedorCarritoConItems').style.display = 'none';
+            document.getElementById('contenedorCarritoVacio').style.display = 'block';
+        }
+
+        document.getElementById('listaItemsCarrito').addEventListener('click', async function (e) {
+            const card = e.target.closest('.item-carrito');
+            if (!card) return;
+
+            const tipo = card.dataset.tipo;
+            const id = card.dataset.id;
+            const precio = parseFloat(card.dataset.precio);
+            const inputCantidad = card.querySelector('.input-cantidad-item');
+
+            if (e.target.classList.contains('btn-sumar') || e.target.classList.contains('btn-restar')) {
+                let cantidad = parseInt(inputCantidad.value);
+                cantidad = e.target.classList.contains('btn-sumar') ? cantidad + 1 : Math.max(1, cantidad - 1);
+                inputCantidad.value = cantidad;
+
+                const formData = new URLSearchParams();
+                formData.append('tipo', tipo);
+                formData.append('id', id);
+                formData.append('cantidad', cantidad);
+                formData.append('__RequestVerificationToken', token);
+
+                const response = await fetch('/Carrito/ActualizarCantidad', { method: 'POST', body: formData });
+                const data = await response.json();
+
+                card.querySelector('.subtotal-linea').textContent = '₡' + (precio * cantidad).toLocaleString('es-CR', { minimumFractionDigits: 2 });
+                actualizarResumen(data);
+            }
+
+            if (e.target.closest('.btn-eliminar')) {
+                const formData = new URLSearchParams();
+                formData.append('tipo', tipo);
+                formData.append('id', id);
+                formData.append('__RequestVerificationToken', token);
+
+                const response = await fetch('/Carrito/Eliminar', { method: 'POST', body: formData });
+                const data = await response.json();
+
+                card.remove();
+
+                if (data.cantidadTotal === 0) {
+                    mostrarCarritoVacio();
+                    actualizarBadgeCarrito(0);
+                } else {
+                    actualizarResumen(data);
+                }
+            }
+        });
+    </script>
+}

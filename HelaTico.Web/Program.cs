@@ -19,7 +19,6 @@ using HelaTico.Web.Resources.Views.Shared;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using HelaTico.Application.Config;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -46,6 +45,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
         new AcceptLanguageHeaderRequestCultureProvider()
     };
 });
+
 //Configurar D.I. //Repository 
 builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
 builder.Services.AddTransient<IRepositoryCombo, RepositoryCombo>();
@@ -67,6 +67,8 @@ builder.Services.AddTransient<IServiceIngrediente, ServiceIngrediente>();
 builder.Services.AddScoped<IServiceEstacion, ServiceEstacion>();
 builder.Services.AddTransient<IServiceUsuario, ServiceUsuario>();
 builder.Services.AddTransient<IServicePedido, ServicePedido>();
+builder.Services.AddTransient<IServiceCarrito, ServiceCarrito>();
+
 
 //Configurar Automapper 
 builder.Services.AddAutoMapper(config =>
@@ -120,7 +122,6 @@ builder.Services.AddHangfireServer();
 // Registrar el Job
 builder.Services.AddScoped<IMenuStatusJob, MenuStatusJob>();
 
-
 builder.Services.Configure<AppConfig>(builder.Configuration);
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -131,6 +132,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ExpireTimeSpan = TimeSpan.FromDays(7);
         options.SlidingExpiration = true;
     });
+
+// Carrito de compras en sesión
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -169,6 +178,8 @@ var localizationOptions = app.Services.GetRequiredService<IOptions<RequestLocali
 app.UseRequestLocalization(localizationOptions);
 
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
