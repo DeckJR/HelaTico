@@ -7,7 +7,10 @@ namespace HelaTico.Application.Enums
         [Display(Name = "Efectivo")]
         Efectivo = 1,
 
-        [Display(Name = "Tarjeta")]
-        Tarjeta = 2
+        [Display(Name = "Tarjeta de crédito")]
+        Credito = 2,
+
+        [Display(Name = "Tarjeta de débito")]
+        Debito = 3
     }
 }

@@ -12,5 +12,7 @@ namespace HelaTico.Application.Services.Interfaces
         Task<List<PedidoListaDTO>> ObtenerHistorialAsync(int idUsuarioLogueado, bool esCliente, DateOnly? fecha, int? estadoPedido);
         Task<PedidoDetalleDTO?> ObtenerDetalleAsync(int idPedido);
         Task<int>RegistrarPedidoAsync(PedidoRegistroDTO dto,int idUsuarioLogueado,bool esCliente,List<CarritoItemDTO> carrito);
+        Task<ProcesarPagoDTO?>PrepararPagoAsync(int idPedido);
+        Task ProcesarPagoAsync(ProcesarPagoDTO dto);
     }
 }

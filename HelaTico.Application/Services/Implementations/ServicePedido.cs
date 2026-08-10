@@ -391,5 +391,134 @@ namespace HelaTico.Application.Services.Implementations
                 _=>estado.ToString()
             };
         }
+        public async Task<ProcesarPagoDTO?>
+    PrepararPagoAsync(int idPedido)
+        {
+            var pedido = await _repository.FindSimpleByIdAsync(idPedido);
+
+            if (pedido == null)
+                return null;
+
+            if (pedido.EstadoPedido!=(int)EstadoPedido.PendienteDePago)
+            {
+                throw new InvalidOperationException("Este pedido ya fue pagado o no se encuentra pendiente de pago.");
+            }
+
+            if (pedido.Pago.Any())
+            {
+                throw new InvalidOperationException("Este pedido ya tiene un pago registrado.");
+            }
+
+            return new ProcesarPagoDTO
+            {
+                IdPedido = pedido.IdPedido,
+
+                Total = pedido.Total
+            };
+        }
+        public async Task ProcesarPagoAsync(ProcesarPagoDTO dto)
+        {            
+            var pedido = await _repository.FindSimpleByIdAsync(dto.IdPedido);
+
+            if (pedido == null)
+            {
+                throw new InvalidOperationException("Pedido no encontrado.");
+            }
+
+            if (pedido.EstadoPedido!=(int)EstadoPedido.PendienteDePago)
+            {
+                throw new InvalidOperationException("El pedido ya fue procesado.");
+            }
+
+            if (pedido.Pago.Any())
+            {
+                throw new InvalidOperationException("Este pedido ya tiene un pago registrado.");
+            }
+
+            if (dto.MetodoPago < 1||dto.MetodoPago > 3)
+            {
+                throw new InvalidOperationException("Método de pago inválido.");
+            }
+
+            decimal montoPagado;
+            decimal vuelto = 0m;
+
+            if (dto.MetodoPago==(int)MetodoPago.Efectivo)
+            {
+                if (!dto.MontoEfectivo.HasValue)
+                {
+                    throw new InvalidOperationException("Debe indicar el monto recibido.");
+                }
+
+                if (dto.MontoEfectivo.Value<pedido.Total)
+                {
+                    throw new InvalidOperationException($"El monto recibido es insuficiente. " + $"El total es ₡{pedido.Total:N2}.");
+                }
+
+                montoPagado =dto.MontoEfectivo.Value;
+
+                vuelto = Math.Round(montoPagado-pedido.Total,2);
+            }
+            else
+            {
+                ValidarTarjeta(dto);
+                montoPagado =pedido.Total;
+                vuelto =0m;
+            }
+
+            var pago =new Pago
+                {
+                    IdPedido =pedido.IdPedido,
+                    MetodoPago =dto.MetodoPago,
+                    Monto =montoPagado,
+                    Vuelto = vuelto, 
+                    Fecha = DateTime.Now
+                };
+            await _repository.AddPagoAsync(pago);
+
+            await _repository.CambiarEstadoAsync(pedido.IdPedido,(int)EstadoPedido.Aceptada);
+        }
+        private static void ValidarTarjeta(ProcesarPagoDTO dto)
+        {
+            string numero =(dto.NumeroTarjeta??string.Empty).Replace(" ", "").Replace("-", "");
+
+            if (numero.Length < 13||numero.Length > 19||!numero.All(char.IsDigit))
+            {
+                throw new InvalidOperationException("El número de tarjeta no es válido.");
+            }
+
+            if (string.IsNullOrWhiteSpace(dto.NombreTarjeta))
+            {
+                throw new InvalidOperationException("Debe indicar el nombre del titular.");
+            }
+
+            if (string.IsNullOrWhiteSpace(dto.VencimientoTarjeta)||dto.VencimientoTarjeta.Length != 5||dto.VencimientoTarjeta[2] != '/')
+            {
+                throw new InvalidOperationException("La fecha de vencimiento debe utilizar el formato MM/AA.");
+            }
+
+            var partes =dto.VencimientoTarjeta.Split('/');
+
+            if (partes.Length != 2||!int.TryParse(partes[0],out int mes)||!int.TryParse(partes[1],out int anio)||mes < 1||mes > 12)
+            {
+                throw new InvalidOperationException("La fecha de vencimiento no es válida.");
+            }
+
+            int anioCompleto =2000 + anio;
+
+            var ultimoDiaMes = new DateTime(anioCompleto,mes,DateTime.DaysInMonth(anioCompleto,mes));
+
+            if (ultimoDiaMes.Date<DateTime.Today)
+            {
+                throw new InvalidOperationException("La tarjeta está vencida.");
+            }
+
+            string cvv =dto.CvvTarjeta??string.Empty;
+
+            if ((cvv.Length != 3&&cvv.Length != 4)||!cvv.All(char.IsDigit))
+            {
+                throw new InvalidOperationException("El CVV no es válido.");
+            }
+        }
     }
 }

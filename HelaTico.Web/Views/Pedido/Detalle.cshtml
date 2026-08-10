@@ -114,23 +114,41 @@
 
         @if (Model.Pago != null)
         {
-            <hr />
-            <h6 class="fw-bold text-muted mb-3">PAGO</h6>
-            <div class="row">
-                <div class="col-md-4">
-                    <p class="mb-1">
+            <div class="card mt-3">
+
+                <div class="card-header">
+                    <strong>
+                        Pago
+                    </strong>
+                </div>
+
+                <div class="card-body">
+
+                    <p>
                         <strong>Método:</strong>
-                        <span class="badge @(Model.Pago.MetodoPagoTexto == "Efectivo" ? "bg-success" : "bg-primary")">
-                            @Model.Pago.MetodoPagoTexto
-                        </span>
+                        @Model.Pago.MetodoPagoTexto
                     </p>
-                    <p class="mb-1"><strong>Monto pagado:</strong> ₡@Model.Pago.Monto.ToString("N2")</p>
-                    @if (Model.Pago.MetodoPagoTexto == "Efectivo" && Model.Pago.Vuelto > 0)
+
+                    <p>
+                        <strong>Monto pagado:</strong>
+                        ₡@Model.Pago.Monto.ToString("N2")
+                    </p>
+
+                    @if (Model.Pago.Vuelto > 0)
                     {
-                        <p class="mb-1"><strong>Vuelto:</strong> ₡@Model.Pago.Vuelto.ToString("N2")</p>
+                        <p>
+                            <strong>Vuelto:</strong>
+
+                            ₡@Model.Pago.Vuelto.ToString("N2")
+                        </p>
                     }
-                    <p class="mb-1 text-muted small">
-                        Procesado el @Model.Pago.Fecha.ToString("dd/MM/yyyy HH:mm")
+
+                    <p>
+                        <strong>Fecha:</strong>
+
+                        @Model.Pago.Fecha
+                        .ToString(
+                        "dd/MM/yyyy HH:mm")
                     </p>
                 </div>
             </div>
@@ -138,8 +156,10 @@
         else
         {
             <div class="alert alert-warning mt-3">
-                <i class="bi bi-exclamation-triangle"></i>
-                Este pedido aún no tiene pago registrado.
+
+                Este pedido se encuentra
+                pendiente de pago.
+
             </div>
         }
 

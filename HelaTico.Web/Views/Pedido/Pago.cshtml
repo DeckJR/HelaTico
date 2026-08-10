@@ -1,0 +1,1184 @@
+﻿@model HelaTico.Application.DTOs.ProcesarPagoDTO
+
+@{
+    ViewData["Title"] = "Procesar Pago";
+}
+
+<div class="container mt-4 mb-5">
+
+    <h2 class="mb-4">
+        Procesar Pago
+    </h2>
+
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+
+    <div class="row g-4">
+
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="col-lg-8">
+
+            <!-- ========================================= -->
+            <!-- TIPO DE CAMBIO HACIENDA -->
+            <!-- ========================================= -->
+            @await Html.PartialAsync("_TipoCambio")
+
+
+            <!-- ========================================= -->
+            <!-- CONVERSIÓN DEL PEDIDO -->
+            <!-- ========================================= -->
+
+            <div class="card shadow-sm mb-3">
+
+                <div class="card-header">
+                    <strong>
+                        Conversión del pedido
+                    </strong>
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3 mb-md-0">
+
+                            <span class="text-muted">
+                                Total en colones
+                            </span>
+
+                            <h4 class="mt-1">
+                                ₡@Model.Total.ToString("N2")
+                            </h4>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <span class="text-muted">
+                                Equivalente aproximado en dólares
+                            </span>
+
+                            <h4 class="mt-1"
+                                id="totalDolares">
+                                Consultando Hacienda...
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+
+                    <small class="text-muted">
+
+                        El equivalente en dólares es informativo y utiliza
+                        el tipo de cambio de venta suministrado por el
+                        Ministerio de Hacienda de Costa Rica.
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ========================================= -->
+            <!-- FORMULARIO DE PAGO -->
+            <!-- ========================================= -->
+
+            <form asp-controller="Pedido"
+                  asp-action="Pago"
+                  method="post"
+                  id="formPago">
+
+                @Html.AntiForgeryToken()
+
+
+                <input asp-for="IdPedido"
+                       type="hidden" />
+
+                <input asp-for="Total"
+                       type="hidden" />
+
+
+                <div class="card shadow-sm">
+
+                    <div class="card-header">
+                        <strong>
+                            Método de pago
+                        </strong>
+                    </div>
+
+
+                    <div class="card-body">
+
+
+                        <!-- MÉTODO DE PAGO -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Método de pago
+                            </label>
+
+
+                            <select asp-for="MetodoPago"
+                                    id="metodoPago"
+                                    class="form-select">
+
+                                <option value="0">
+                                    Seleccione...
+                                </option>
+
+                                <option value="1">
+                                    Efectivo
+                                </option>
+
+                                <option value="2">
+                                    Tarjeta de crédito
+                                </option>
+
+                                <option value="3">
+                                    Tarjeta de débito
+                                </option>
+
+                            </select>
+
+
+                            <span asp-validation-for="MetodoPago"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- ========================================= -->
+                        <!-- EFECTIVO -->
+                        <!-- ========================================= -->
+
+                        <div id="bloqueEfectivo"
+                             style="display:none;">
+
+
+                            <h5 class="mb-3">
+                                Pago en efectivo
+                            </h5>
+
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Monto recibido
+                                </label>
+
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        ₡
+                                    </span>
+
+
+                                    <input asp-for="MontoEfectivo"
+                                           id="montoEfectivo"
+                                           type="number"
+                                           step="0.01"
+                                           min="0"
+                                           class="form-control"
+                                           placeholder="0.00" />
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="alert alert-light border">
+
+                                <div class="d-flex justify-content-between">
+
+                                    <span>
+                                        Total a pagar:
+                                    </span>
+
+                                    <strong>
+                                        ₡@Model.Total.ToString("N2")
+                                    </strong>
+
+                                </div>
+
+
+                                <hr />
+
+
+                                <div class="d-flex justify-content-between">
+
+                                    <span>
+                                        Vuelto:
+                                    </span>
+
+                                    <strong id="vuelto">
+                                        ₡0,00
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- ========================================= -->
+                        <!-- TARJETA -->
+                        <!-- ========================================= -->
+
+                        <div id="bloqueTarjeta"
+                             style="display:none;">
+
+
+                            <h5 class="mb-3">
+                                Datos de tarjeta
+                            </h5>
+
+
+                            <div class="alert alert-info">
+
+                                <i class="bi bi-info-circle"></i>
+
+                                Este pago es una simulación académica.
+                                Los datos de la tarjeta no serán almacenados.
+
+                            </div>
+
+
+                            <!-- NÚMERO -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Número de tarjeta
+                                </label>
+
+
+                                <input asp-for="NumeroTarjeta"
+                                       id="numeroTarjeta"
+                                       type="text"
+                                       class="form-control"
+                                       maxlength="19"
+                                       placeholder="4111 1111 1111 1111"
+                                       autocomplete="off" />
+
+                            </div>
+
+
+                            <!-- TITULAR -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Nombre del titular
+                                </label>
+
+
+                                <input asp-for="NombreTarjeta"
+                                       id="nombreTarjeta"
+                                       type="text"
+                                       class="form-control"
+                                       maxlength="100"
+                                       placeholder="Nombre como aparece en la tarjeta"
+                                       autocomplete="off" />
+
+                            </div>
+
+
+                            <div class="row">
+
+                                <!-- VENCIMIENTO -->
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label">
+                                        Vencimiento
+                                    </label>
+
+
+                                    <input asp-for="VencimientoTarjeta"
+                                           id="vencimientoTarjeta"
+                                           type="text"
+                                           class="form-control"
+                                           maxlength="5"
+                                           placeholder="MM/AA"
+                                           autocomplete="off" />
+
+                                </div>
+
+
+                                <!-- CVV -->
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label">
+                                        CVV
+                                    </label>
+
+
+                                    <input asp-for="CvvTarjeta"
+                                           id="cvvTarjeta"
+                                           type="password"
+                                           class="form-control"
+                                           maxlength="4"
+                                           placeholder="123"
+                                           autocomplete="off" />
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="alert alert-light border">
+
+                                <div class="d-flex justify-content-between">
+
+                                    <span>
+                                        Total a cobrar:
+                                    </span>
+
+                                    <strong>
+                                        ₡@Model.Total.ToString("N2")
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ========================================= -->
+                <!-- BOTONES -->
+                <!-- ========================================= -->
+
+                <div class="mt-3 d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-success"
+                            id="btnPagar">
+
+                        <i class="bi bi-credit-card"></i>
+
+                        Confirmar pago
+
+                    </button>
+
+
+                    <a asp-controller="Pedido"
+                       asp-action="Detalle"
+                       asp-route-id="@Model.IdPedido"
+                       class="btn btn-outline-secondary">
+
+                        Volver al pedido
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+        <!-- ========================================= -->
+        <!-- RESUMEN -->
+        <!-- ========================================= -->
+
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-primary text-white">
+
+                    <strong>
+                        Resumen
+                    </strong>
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <p class="text-muted mb-1">
+                        Pedido
+                    </p>
+
+                    <h5>
+                        #@Model.IdPedido
+                    </h5>
+
+
+                    <hr />
+
+
+                    <p class="text-muted mb-1">
+                        Total a pagar
+                    </p>
+
+
+                    <h3 class="text-primary">
+                        ₡@Model.Total.ToString("N2")
+                    </h3>
+
+
+                    <div class="mt-3">
+
+                        <span class="text-muted">
+                            Aproximadamente
+                        </span>
+
+
+                        <div class="fs-5 fw-bold"
+                             id="totalDolaresResumen">
+
+                            Consultando...
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+@section Scripts
+{
+    <script>
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function ()
+            {
+
+                /*
+                 * ==========================================
+                 * REFERENCIAS DEL DOM
+                 * ==========================================
+                 */
+
+                const metodoPago =
+                    document.getElementById(
+                        'metodoPago'
+                    );
+
+
+                const bloqueEfectivo =
+                    document.getElementById(
+                        'bloqueEfectivo'
+                    );
+
+
+                const bloqueTarjeta =
+                    document.getElementById(
+                        'bloqueTarjeta'
+                    );
+
+
+                const montoEfectivo =
+                    document.getElementById(
+                        'montoEfectivo'
+                    );
+
+
+                const vuelto =
+                    document.getElementById(
+                        'vuelto'
+                    );
+
+
+                const numeroTarjeta =
+                    document.getElementById(
+                        'numeroTarjeta'
+                    );
+
+
+                const nombreTarjeta =
+                    document.getElementById(
+                        'nombreTarjeta'
+                    );
+
+
+                const vencimientoTarjeta =
+                    document.getElementById(
+                        'vencimientoTarjeta'
+                    );
+
+
+                const cvvTarjeta =
+                    document.getElementById(
+                        'cvvTarjeta'
+                    );
+
+
+                const totalDolares =
+                    document.getElementById(
+                        'totalDolares'
+                    );
+
+
+                const totalDolaresResumen =
+                    document.getElementById(
+                        'totalDolaresResumen'
+                    );
+
+
+                /*
+                 * ==========================================
+                 * TOTAL EN COLONES
+                 * ==========================================
+                 */
+
+                const totalColones =
+                    Number(
+                        '@Model.Total.ToString(
+                    System.Globalization.CultureInfo.InvariantCulture
+                )'
+                    );
+
+
+                /*
+                 * ==========================================
+                 * MOSTRAR / OCULTAR MÉTODO DE PAGO
+                 * ==========================================
+                 */
+
+                function actualizarMetodoPago()
+                {
+                    if (!metodoPago)
+                        return;
+
+
+                    const metodo =
+                        Number(
+                            metodoPago.value
+                        );
+
+
+                    /*
+                     * 1 = Efectivo
+                     */
+
+                    if (bloqueEfectivo)
+                    {
+                        bloqueEfectivo.style.display =
+                            metodo === 1
+                                ? 'block'
+                                : 'none';
+                    }
+
+
+                    /*
+                     * 2 = Crédito
+                     * 3 = Débito
+                     */
+
+                    if (bloqueTarjeta)
+                    {
+                        bloqueTarjeta.style.display =
+                            metodo === 2
+                            ||
+                            metodo === 3
+                                ? 'block'
+                                : 'none';
+                    }
+
+
+                    calcularVuelto();
+                }
+
+
+                if (metodoPago)
+                {
+                    metodoPago.addEventListener(
+                        'change',
+                        actualizarMetodoPago
+                    );
+                }
+
+
+
+                /*
+                 * ==========================================
+                 * CALCULAR VUELTO
+                 * ==========================================
+                 */
+
+                function calcularVuelto()
+                {
+                    if (
+                        !montoEfectivo
+                        ||
+                        !vuelto
+                    )
+                    {
+                        return;
+                    }
+
+
+                    const recibido =
+                        Number(
+                            montoEfectivo.value
+                            ||
+                            0
+                        );
+
+
+                    const diferencia =
+                        recibido >= totalColones
+                            ? recibido - totalColones
+                            : 0;
+
+
+                    vuelto.textContent =
+                        diferencia.toLocaleString(
+                            'es-CR',
+                            {
+                                style:
+                                    'currency',
+
+                                currency:
+                                    'CRC'
+                            }
+                        );
+                }
+
+
+                if (montoEfectivo)
+                {
+                    montoEfectivo.addEventListener(
+                        'input',
+                        calcularVuelto
+                    );
+                }
+
+
+
+                /*
+                 * ==========================================
+                 * FORMATO DEL NÚMERO DE TARJETA
+                 * ==========================================
+                 */
+
+                if (numeroTarjeta)
+                {
+                    numeroTarjeta.addEventListener(
+                        'input',
+                        function ()
+                        {
+                            let valor =
+                                this.value
+                                .replace(
+                                    /\D/g,
+                                    ''
+                                )
+                                .substring(
+                                    0,
+                                    16
+                                );
+
+
+                            this.value =
+                                valor
+                                .replace(
+                                    /(.{4})/g,
+                                    '$1 '
+                                )
+                                .trim();
+                        }
+                    );
+                }
+
+
+
+                /*
+                 * ==========================================
+                 * FORMATO DEL VENCIMIENTO MM/AA
+                 * ==========================================
+                 */
+
+                if (vencimientoTarjeta)
+                {
+                    vencimientoTarjeta.addEventListener(
+                        'input',
+                        function ()
+                        {
+                            let valor =
+                                this.value
+                                .replace(
+                                    /\D/g,
+                                    ''
+                                )
+                                .substring(
+                                    0,
+                                    4
+                                );
+
+
+                            if (
+                                valor.length > 2
+                            )
+                            {
+                                valor =
+                                    valor.substring(
+                                        0,
+                                        2
+                                    )
+                                    +
+                                    '/'
+                                    +
+                                    valor.substring(
+                                        2
+                                    );
+                            }
+
+
+                            this.value =
+                                valor;
+                        }
+                    );
+                }
+
+
+
+                /*
+                 * ==========================================
+                 * SOLO NÚMEROS EN CVV
+                 * ==========================================
+                 */
+
+                if (cvvTarjeta)
+                {
+                    cvvTarjeta.addEventListener(
+                        'input',
+                        function ()
+                        {
+                            this.value =
+                                this.value
+                                .replace(
+                                    /\D/g,
+                                    ''
+                                )
+                                .substring(
+                                    0,
+                                    4
+                                );
+                        }
+                    );
+                }
+
+
+
+                /*
+                 * ==========================================
+                 * TIPO DE CAMBIO HACIENDA
+                 * ==========================================
+                 *
+                 * El partial:
+                 *
+                 * _TipoCambio.cshtml
+                 *
+                 * consulta:
+                 *
+                 * /TipoCambio/Actual
+                 *
+                 * y deja el tipo de cambio
+                 * de venta disponible en:
+                 *
+                 * window.tipoCambioVenta
+                 *
+                 */
+
+
+                function actualizarTotalDolares()
+                {
+                    const tipoCambioVenta =
+                        Number(
+                            window.tipoCambioVenta
+                        );
+
+
+                    if (
+                        !tipoCambioVenta
+                        ||
+                        tipoCambioVenta <= 0
+                    )
+                    {
+                        return false;
+                    }
+
+
+                    /*
+                     * Colones / Venta
+                     * =
+                     * Dólares
+                     */
+
+                    const dolares =
+                        totalColones
+                        /
+                        tipoCambioVenta;
+
+
+                    const texto =
+                        dolares.toLocaleString(
+                            'en-US',
+                            {
+                                style:
+                                    'currency',
+
+                                currency:
+                                    'USD',
+
+                                minimumFractionDigits:
+                                    2,
+
+                                maximumFractionDigits:
+                                    2
+                            }
+                        );
+
+
+                    if (totalDolares)
+                    {
+                        totalDolares.textContent =
+                            texto;
+                    }
+
+
+                    if (totalDolaresResumen)
+                    {
+                        totalDolaresResumen.textContent =
+                            texto;
+                    }
+
+
+                    return true;
+                }
+
+
+
+                /*
+                 * ==========================================
+                 * ESPERAR RESPUESTA DE HACIENDA
+                 * ==========================================
+                 *
+                 * Como el partial realiza fetch()
+                 * de manera asincrónica, esperamos
+                 * hasta que window.tipoCambioVenta
+                 * tenga un valor.
+                 */
+
+
+                if (
+                    !actualizarTotalDolares()
+                )
+                {
+                    let intentos =
+                        0;
+
+
+                    const intervalo =
+                        setInterval(
+                            function ()
+                            {
+                                intentos++;
+
+
+                                if (
+                                    actualizarTotalDolares()
+                                )
+                                {
+                                    clearInterval(
+                                        intervalo
+                                    );
+
+                                    return;
+                                }
+
+
+                                /*
+                                 * 50 intentos × 200 ms
+                                 * =
+                                 * aproximadamente
+                                 * 10 segundos.
+                                 */
+
+                                if (
+                                    intentos >= 50
+                                )
+                                {
+                                    clearInterval(
+                                        intervalo
+                                    );
+
+
+                                    if (totalDolares)
+                                    {
+                                        totalDolares.textContent =
+                                            'No disponible';
+                                    }
+
+
+                                    if (totalDolaresResumen)
+                                    {
+                                        totalDolaresResumen.textContent =
+                                            'No disponible';
+                                    }
+                                }
+
+                            },
+                            200
+                        );
+                }
+
+
+
+                /*
+                 * ==========================================
+                 * VALIDACIÓN CLIENTE ANTES DE ENVIAR
+                 * ==========================================
+                 *
+                 * El backend TAMBIÉN valida.
+                 *
+                 * Esto solamente mejora la experiencia
+                 * del usuario.
+                 */
+
+
+                const formPago =
+                    document.getElementById(
+                        'formPago'
+                    );
+
+
+                if (formPago)
+                {
+                    formPago.addEventListener(
+                        'submit',
+                        function (event)
+                        {
+                            const metodo =
+                                Number(
+                                    metodoPago?.value
+                                    ||
+                                    0
+                                );
+
+
+                            /*
+                             * No seleccionó método.
+                             */
+
+                            if (
+                                metodo < 1
+                                ||
+                                metodo > 3
+                            )
+                            {
+                                event.preventDefault();
+
+
+                                alert(
+                                    'Debe seleccionar un método de pago.'
+                                );
+
+
+                                return;
+                            }
+
+
+
+                            /*
+                             * EFECTIVO
+                             */
+
+                            if (
+                                metodo === 1
+                            )
+                            {
+                                const recibido =
+                                    Number(
+                                        montoEfectivo?.value
+                                        ||
+                                        0
+                                    );
+
+
+                                if (
+                                    recibido <
+                                    totalColones
+                                )
+                                {
+                                    event.preventDefault();
+
+
+                                    alert(
+                                        'El monto recibido es insuficiente.'
+                                    );
+
+
+                                    return;
+                                }
+                            }
+
+
+
+                            /*
+                             * CRÉDITO / DÉBITO
+                             */
+
+                            if (
+                                metodo === 2
+                                ||
+                                metodo === 3
+                            )
+                            {
+                                const numero =
+                                    (
+                                        numeroTarjeta?.value
+                                        ||
+                                        ''
+                                    )
+                                    .replace(
+                                        /\s/g,
+                                        ''
+                                    );
+
+
+                                if (
+                                    numero.length < 13
+                                )
+                                {
+                                    event.preventDefault();
+
+
+                                    alert(
+                                        'Ingrese un número de tarjeta válido.'
+                                    );
+
+
+                                    return;
+                                }
+
+
+                                if (
+                                    !nombreTarjeta
+                                    ||
+                                    !nombreTarjeta.value.trim()
+                                )
+                                {
+                                    event.preventDefault();
+
+
+                                    alert(
+                                        'Ingrese el nombre del titular.'
+                                    );
+
+
+                                    return;
+                                }
+
+
+                                if (
+                                    !vencimientoTarjeta
+                                    ||
+                                    vencimientoTarjeta.value.length
+                                    !== 5
+                                )
+                                {
+                                    event.preventDefault();
+
+
+                                    alert(
+                                        'Ingrese el vencimiento en formato MM/AA.'
+                                    );
+
+
+                                    return;
+                                }
+
+
+                                if (
+                                    !cvvTarjeta
+                                    ||
+                                    (
+                                        cvvTarjeta.value.length
+                                        !== 3
+                                        &&
+                                        cvvTarjeta.value.length
+                                        !== 4
+                                    )
+                                )
+                                {
+                                    event.preventDefault();
+
+
+                                    alert(
+                                        'Ingrese un CVV válido.'
+                                    );
+
+
+                                    return;
+                                }
+                            }
+                        }
+                    );
+                }
+
+
+
+                /*
+                 * ==========================================
+                 * ESTADO INICIAL
+                 * ==========================================
+                 */
+
+                actualizarMetodoPago();
+
+                calcularVuelto();
+
+            }
+        );
+
+    </script>
+}

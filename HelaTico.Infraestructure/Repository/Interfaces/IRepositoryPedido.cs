@@ -13,5 +13,8 @@ namespace HelaTico.Infraestructure.Repository.Interfaces
         Task<List<Pedido>> GetHistorialTodosAsync(DateOnly? fecha, int? estadoPedido);
         Task<Pedido?> FindByIdAsync(int id);
         Task<int> RegistrarPedidoAsync (Pedido pedido);
+        Task<Pedido?>FindSimpleByIdAsync(int idPedido);
+        Task AddPagoAsync(Pago pago);
+        Task CambiarEstadoAsync(int idPedido,int nuevoEstado);
     }
 }

@@ -105,5 +105,39 @@ namespace HelaTico.Infraestructure.Repository.Implementations
             return query;
         }
 
+        public Task<Pedido?>FindSimpleByIdAsync(int idPedido)
+        {
+            return _context.Pedido.Include(p => p.Pago).FirstOrDefaultAsync(p => p.IdPedido == idPedido);
+        }
+
+        public async Task AddPagoAsync(Pago pago)
+        {
+            await _context.Pago.AddAsync(pago);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CambiarEstadoAsync(int idPedido,int nuevoEstado)
+        {
+            var pedido =await _context.Pedido.FindAsync(idPedido);
+
+            if (pedido == null)
+            {
+                throw new InvalidOperationException("Pedido no encontrado.");
+            }
+
+            pedido.EstadoPedido =nuevoEstado;
+
+            var historial =new HistorialEstadoPedido
+                {
+                    IdPedido = idPedido,
+                    EstadoPedido = nuevoEstado,
+                    FechaYhora = DateTime.Now
+                };
+
+            await _context.HistorialEstadoPedido.AddAsync(historial);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
