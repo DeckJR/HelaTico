@@ -14,5 +14,6 @@ namespace HelaTico.Application.DTOs
         public decimal Precio { get; set; }
         public int Cantidad { get; set; }
         public string ImagenUrl { get; set; } = null!;
+        public string Observaciones { get; set; } = string.Empty;
     }
 }

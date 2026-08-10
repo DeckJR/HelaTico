@@ -13,50 +13,126 @@ namespace HelaTico.Web.Helpers
             if (string.IsNullOrEmpty(json))
                 return new List<CarritoItemDTO>();
 
-            return JsonSerializer.Deserialize<List<CarritoItemDTO>>(json) ?? new List<CarritoItemDTO>();
+            return JsonSerializer
+                .Deserialize<List<CarritoItemDTO>>(json)
+                ?? new List<CarritoItemDTO>();
         }
 
-        private static void Guardar(ISession session, List<CarritoItemDTO> items)
+        private static void Guardar(
+            ISession session,
+            List<CarritoItemDTO> items)
         {
-            session.SetString(SESSION_KEY, JsonSerializer.Serialize(items));
+            session.SetString(
+                SESSION_KEY,
+                JsonSerializer.Serialize(items));
         }
 
-        public static void AgregarItem(ISession session, string tipo, int id, string nombre, decimal precio, int cantidad, string imagenUrl)
+        public static void AgregarItem(
+            ISession session,
+            string tipo,
+            int id,
+            string nombre,
+            decimal precio,
+            int cantidad,
+            string imagenUrl)
         {
             var items = Obtener(session);
-            var existente = items.FirstOrDefault(i => i.Tipo == tipo && i.Id == id);
+
+            var existente = items.FirstOrDefault(
+                i => i.Tipo == tipo && i.Id == id);
 
             if (existente != null)
-                existente.Cantidad += cantidad;
-            else
-                items.Add(new CarritoItemDTO { Tipo = tipo, Id = id, Nombre = nombre, Precio = precio, Cantidad = cantidad, ImagenUrl = imagenUrl });
-
-            Guardar(session, items);
-        }
-
-        public static void ActualizarCantidad(ISession session, string tipo, int id, int nuevaCantidad)
-        {
-            var items = Obtener(session);
-            var item = items.FirstOrDefault(i => i.Tipo == tipo && i.Id == id);
-
-            if (item != null)
             {
-                if (nuevaCantidad < 1) nuevaCantidad = 1;
-                item.Cantidad = nuevaCantidad;
-                Guardar(session, items);
+                existente.Cantidad += cantidad;
             }
-        }
+            else
+            {
+                items.Add(new CarritoItemDTO
+                {
+                    Tipo = tipo,
+                    Id = id,
+                    Nombre = nombre,
+                    Precio = precio,
+                    Cantidad = cantidad,
+                    ImagenUrl = imagenUrl,
+                    Observaciones = string.Empty
+                });
+            }
 
-        public static void Eliminar(ISession session, string tipo, int id)
-        {
-            var items = Obtener(session);
-            items.RemoveAll(i => i.Tipo == tipo && i.Id == id);
             Guardar(session, items);
         }
 
-        public static int ObtenerCantidadTotal(ISession session)
+        public static void ActualizarCantidad(
+            ISession session,
+            string tipo,
+            int id,
+            int nuevaCantidad)
         {
-            return Obtener(session).Sum(i => i.Cantidad);
+            var items = Obtener(session);
+
+            var item = items.FirstOrDefault(
+                i => i.Tipo == tipo && i.Id == id);
+
+            if (item == null)
+                return;
+
+            if (nuevaCantidad < 1)
+                nuevaCantidad = 1;
+
+            item.Cantidad = nuevaCantidad;
+            Guardar(session, items);
+        }
+
+        public static void ActualizarObservaciones(
+            ISession session,
+            string tipo,
+            int id,
+            string observaciones)
+        {
+            var items = Obtener(session);
+
+            var item = items.FirstOrDefault(
+                i => i.Tipo == tipo && i.Id == id);
+
+            if (item == null)
+                return;
+
+            item.Observaciones =
+                (observaciones ?? string.Empty).Trim();
+
+            if (item.Observaciones.Length > 50)
+            {
+                item.Observaciones =
+                    item.Observaciones[..50];
+            }
+
+            Guardar(session, items);
+        }
+
+        public static void Eliminar(
+            ISession session,
+            string tipo,
+            int id)
+        {
+            var items = Obtener(session);
+
+            items.RemoveAll(
+                i => i.Tipo == tipo && i.Id == id);
+
+            Guardar(session, items);
+        }
+
+        public static int ObtenerCantidadTotal(
+            ISession session)
+        {
+            return Obtener(session)
+                .Sum(i => i.Cantidad);
+        }
+
+        public static void Limpiar(
+            ISession session)
+        {
+            session.Remove(SESSION_KEY);
         }
     }
 }

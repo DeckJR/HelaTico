@@ -35,5 +35,20 @@ namespace HelaTico.Application.Services.Implementations
 
             return (_mapper.Map<UsuarioDTO>(usuario), null);
         }
+
+        public async Task<UsuarioDTO?>FindByIdAsync(int id)
+        {
+            var usuario = await _repository.FindByIdAsync(id);
+
+            return usuario == null ? null: _mapper.Map<UsuarioDTO>(usuario);
+        }
+
+
+        public async Task<List<UsuarioDTO>>BuscarClientesAsync(string nombre)
+        {
+            var usuarios = await _repository.SearchClientesAsync(nombre);
+
+            return _mapper.Map<List<UsuarioDTO>>(usuarios);
+        }
     }
 }

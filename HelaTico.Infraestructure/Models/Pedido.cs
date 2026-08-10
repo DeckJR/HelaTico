@@ -9,7 +9,7 @@ public partial class Pedido
 
     public int IdCliente { get; set; }
 
-    public int IdEmpleado { get; set; }
+    public int? IdEmpleado { get; set; }
 
     public DateTime Fecha { get; set; }
 
@@ -35,7 +35,7 @@ public partial class Pedido
 
     public virtual Usuario IdClienteNavigation { get; set; } = null!;
 
-    public virtual Usuario IdEmpleadoNavigation { get; set; } = null!;
+    public virtual Usuario? IdEmpleadoNavigation { get; set; } = null!;
 
     public virtual TipoEntrega IdTipoEntregaNavigation { get; set; } = null!;
 

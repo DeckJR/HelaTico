@@ -1,0 +1,505 @@
+﻿@model HelaTico.Web.ViewModels.PedidoRegistroViewModel
+@{ViewData["Title"] ="Registrar Pedido";}
+<h2 class="mb-4">
+    Registrar Pedido
+</h2>
+
+@if (
+   !string.IsNullOrWhiteSpace(
+       Model.Error))
+{
+    <div class="alert alert-danger">
+        @Model.Error
+    </div>
+}
+
+
+<form asp-controller="Pedido"
+      asp-action="Registrar"
+      method="post"
+      id="formPedido">
+
+    @Html.AntiForgeryToken()
+
+
+    <div class="card mb-3">
+
+        <div class="card-header">
+            <strong>
+                Datos generales
+            </strong>
+        </div>
+
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        Fecha
+                    </label>
+
+                    <input class="form-control"
+                           value="@DateTime.Now.ToString("dd/MM/yyyy HH:mm")"
+                           readonly />
+
+                </div>
+
+
+                @if (Model.EsCliente)
+                {
+                    <div class="col-md-8">
+
+                        <label class="form-label">
+                            Cliente
+                        </label>
+
+                        <input class="form-control"
+                               value="@($"{Model.ClienteSeleccionado?.Nombre} {Model.ClienteSeleccionado?.Apellido1} - {Model.ClienteSeleccionado?.Correo}")"
+                               readonly />
+
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Encargado
+                        </label>
+
+                        <input class="form-control"
+                               value="@Model.NombreEncargado"
+                               readonly />
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Cliente
+                        </label>
+
+                        <input id="buscarCliente"
+                               type="text"
+                               class="form-control"
+                               value="@(
+                                   Model.ClienteSeleccionado == null
+                                   ? ""
+                                   : $"{Model.ClienteSeleccionado.Nombre} {Model.ClienteSeleccionado.Apellido1} - {Model.ClienteSeleccionado.Correo}"
+                               )"
+                               placeholder="Buscar nombre o correo"
+                               autocomplete="off" />
+
+
+                        <input asp-for="Dto.IdCliente"
+                               type="hidden"
+                               id="idCliente" />
+
+
+                        <div id="resultadosClientes"
+                             class="list-group mt-1">
+                        </div>
+
+                    </div>
+                }
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Método de entrega
+                    </label>
+
+
+                    <select asp-for="Dto.IdTipoEntrega"
+                            id="tipoEntrega"
+                            class="form-select">
+
+                        <option value="0">
+                            Seleccione...
+                        </option>
+
+
+                        @foreach (
+                        var tipo
+                        in Model.TiposEntrega)
+                        {
+                            <option value="@tipo.IdTipoEntrega"
+                                    data-descripcion="@tipo.Descripcion">
+
+                                @tipo.Descripcion
+
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-6"
+                     id="bloqueDireccion"
+                     style="display:none">
+
+                    <label class="form-label">
+                        Dirección de entrega
+                    </label>
+
+                    <input asp-for="Dto.DireccionEntrega"
+                           class="form-control"
+                           maxlength="150"
+                           placeholder="Ingrese la dirección" />
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="card">
+
+        <div class="card-header">
+            <strong>
+                Detalle del pedido
+            </strong>
+        </div>
+
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-striped align-middle">
+
+                    <thead>
+
+                        <tr>
+                            <th>Artículo</th>
+                            <th>Tipo</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                            <th>Impuesto</th>
+                            <th>Observaciones</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (
+                        var item
+                        in Model.Carrito)
+                        {
+                            var subtotal =
+                            item.Precio
+                            *
+                            item.Cantidad;
+
+
+                            var impuesto =
+                            Math.Round(
+                            subtotal
+                            *
+                            0.13m,
+                            2);
+
+
+                            <tr>
+
+                                <td>
+                                    @item.Nombre
+                                </td>
+
+                                <td>
+                                    @item.Tipo
+                                </td>
+
+                                <td>
+                                    ₡@item.Precio.ToString("N2")
+                                </td>
+
+                                <td>
+                                    @item.Cantidad
+                                </td>
+
+                                <td>
+                                    ₡@subtotal.ToString("N2")
+                                </td>
+
+                                <td>
+                                    ₡@impuesto.ToString("N2")
+                                </td>
+
+                                <td>
+                                    @(
+                                        string.IsNullOrWhiteSpace(
+                                        item.Observaciones)
+                                        ? "Sin observaciones"
+                                        : item.Observaciones
+                                        )
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <hr />
+
+
+            <div class="row">
+
+                <div class="col-md-6 ms-auto">
+
+                    <div class="d-flex justify-content-between">
+                        <span>
+                            Subtotal:
+                        </span>
+
+                        <strong>
+                            ₡@Model.SubTotal.ToString("N2")
+                        </strong>
+                    </div>
+
+
+                    <div class="d-flex justify-content-between">
+                        <span>
+                            Impuesto:
+                        </span>
+
+                        <strong>
+                            ₡@Model.Impuesto.ToString("N2")
+                        </strong>
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mt-2 fs-5">
+
+                        <span>
+                            Total antes de envío:
+                        </span>
+
+                        <strong>
+                            ₡@(
+                               (
+                               Model.SubTotal
+                               +
+                               Model.Impuesto
+                               )
+                               .ToString("N2")
+                               )
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="mt-3 d-flex gap-2">
+
+        <a asp-controller="Carrito"
+           asp-action="Ver"
+           class="btn btn-secondary">
+
+            Volver al carrito
+
+        </a>
+
+
+        <button type="submit"
+                class="btn btn-primary">
+
+            Confirmar pedido
+
+        </button>
+
+    </div>
+
+</form>
+
+
+
+@section Scripts
+{
+    <script>
+
+        const tipoEntrega = document.getElementById('tipoEntrega');
+
+        const bloqueDireccion =
+            document.getElementById(
+                'bloqueDireccion'
+            );
+
+
+        function actualizarEntrega()
+        {
+            const opcion =
+                tipoEntrega.options[
+                    tipoEntrega.selectedIndex
+                ];
+
+
+            const descripcion =
+                (
+                    opcion?.dataset.descripcion
+                    ||
+                    ''
+                )
+                .toLowerCase();
+
+
+            const esDomicilio =
+                descripcion.includes(
+                    'domicilio'
+                );
+
+
+            bloqueDireccion.style.display =
+                esDomicilio
+                ? 'block'
+                : 'none';
+        }
+
+
+        tipoEntrega.addEventListener(
+            'change',
+            actualizarEntrega
+        );
+
+
+        actualizarEntrega();
+
+
+
+
+        const buscarCliente =
+            document.getElementById(
+                'buscarCliente'
+            );
+
+
+        if (buscarCliente)
+        {
+            let timer;
+
+
+            buscarCliente.addEventListener(
+                'input',
+                function ()
+                {
+                    clearTimeout(
+                        timer
+                    );
+
+
+                    timer =
+                        setTimeout(
+                            buscar,
+                            300
+                        );
+                });
+
+
+            async function buscar()
+            {
+                const texto =
+                    buscarCliente.value
+                        .trim();
+
+
+                const respuesta =
+                    await fetch(
+                        '/Pedido/BuscarClientes?nombre='
+                        +
+                        encodeURIComponent(
+                            texto
+                        )
+                    );
+
+
+                const clientes =
+                    await respuesta.json();
+
+
+                const contenedor =
+                    document.getElementById(
+                        'resultadosClientes'
+                    );
+
+
+                contenedor.innerHTML =
+                    '';
+
+
+                clientes.forEach(
+                    cliente =>
+                    {
+                        const boton =
+                            document.createElement(
+                                'button'
+                            );
+
+
+                        boton.type =
+                            'button';
+
+
+                        boton.className =
+                            'list-group-item list-group-item-action';
+
+
+                        boton.textContent =
+                            `${cliente.nombre} ${cliente.apellido1} - ${cliente.correo}`;
+
+
+                        boton.addEventListener(
+                            'click',
+                            function ()
+                            {
+                                document.getElementById(
+                                    'idCliente'
+                                ).value =
+                                    cliente.idUsuario;
+
+
+                                buscarCliente.value =
+                                    boton.textContent;
+
+
+                                contenedor.innerHTML =
+                                    '';
+                            });
+
+
+                        contenedor.appendChild(
+                            boton
+                        );
+                    });
+            }
+        }
+
+    </script>
+}

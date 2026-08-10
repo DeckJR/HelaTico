@@ -8,49 +8,96 @@ namespace HelaTico.Web.Controllers
     {
         private readonly IServiceCarrito _serviceCarrito;
 
-        public CarritoController(IServiceCarrito serviceCarrito)
+        public CarritoController(
+            IServiceCarrito serviceCarrito)
         {
             _serviceCarrito = serviceCarrito;
         }
 
         public IActionResult Ver()
         {
-            var items = CarritoSessionHelper.Obtener(HttpContext.Session);
-            var resumen = _serviceCarrito.CalcularResumen(items);
+            var items =
+                CarritoSessionHelper.Obtener(
+                    HttpContext.Session);
+
+            var resumen =
+                _serviceCarrito.CalcularResumen(items);
+
             return View(resumen);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Agregar(string tipo, int id, string nombre, string precio, int cantidad, string imagenUrl)
+        public IActionResult Agregar(
+            string tipo,
+            int id,
+            string nombre,
+            string precio,
+            int cantidad,
+            string imagenUrl)
         {
-            if (cantidad < 1) cantidad = 1;
+            if (cantidad < 1)
+                cantidad = 1;
 
-            if (!decimal.TryParse(precio, System.Globalization.NumberStyles.Any,
-                    System.Globalization.CultureInfo.InvariantCulture, out decimal precioDecimal))
+            if (!decimal.TryParse(
+                precio,
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out decimal precioDecimal))
             {
-                return Json(new { exito = false, mensaje = "Precio inválido." });
+                return Json(new
+                {
+                    exito = false,
+                    mensaje = "Precio inválido."
+                });
             }
 
-            CarritoSessionHelper.AgregarItem(HttpContext.Session, tipo, id, nombre, precioDecimal, cantidad, imagenUrl);
+            CarritoSessionHelper.AgregarItem(
+                HttpContext.Session,
+                tipo,
+                id,
+                nombre,
+                precioDecimal,
+                cantidad,
+                imagenUrl);
 
-            int total = CarritoSessionHelper.ObtenerCantidadTotal(HttpContext.Session);
-
-            return Json(new { exito = true, cantidadTotal = total });
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult ActualizarCantidad(string tipo, int id, int cantidad)
-        {
-            CarritoSessionHelper.ActualizarCantidad(HttpContext.Session, tipo, id, cantidad);
-
-            var items = CarritoSessionHelper.Obtener(HttpContext.Session);
-            var resumen = _serviceCarrito.CalcularResumen(items);
+            int total =
+                CarritoSessionHelper
+                    .ObtenerCantidadTotal(
+                        HttpContext.Session);
 
             return Json(new
             {
                 exito = true,
-                cantidadTotal = items.Sum(i => i.Cantidad),
+                cantidadTotal = total
+            });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ActualizarCantidad(
+            string tipo,
+            int id,
+            int cantidad)
+        {
+            CarritoSessionHelper.ActualizarCantidad(
+                HttpContext.Session,
+                tipo,
+                id,
+                cantidad);
+
+            var items =
+                CarritoSessionHelper.Obtener(
+                    HttpContext.Session);
+
+            var resumen =
+                _serviceCarrito.CalcularResumen(items);
+
+            return Json(new
+            {
+                exito = true,
+                cantidadTotal =
+                    items.Sum(i => i.Cantidad),
+
                 resumen.SubTotal,
                 resumen.Impuesto,
                 resumen.Total
@@ -59,17 +106,48 @@ namespace HelaTico.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Eliminar(string tipo, int id)
+        public IActionResult ActualizarObservaciones(
+            string tipo,
+            int id,
+            string observaciones)
         {
-            CarritoSessionHelper.Eliminar(HttpContext.Session, tipo, id);
+            CarritoSessionHelper
+                .ActualizarObservaciones(
+                    HttpContext.Session,
+                    tipo,
+                    id,
+                    observaciones);
 
-            var items = CarritoSessionHelper.Obtener(HttpContext.Session);
-            var resumen = _serviceCarrito.CalcularResumen(items);
+            return Json(new
+            {
+                exito = true
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Eliminar(
+            string tipo,
+            int id)
+        {
+            CarritoSessionHelper.Eliminar(
+                HttpContext.Session,
+                tipo,
+                id);
+
+            var items =
+                CarritoSessionHelper.Obtener(
+                    HttpContext.Session);
+
+            var resumen =
+                _serviceCarrito.CalcularResumen(items);
 
             return Json(new
             {
                 exito = true,
-                cantidadTotal = items.Sum(i => i.Cantidad),
+                cantidadTotal =
+                    items.Sum(i => i.Cantidad),
+
                 resumen.SubTotal,
                 resumen.Impuesto,
                 resumen.Total
@@ -79,8 +157,15 @@ namespace HelaTico.Web.Controllers
         [HttpGet]
         public IActionResult Cantidad()
         {
-            int total = CarritoSessionHelper.ObtenerCantidadTotal(HttpContext.Session);
-            return Json(new { cantidadTotal = total });
+            int total =
+                CarritoSessionHelper
+                    .ObtenerCantidadTotal(
+                        HttpContext.Session);
+
+            return Json(new
+            {
+                cantidadTotal = total
+            });
         }
     }
 }

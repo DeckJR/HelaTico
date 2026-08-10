@@ -32,5 +32,19 @@ namespace HelaTico.Infraestructure.Repository.Implementations
                 .Include(u => u.IdRolUsuarioNavigation)
                 .FirstOrDefaultAsync(u => u.IdUsuario == id);
         }
+        public async Task<List<Usuario>>SearchClientesAsync(string nombre)
+        {
+            nombre = (nombre ?? string.Empty).Trim().ToLower();
+
+            var query =_context.Usuario.Include(u => u.IdRolUsuarioNavigation)
+                .Where(u => u.IdRolUsuarioNavigation.Descripcion == "Cliente" && u.EstadoUsuario == 1);
+
+            if (!string.IsNullOrWhiteSpace(nombre))
+            {
+                query = query.Where(u => u.Nombre.ToLower().Contains(nombre) || u.Apellido1.ToLower().Contains(nombre) ||u.Correo.ToLower().Contains(nombre));
+            }
+
+            return await query.OrderBy(u => u.Nombre).ThenBy(u => u.Apellido1).Take(20).ToListAsync();
+        }
     }
 }

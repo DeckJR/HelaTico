@@ -10,5 +10,7 @@ namespace HelaTico.Application.Services.Interfaces
     public interface IServiceUsuario
     {
         Task<(UsuarioDTO? Usuario, string? Error)> LoginAsync(string correo, string password);
+        Task<UsuarioDTO?> FindByIdAsync(int id);
+        Task<List<UsuarioDTO>>BuscarClientesAsync(string nombre);
     }
 }

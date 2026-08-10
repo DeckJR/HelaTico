@@ -47,6 +47,42 @@ namespace HelaTico.Infraestructure.Repository.Implementations
                 .FirstOrDefaultAsync(p => p.IdPedido == id);
         }
 
+        public async Task<int> RegistrarPedidoAsync(Pedido pedido)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                await _context.Pedido
+                    .AddAsync(pedido);
+
+                await _context
+                    .SaveChangesAsync();
+
+
+                // Registrar el primer estado del pedido en el historial que sería el de Pnediente de pago
+                var historial = new HistorialEstadoPedido
+                    {
+                        IdPedido = pedido.IdPedido,
+                        EstadoPedido = pedido.EstadoPedido,
+                        FechaYhora =DateTime.Now
+                    };
+
+                await _context.HistorialEstadoPedido.AddAsync(historial);
+
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return pedido.IdPedido;
+            }
+            catch
+            {
+                await transaction .RollbackAsync();
+                throw;
+            }
+        }
+
         private IQueryable<Pedido> BaseQuery()
         {
             return _context.Pedido
@@ -68,5 +104,6 @@ namespace HelaTico.Infraestructure.Repository.Implementations
 
             return query;
         }
+
     }
 }
