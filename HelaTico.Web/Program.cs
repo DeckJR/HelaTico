@@ -141,8 +141,16 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-var app = builder.Build();
+//Activar la memoria cache para poder tener una persistencia del tipo del cambio del dolar
+builder.Services.AddMemoryCache();
 
+//repositorio del tipo del cambio
+builder.Services.AddHttpClient<IRepositoryTipoCambio, RepositoryTipoCambio>();
+
+//servicio del tipo del cambio
+builder.Services.AddScoped<IServiceTipoCambio, ServiceTipoCambio>();
+
+var app = builder.Build();
 
 
 // Activar el Dashboard de Hangfire

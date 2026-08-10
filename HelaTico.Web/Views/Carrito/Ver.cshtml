@@ -70,7 +70,7 @@
                         <span id="resumenTotal">₡@Model.Total.ToString("N2")</span>
                     </div>
 
-                    <button type="button" class="btn btn-success w-100 mt-3" disabled title="Pantalla de registro de pedido pendiente">
+                    <button type="button" id="btnPagar" class="btn btn-success w-100 mt-3">
                         Pagar
                     </button>
                 </div>
@@ -100,6 +100,25 @@
             document.getElementById('contenedorCarritoVacio').style.display = 'block';
         }
 
+        async function eliminarItem(card, tipo, id) {
+            const formData = new URLSearchParams();
+            formData.append('tipo', tipo);
+            formData.append('id', id);
+            formData.append('__RequestVerificationToken', token);
+
+            const response = await fetch('/Carrito/Eliminar', { method: 'POST', body: formData });
+            const data = await response.json();
+
+            card.remove();
+
+            if (data.cantidadTotal === 0) {
+                mostrarCarritoVacio();
+                actualizarBadgeCarrito(0);
+            } else {
+                actualizarResumen(data);
+            }
+        }
+
         document.getElementById('listaItemsCarrito').addEventListener('click', async function (e) {
             const card = e.target.closest('.item-carrito');
             if (!card) return;
@@ -111,7 +130,13 @@
 
             if (e.target.classList.contains('btn-sumar') || e.target.classList.contains('btn-restar')) {
                 let cantidad = parseInt(inputCantidad.value);
-                cantidad = e.target.classList.contains('btn-sumar') ? cantidad + 1 : Math.max(1, cantidad - 1);
+                cantidad = e.target.classList.contains('btn-sumar') ? cantidad + 1 : cantidad - 1;
+
+                if (cantidad <= 0) {
+                    await eliminarItem(card, tipo, id);
+                    return;
+                }
+
                 inputCantidad.value = cantidad;
 
                 const formData = new URLSearchParams();
@@ -128,23 +153,13 @@
             }
 
             if (e.target.closest('.btn-eliminar')) {
-                const formData = new URLSearchParams();
-                formData.append('tipo', tipo);
-                formData.append('id', id);
-                formData.append('__RequestVerificationToken', token);
-
-                const response = await fetch('/Carrito/Eliminar', { method: 'POST', body: formData });
-                const data = await response.json();
-
-                card.remove();
-
-                if (data.cantidadTotal === 0) {
-                    mostrarCarritoVacio();
-                    actualizarBadgeCarrito(0);
-                } else {
-                    actualizarResumen(data);
-                }
+                await eliminarItem(card, tipo, id);
             }
+        });
+
+        document.getElementById('btnPagar').addEventListener('click', function () {
+            // TODO: reemplazar por redirección real cuando exista la pantalla de registro de Pedido
+            alert('La pantalla de registro de pedido está en construcción.');
         });
     </script>
 }

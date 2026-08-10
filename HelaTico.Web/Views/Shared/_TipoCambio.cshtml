@@ -1,0 +1,44 @@
+﻿@* Partial reutilizable: muestra el tipo de cambio actual de Hacienda *@
+@* Uso: @await Html.PartialAsync("_TipoCambio") *@
+
+<div id="tipoCambioCard" class="alert alert-info d-flex align-items-center gap-2 mb-3"
+     style="display:none !important;">
+    <i class="bi bi-bank fs-5"></i>
+    <div>
+        <strong>Tipo de cambio hoy</strong>
+        <small class="text-muted ms-1" id="tcFecha"></small>
+        <div class="mt-1">
+            <span class="me-3">Compra: <strong id="tcCompra">—</strong></span>
+            <span>Venta: <strong id="tcVenta">—</strong></span>
+        </div>
+        <small class="text-muted">Fuente: Ministerio de Hacienda de Costa Rica</small>
+    </div>
+</div>
+
+<div id="tipoCambioError" class="alert alert-warning d-none">
+    <i class="bi bi-exclamation-triangle"></i>
+    Tipo de cambio no disponible en este momento.
+</div>
+
+<script>
+    (async function () {
+        try {
+            const res  = await fetch('/TipoCambio/Actual');
+            const data = await res.json();
+
+            if (data.disponible) {
+                document.getElementById('tcCompra').textContent = `₡${data.compra.toFixed(2)}`;
+                document.getElementById('tcVenta').textContent  = `₡${data.venta.toFixed(2)}`;
+                document.getElementById('tcFecha').textContent  = `(${data.fecha})`;
+                document.getElementById('tipoCambioCard').style.display = 'flex';
+
+                // Exponer la tasa de venta globalmente para que el formulario de pago la use
+                window.tipoCambioVenta = data.venta;
+            } else {
+                document.getElementById('tipoCambioError').classList.remove('d-none');
+            }
+        } catch {
+            document.getElementById('tipoCambioError').classList.remove('d-none');
+        }
+    })();
+</script>
