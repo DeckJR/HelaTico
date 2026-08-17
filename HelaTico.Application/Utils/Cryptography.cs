@@ -12,7 +12,7 @@ namespace HelaTico.Application.Utils
         public static string Encrypt(string texto, string secret)
         {
             byte[] plainBytes = Encoding.UTF8.GetBytes(texto);
-            string hash = ComputeHash(secret.Substring(0, 32));
+            string hash = ComputeHash(secret);
             byte[] key = Encoding.UTF8.GetBytes(hash);
             byte[] iv = [33, 24, 31, 46, 75, 64, 97, 18, 89, 10, 111, 132, 131, 144, 145, 250];
             byte[] encryptedBytes;

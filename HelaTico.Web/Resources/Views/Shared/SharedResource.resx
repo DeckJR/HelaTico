@@ -174,4 +174,7 @@
   <data name="NavHistorialPedidos" xml:space="preserve">
     <value />
   </data>
+  <data name="NavUsuarios" xml:space="preserve">
+    <value />
+  </data>
 </root>

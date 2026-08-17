@@ -1,0 +1,67 @@
+﻿@model List<HelaTico.Application.DTOs.UsuarioDTO>
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Gestión de Usuarios</h1>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-person-plus"></i> Crear Usuario 
+    </a>
+</div>
+
+@if (TempData["MensajeExito"] != null)
+{
+    <div class="alert alert-success">@TempData["MensajeExito"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.Nombre @u.Apellido1 @u.Apellido2</td>
+                <td>@u.Correo</td>
+                <td><span class="badge bg-info">@u.DescripcionRol</span></td>
+                <td>
+                    <span class="badge @(u.EstadoUsuario == 1 ? "bg-success" : "bg-secondary")">
+                        @(u.EstadoUsuario == 1 ? "Activo" : "Inactivo")
+                    </span>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-danger btn-cambiar-estado"
+                            data-id="@u.IdUsuario" data-estado="@(u.EstadoUsuario == 1 ? 0 : 1)">
+                        @(u.EstadoUsuario == 1 ? "Desactivar" : "Activar")
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+        document.querySelectorAll('.btn-cambiar-estado').forEach(btn => {
+            btn.addEventListener('click', async function () {
+                const formData = new URLSearchParams();
+                formData.append('id', this.dataset.id);
+                formData.append('nuevoEstado', this.dataset.estado);
+                if (token) formData.append('__RequestVerificationToken', token);
+
+                const response = await fetch('/Usuario/CambiarEstado', { method: 'POST', body: formData });
+                const data = await response.json();
+                if (data.exito) location.reload();
+            });
+        });
+    </script>
+}

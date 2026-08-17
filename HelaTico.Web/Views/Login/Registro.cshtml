@@ -1,0 +1,65 @@
+﻿@model HelaTico.Web.ViewModels.ViewModelRegistro
+@{
+    ViewData["Title"] = "Crear Cuenta";
+}
+<div class="d-flex justify-content-center align-items-center" style="min-height:85vh;">
+    <div class="card border-0 shadow-lg" style="width:650px; border-radius:25px; overflow:hidden;">
+        <div class="text-center text-white" style="background:linear-gradient(180deg,#0d47a1,#1565c0); padding:40px 30px;">
+            <h1 class="fw-bold mb-2" style="font-size:2.5rem;">HelaTico</h1>
+            <p class="mb-0" style="font-size:1.2rem;">Crear Cuenta</p>
+        </div>
+        <div class="card-body" style="padding:45px;">
+            <form asp-controller="Login" asp-action="Registro" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Nombre" class="form-label fw-bold"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="Apellido1" class="form-label fw-bold"></label>
+                        <input asp-for="Apellido1" class="form-control" />
+                        <span asp-validation-for="Apellido1" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="Apellido2" class="form-label fw-bold"></label>
+                        <input asp-for="Apellido2" class="form-control" />
+                        <span asp-validation-for="Apellido2" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Correo" class="form-label fw-bold"></label>
+                    <input asp-for="Correo" class="form-control" autocomplete="off" />
+                    <span asp-validation-for="Correo" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="Contrasenna" class="form-label fw-bold">Contraseña</label>
+                        <input asp-for="Contrasenna" class="form-control" />
+                        <span asp-validation-for="Contrasenna" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="ConfirmarContrasenna" class="form-label fw-bold">Confirmar Contraseña</label>
+                        <input asp-for="ConfirmarContrasenna" class="form-control" />
+                        <span asp-validation-for="ConfirmarContrasenna" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn w-100 text-white fw-bold" style="background:linear-gradient(180deg,#1565c0,#0d47a1); height:55px; border-radius:12px;">
+                    Crear Cuenta
+                </button>
+
+                <p class="text-center mt-3 mb-0">
+                    ¿Ya tenés cuenta? <a asp-controller="Login" asp-action="Index">Iniciá sesión acá</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

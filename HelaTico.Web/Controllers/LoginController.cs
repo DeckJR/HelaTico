@@ -1,10 +1,12 @@
-﻿using HelaTico.Web.ViewModels;
+﻿using HelaTico.Application.DTOs;
+using HelaTico.Web.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HelaTico.Application.Services.Interfaces;
 using System.Security.Claims;
+
 namespace HelaTico.Web.Controllers
 {
     public class LoginController : Controller
@@ -14,23 +16,23 @@ namespace HelaTico.Web.Controllers
         {
             _serviceUsuario = serviceUsuario;
         }
+
         [HttpGet]
         public IActionResult Index()
         {
-            // Si ya inició sesión, no tiene sentido mostrarle el formulario de login otra vez
             if (User.Identity != null && User.Identity.IsAuthenticated)
-            {
                 return RedirectToAction("Index", "Home");
-            }
 
             return View(new ViewModelLogin());
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(ViewModelLogin model)
         {
             if (!ModelState.IsValid)
                 return View(model);
+
             var (usuario, error) = await _serviceUsuario.LoginAsync(model.Correo, model.Contrasenna);
             if (usuario == null)
             {
@@ -38,8 +40,6 @@ namespace HelaTico.Web.Controllers
                 return View(model);
             }
 
-            // Evitar que el carrito (u otros datos) de la sesión anterior
-            // se "arrastre" a este nuevo usuario logeado.
             HttpContext.Session.Clear();
 
             var claims = new List<Claim>
@@ -54,20 +54,60 @@ namespace HelaTico.Web.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 new AuthenticationProperties { IsPersistent = true });
-            return RedirectToAction("Index", "Home");
+
+            return usuario.DescripcionRol switch
+            {
+                "Cocina" => RedirectToAction("Index", "Cocina"),
+                _ => RedirectToAction("Index", "Home")
+            };
         }
+
+        [HttpGet]
+        public IActionResult Registro()
+        {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+
+            return View(new ViewModelRegistro());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Registro(ViewModelRegistro model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var dto = new UsuarioDTO
+            {
+                Nombre = model.Nombre,
+                Apellido1 = model.Apellido1,
+                Apellido2 = model.Apellido2,
+                Correo = model.Correo
+            };
+
+            var (exito, mensaje) = await _serviceUsuario.RegistrarClienteAsync(dto, model.Contrasenna);
+
+            if (!exito)
+            {
+                ModelState.AddModelError(string.Empty, mensaje);
+                return View(model);
+            }
+
+            TempData["MensajeExito"] = mensaje;
+            return RedirectToAction("Index");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            // Limpiar el carrito y cualquier otro dato de sesión del usuario que sale
             HttpContext.Session.Clear();
-
             return RedirectToAction("Index", "Home");
         }
+
         [AllowAnonymous]
         public IActionResult Forbidden()
         {

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Order History</value>
+  </data>
+  <data name="DateLabel" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="StateLabel" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="AllOption" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="StatePendingPayment" xml:space="preserve">
+    <value>Pending Payment</value>
+  </data>
+  <data name="StateAccepted" xml:space="preserve">
+    <value>Accepted</value>
+  </data>
+  <data name="StatePreparation" xml:space="preserve">
+    <value>Preparation</value>
+  </data>
+  <data name="StateProcessing" xml:space="preserve">
+    <value>Processing</value>
+  </data>
+  <data name="StateDelivered" xml:space="preserve">
+    <value>Delivered</value>
+  </data>
+  <data name="ClearFiltersButton" xml:space="preserve">
+    <value>Clear filters</value>
+  </data>
+  <data name="ColNumber" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="ColDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="ColClient" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="ColEmployee" xml:space="preserve">
+    <value>Employee</value>
+  </data>
+  <data name="ColState" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="ColTotal" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="ColDetail" xml:space="preserve">
+    <value>Detail</value>
+  </data>
+  <data name="LoadingText" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="NoOrdersText" xml:space="preserve">
+    <value>No orders found.</value>
+  </data>
+  <data name="ViewDetailButton" xml:space="preserve">
+    <value>View Detail</value>
+  </data>
+</root>

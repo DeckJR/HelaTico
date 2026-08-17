@@ -13,5 +13,10 @@ namespace HelaTico.Infraestructure.Repository.Interfaces
         Task<Usuario?> FindByCorreoAsync(string correo);
         Task<Usuario?> FindByIdAsync(int id);
         Task<List<Usuario>> SearchClientesAsync(string nombre);
+        Task<List<Usuario>> GetAllAsync();
+        Task<bool> ExistsByCorreoAsync(string correo);
+        Task<int> CreateAsync(Usuario usuario);
+        Task UpdateAsync(Usuario usuario);
+        Task<List<RolUsuario>> GetRolesAsync();
     }
 }

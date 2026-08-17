@@ -1,0 +1,59 @@
+﻿@model HelaTico.Web.ViewModels.ViewModelCrearUsuario
+@{
+    ViewData["Title"] = "Crear Usuario";
+    var roles = (List<HelaTico.Application.DTOs.RolDTO>)ViewBag.Roles;
+}
+<h1>Crear Usuario</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Apellido1" class="form-label"></label>
+                <input asp-for="Apellido1" class="form-control" />
+                <span asp-validation-for="Apellido1" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Apellido2" class="form-label"></label>
+                <input asp-for="Apellido2" class="form-control" />
+                <span asp-validation-for="Apellido2" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Correo" class="form-label"></label>
+                <input asp-for="Correo" class="form-control" autocomplete="off" />
+                <span asp-validation-for="Correo" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Contrasenna" class="form-label">Contraseña</label>
+                <input asp-for="Contrasenna" class="form-control" />
+                <span asp-validation-for="Contrasenna" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="IdRolUsuario" class="form-label">Rol</label>
+                <select asp-for="IdRolUsuario" class="form-select">
+                    <option value="">-- Seleccione --</option>
+                    @foreach (var rol in roles)
+                    {
+                        <option value="@rol.IdRolUsuario">@rol.Descripcion</option>
+                    }
+                </select>
+                <span asp-validation-for="IdRolUsuario" class="text-danger"></span>
+            </div>
+
+            <div class="btn-group mt-3">
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

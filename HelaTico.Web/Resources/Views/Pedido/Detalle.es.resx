@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitlePrefix" xml:space="preserve">
+    <value>Detalle del Pedido #</value>
+  </data>
+  <data name="OrderHeading" xml:space="preserve">
+    <value>Pedido</value>
+  </data>
+  <data name="BackButton" xml:space="preserve">
+    <value>Volver</value>
+  </data>
+  <data name="ReceiptHeading" xml:space="preserve">
+    <value>Comprobante de Pedido</value>
+  </data>
+  <data name="ClientDataHeading" xml:space="preserve">
+    <value>DATOS DEL CLIENTE</value>
+  </data>
+  <data name="NameLabel" xml:space="preserve">
+    <value>Nombre:</value>
+  </data>
+  <data name="EmailLabel" xml:space="preserve">
+    <value>Correo:</value>
+  </data>
+  <data name="OrderDataHeading" xml:space="preserve">
+    <value>DATOS DEL PEDIDO</value>
+  </data>
+  <data name="DateLabel" xml:space="preserve">
+    <value>Fecha:</value>
+  </data>
+  <data name="AttendedByLabel" xml:space="preserve">
+    <value>Atendido por:</value>
+  </data>
+  <data name="DeliveryTypeLabel" xml:space="preserve">
+    <value>Tipo de entrega:</value>
+  </data>
+  <data name="AddressLabel" xml:space="preserve">
+    <value>Dirección:</value>
+  </data>
+  <data name="DetailHeading" xml:space="preserve">
+    <value>DETALLE</value>
+  </data>
+  <data name="ColItem" xml:space="preserve">
+    <value>Artículo</value>
+  </data>
+  <data name="ColType" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="ColQuantity" xml:space="preserve">
+    <value>Cantidad</value>
+  </data>
+  <data name="ColSubTotal" xml:space="preserve">
+    <value>Subtotal</value>
+  </data>
+  <data name="ColTax" xml:space="preserve">
+    <value>Impuesto</value>
+  </data>
+  <data name="ColLineTotal" xml:space="preserve">
+    <value>Total Línea</value>
+  </data>
+  <data name="ColObservations" xml:space="preserve">
+    <value>Observaciones</value>
+  </data>
+  <data name="SubTotalLabel" xml:space="preserve">
+    <value>Subtotal</value>
+  </data>
+  <data name="TaxLabel" xml:space="preserve">
+    <value>Impuesto</value>
+  </data>
+  <data name="ServiceFeeLabel" xml:space="preserve">
+    <value>Cuota de servicio</value>
+  </data>
+  <data name="ShippingCostLabel" xml:space="preserve">
+    <value>Costo de envío</value>
+  </data>
+  <data name="TotalLabelUpper" xml:space="preserve">
+    <value>TOTAL</value>
+  </data>
+  <data name="PaymentHeading" xml:space="preserve">
+    <value>PAGO</value>
+  </data>
+  <data name="MethodLabel" xml:space="preserve">
+    <value>Método:</value>
+  </data>
+  <data name="AmountPaidLabel" xml:space="preserve">
+    <value>Monto pagado:</value>
+  </data>
+  <data name="ChangeLabel" xml:space="preserve">
+    <value>Vuelto:</value>
+  </data>
+  <data name="ProcessedOnLabel" xml:space="preserve">
+    <value>Procesado el</value>
+  </data>
+  <data name="NoPaymentText" xml:space="preserve">
+    <value>Este pedido aún no tiene pago registrado.</value>
+  </data>
+  <data name="Producto" xml:space="preserve">
+    <value>Producto</value>
+  </data>
+  <data name="Combo" xml:space="preserve">
+    <value>Combo</value>
+  </data>
+  <data name="Domicilio" xml:space="preserve">
+    <value>Domicilio</value>
+  </data>
+  <data name="Recogida en tienda" xml:space="preserve">
+    <value>Recogida en tienda</value>
+  </data>
+  <data name="Pendiente de pago" xml:space="preserve">
+    <value>Pendiente de pago</value>
+  </data>
+  <data name="Aceptada" xml:space="preserve">
+    <value>Aceptada</value>
+  </data>
+  <data name="Preparación" xml:space="preserve">
+    <value>Preparación</value>
+  </data>
+  <data name="Procesando" xml:space="preserve">
+    <value>Procesando</value>
+  </data>
+  <data name="Entregada" xml:space="preserve">
+    <value>Entregada</value>
+  </data>
+  <data name="Efectivo" xml:space="preserve">
+    <value>Efectivo</value>
+  </data>
+  <data name="Tarjeta de Crédito" xml:space="preserve">
+    <value>Tarjeta de Crédito</value>
+  </data>
+  <data name="Tarjeta de Débito" xml:space="preserve">
+    <value>Tarjeta de Débito</value>
+  </data>
+</root>
