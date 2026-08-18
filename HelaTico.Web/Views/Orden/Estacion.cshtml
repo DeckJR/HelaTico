@@ -1,0 +1,343 @@
+﻿@model List<HelaTico.Application.DTOs.OrdenEstacionDTO>
+
+@{
+    ViewData["Title"] = "Estación";
+
+    int idEstacion =ViewBag.IdEstacion;
+}
+
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2>
+                @ViewBag.NombreEstacion
+            </h2>
+
+            <p class="text-muted mb-0">
+                Órdenes de preparación
+            </p>
+
+        </div>
+
+
+        <a asp-controller="Orden"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+
+            Volver a estaciones
+
+        </a>
+
+    </div>
+
+
+    @Html.AntiForgeryToken()
+
+
+    <div id="contenedorOrdenes">
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+
+                No existen órdenes
+                para esta estación.
+
+            </div>
+        }
+
+
+        @foreach (var orden in Model)
+        {
+            <div class="card shadow-sm mb-3 orden-card"
+                 data-id="@orden.IdOrden">
+
+                <div class="card-header d-flex justify-content-between">
+
+                    <strong>
+                        Pedido #@orden.IdPedido
+                    </strong>
+
+
+                    @if (orden.EstadoOrden== 1)
+                    {
+                        <span class="badge bg-warning text-dark estado-badge">
+                            Pendiente
+                        </span>
+                    }
+                    else if (orden.EstadoOrden== 2)
+                    {
+                        <span class="badge bg-primary estado-badge">
+                            En proceso
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success estado-badge">
+                            Finalizada
+                        </span>
+                    }
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <p>
+                                <strong>
+                                    Producto:
+                                </strong>
+
+                                @orden.Producto
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Cantidad:
+                                </strong>
+
+                                @orden.Cantidad
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Observaciones:
+                                </strong>
+
+                                @(string.IsNullOrWhiteSpace(orden.Observaciones)? "Sin observaciones": orden.Observaciones)
+                            </p>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <p>
+                                <strong>
+                                    Hora inicio:
+                                </strong>
+
+                                <span class="hora-inicio">
+
+                                    @(orden.HoraInicio.HasValue? orden.HoraInicio.Value.ToString("HH:mm:ss"): "—")
+
+                                </span>
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Hora fin:
+                                </strong>
+
+                                <span class="hora-fin">
+
+                                    @(
+                                        orden.HoraFin.HasValue? orden.HoraFin.Value.ToString("HH:mm:ss"): "—"                                        )
+
+                                </span>
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="mt-2">
+
+                        @if (orden.EstadoOrden== 1)
+                        {
+                            <button type="button"
+                                    class="btn btn-primary btn-iniciar">
+
+                                Iniciar preparación
+
+                            </button>
+                        }
+
+
+                        @if (orden.EstadoOrden== 2)
+                        {
+                            <button type="button"
+                                    class="btn btn-success btn-finalizar">
+
+                                Finalizar preparación
+
+                            </button>
+                        }
+
+
+                        @if (orden.EstadoOrden== 3)
+                        {
+                            <span class="text-success fw-bold">
+                                ✔ Preparación finalizada
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+
+@section Scripts
+{
+    <script>
+
+        document.addEventListener('DOMContentLoaded',function ()
+            {
+                const token =document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                document.querySelectorAll(
+                    '.btn-iniciar'
+                )
+                .forEach(
+                    boton =>
+                    {
+                        boton.addEventListener(
+                            'click',
+                            async function ()
+                            {
+                                const card =
+                                    this.closest(
+                                        '.orden-card'
+                                    );
+
+
+                                const id =card.dataset.id;
+
+
+                                const formData =new URLSearchParams();
+
+
+                                formData.append('id',id);
+
+
+                                formData.append('__RequestVerificationToken',token);
+
+
+                                const response =
+                                    await fetch(
+                                        '/Orden/Iniciar',
+                                        {
+                                            method:
+                                                'POST',
+
+                                            body:
+                                                formData
+                                        }
+                                    );
+
+
+                                const data =
+                                    await response.json();
+
+
+                                if (!data.exito)
+                                {
+                                    alert(
+                                        data.mensaje
+                                    );
+
+                                    return;
+                                }
+
+
+                                location.reload();
+                            }
+                        );
+                    }
+                );
+
+
+                document.querySelectorAll(
+                    '.btn-finalizar'
+                )
+                .forEach(
+                    boton =>
+                    {
+                        boton.addEventListener(
+                            'click',
+                            async function ()
+                            {
+                                const card =
+                                    this.closest(
+                                        '.orden-card'
+                                    );
+
+
+                                const id =
+                                    card.dataset.id;
+
+
+                                const formData =
+                                    new URLSearchParams();
+
+
+                                formData.append(
+                                    'id',
+                                    id
+                                );
+
+
+                                formData.append(
+                                    '__RequestVerificationToken',
+                                    token
+                                );
+
+
+                                const response =
+                                    await fetch(
+                                        '/Orden/Finalizar',
+                                        {
+                                            method:
+                                                'POST',
+
+                                            body:
+                                                formData
+                                        }
+                                    );
+
+
+                                const data =
+                                    await response.json();
+
+
+                                if (!data.exito)
+                                {
+                                    alert(
+                                        data.mensaje
+                                    );
+
+                                    return;
+                                }
+
+
+                                location.reload();
+                            }
+                        );
+                    }
+                );
+
+            }
+        );
+
+    </script>
+}

@@ -13,9 +13,9 @@ public partial class Orden
 
     public int EstadoOrden { get; set; }
 
-    public TimeOnly HoraInicio { get; set; }
+    public TimeOnly? HoraInicio { get; set; }
 
-    public TimeOnly HoraFin { get; set; }
+    public TimeOnly? HoraFin { get; set; }
 
     public int IdProducto { get; set; }
 

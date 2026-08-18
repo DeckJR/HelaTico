@@ -1,0 +1,82 @@
+﻿@model List<HelaTico.Application.DTOs.EstacionProcesoDTO>
+
+@{
+    ViewData["Title"] =
+        "Estaciones de preparación";
+}
+
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">
+        Estaciones de preparación
+    </h2>
+
+
+    <div class="row g-4">
+
+        @foreach (var estacion in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+
+                <div class="card h-100 shadow-sm">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            @estacion.Descripcion
+                        </h5>
+
+
+                        <hr />
+
+
+                        <div class="d-flex justify-content-between mb-2">
+
+                            <span>
+                                Pendientes
+                            </span>
+
+                            <span class="badge bg-warning text-dark">
+                                @estacion.OrdenesPendientes
+                            </span>
+
+                        </div>
+
+
+                        <div class="d-flex justify-content-between">
+
+                            <span>
+                                En proceso
+                            </span>
+
+                            <span class="badge bg-primary">
+                                @estacion.OrdenesEnProceso
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-footer bg-transparent">
+
+                        <a asp-controller="Orden"
+                           asp-action="Estacion"
+                           asp-route-id="@estacion.IdEstacion"
+                           class="btn btn-primary w-100">
+
+                            Ver estación
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>

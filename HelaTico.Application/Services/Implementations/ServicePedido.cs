@@ -17,20 +17,21 @@ namespace HelaTico.Application.Services.Implementations
         private readonly IRepositoryTipoEntrega _tipoEntrega;
         private readonly IRepositoryProducto _producto;
         private readonly IRepositoryCombo _combo;
+        private readonly IServiceOrden _serviceOrden;
 
         private const decimal IVA = 0.13m;
         private const decimal COSTO_ENVIO = 2000m;
 
-        public ServicePedido(IRepositoryPedido repository,IRepositoryTipoEntrega tipoEntrega,IRepositoryProducto producto,IRepositoryCombo combo)
+        public ServicePedido(IRepositoryPedido repository,IRepositoryTipoEntrega tipoEntrega, IRepositoryProducto producto, IRepositoryCombo combo, IServiceOrden serviceOrden)
         {
             _repository = repository;
             _tipoEntrega = tipoEntrega;
             _producto = producto;
             _combo = combo;
+            _serviceOrden = serviceOrden;
         }
 
-        public async Task<List<PedidoListaDTO>> ObtenerHistorialAsync(
-            int idUsuarioLogueado, bool esCliente, DateOnly? fecha, int? estadoPedido)
+        public async Task<List<PedidoListaDTO>> ObtenerHistorialAsync(int idUsuarioLogueado, bool esCliente, DateOnly? fecha, int? estadoPedido)
         {
             var pedidos = esCliente
                 ? await _repository.GetHistorialClienteAsync(idUsuarioLogueado, fecha, estadoPedido)
@@ -477,6 +478,8 @@ namespace HelaTico.Application.Services.Implementations
             await _repository.AddPagoAsync(pago);
 
             await _repository.CambiarEstadoAsync(pedido.IdPedido,(int)EstadoPedido.Aceptada);
+
+            await _serviceOrden.GenerarOrdenesPedidoAsync(pedido.IdPedido);
         }
         private static void ValidarTarjeta(ProcesarPagoDTO dto)
         {

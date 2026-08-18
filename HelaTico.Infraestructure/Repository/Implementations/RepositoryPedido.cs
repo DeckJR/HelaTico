@@ -139,5 +139,11 @@ namespace HelaTico.Infraestructure.Repository.Implementations
 
             await _context.SaveChangesAsync();
         }
+        public async Task<Pedido?>FindWithDetalleAsync(int idPedido)
+        {
+            return await _context.Pedido.Include(p =>p.DetallePedido).ThenInclude(d =>d.IdProductoNavigation)
+                .Include(p =>p.DetallePedido).ThenInclude(d =>d.IdComboNavigation).ThenInclude(c =>c.ComboProducto)
+                            .ThenInclude(cp =>cp.IdProductoNavigation).FirstOrDefaultAsync(p =>p.IdPedido== idPedido);
+        }
     }
 }

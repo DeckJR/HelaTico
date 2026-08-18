@@ -16,5 +16,6 @@ namespace HelaTico.Infraestructure.Repository.Interfaces
         Task DeleteComboProductosAsync(int idCombo);
         Task AddComboProductoAsync(ComboProducto comboProducto);
         Task DeleteAsync(int id);
+        Task<Combo?>FindWithProductosAsync(int idCombo);
     }
 }

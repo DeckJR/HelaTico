@@ -13,5 +13,6 @@ namespace HelaTico.Infraestructure.Repository.Interfaces
         Task<Producto> FindByIdAsync(int idProducto);
         Task AddPreparacionAsync(Preparacion preparacion);
         Task DeleteByProductoAsync(int idProducto);
+        Task<List<Preparacion>> GetByProductoAsync(int idProducto);
     }
 }

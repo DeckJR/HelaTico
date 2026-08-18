@@ -16,5 +16,6 @@ namespace HelaTico.Infraestructure.Repository.Interfaces
         Task<Pedido?>FindSimpleByIdAsync(int idPedido);
         Task AddPagoAsync(Pago pago);
         Task CambiarEstadoAsync(int idPedido,int nuevoEstado);
+        Task<Pedido?>FindWithDetalleAsync(int idPedido);
     }
 }

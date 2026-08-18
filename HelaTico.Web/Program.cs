@@ -57,6 +57,7 @@ builder.Services.AddScoped<IRepositoryEstacion, RepositoryEstacion>();
 builder.Services.AddTransient<IRepositoryUsuario, RepositoryUsuario>();
 builder.Services.AddTransient<IRepositoryPedido, RepositoryPedido>();
 builder.Services.AddTransient<IRepositoryTipoEntrega,RepositoryTipoEntrega>();
+builder.Services.AddTransient<IRepositoryOrden,RepositoryOrden>();
 
 //Services 
 builder.Services.AddTransient<IServiceProducto, ServiceProducto>();
@@ -70,6 +71,7 @@ builder.Services.AddTransient<IServiceUsuario, ServiceUsuario>();
 builder.Services.AddTransient<IServicePedido, ServicePedido>();
 builder.Services.AddTransient<IServiceCarrito, ServiceCarrito>();
 builder.Services.AddTransient<IServiceTipoEntrega,ServiceTipoEntrega>();
+builder.Services.AddTransient<IServiceOrden,ServiceOrden>();
 
 
 //Configurar Automapper 

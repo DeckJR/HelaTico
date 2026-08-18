@@ -51,5 +51,11 @@ namespace HelaTico.Infraestructure.Repository.Implementations
             _context.Preparacion.RemoveRange(pasos);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Preparacion>> GetByProductoAsync(int idProducto)
+        {
+            return await _context.Preparacion.Include(p =>p.IdEstacionNavigation)
+                .Where(p =>p.IdProducto== idProducto).OrderBy(p =>p.Orden).ToListAsync();
+        }
     }
 }
