@@ -1,67 +1,209 @@
 ﻿@model List<HelaTico.Application.DTOs.UsuarioDTO>
+
 @{
-    ViewData["Title"] = "Gestión de Usuarios";
+    ViewData["Title"] = Localizer["Title"];
 }
+
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Gestión de Usuarios</h1>
-    <a asp-action="Create" class="btn btn-success">
-        <i class="bi bi-person-plus"></i> Crear Usuario 
+
+    <h1>
+        @Localizer["Heading"]
+    </h1>
+
+    <a asp-action="Create"
+       class="btn text-white fw-bold"
+       style="background:#667A56;">
+
+        <i class="bi bi-person-plus"></i>
+
+        @Localizer["BtnCrearUsuario"]
+
     </a>
+
 </div>
 
 @if (TempData["MensajeExito"] != null)
 {
-    <div class="alert alert-success">@TempData["MensajeExito"]</div>
+    <div class="alert alert-success">
+        @TempData["MensajeExito"]
+    </div>
 }
 
-<table class="table table-striped">
+<table class="table table-striped align-middle">
+
     <thead>
+
         <tr>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Rol</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+
+            <th>
+                @Localizer["ColNombre"]
+            </th>
+
+            <th>
+                @Localizer["ColCorreo"]
+            </th>
+
+            <th>
+                @Localizer["ColRol"]
+            </th>
+
+            <th>
+                @Localizer["ColEstado"]
+            </th>
+
+            <th>
+                @Localizer["ColAcciones"]
+            </th>
+
         </tr>
+
     </thead>
+
     <tbody>
+
         @foreach (var u in Model)
         {
             <tr>
-                <td>@u.Nombre @u.Apellido1 @u.Apellido2</td>
-                <td>@u.Correo</td>
-                <td><span class="badge bg-info">@u.DescripcionRol</span></td>
+
                 <td>
-                    <span class="badge @(u.EstadoUsuario == 1 ? "bg-success" : "bg-secondary")">
-                        @(u.EstadoUsuario == 1 ? "Activo" : "Inactivo")
+                    @u.Nombre @u.Apellido1 @u.Apellido2
+                </td>
+
+                <td>
+                    @u.Correo
+                </td>
+
+                <td>
+                    <span class="badge bg-info">
+                        @u.DescripcionRol
                     </span>
                 </td>
+
                 <td>
-                    <button type="button" class="btn btn-sm btn-outline-danger btn-cambiar-estado"
-                            data-id="@u.IdUsuario" data-estado="@(u.EstadoUsuario == 1 ? 0 : 1)">
-                        @(u.EstadoUsuario == 1 ? "Desactivar" : "Activar")
-                    </button>
+
+                    <span class="badge @(u.EstadoUsuario == 1
+                        ? "bg-success"
+                        : "bg-secondary")">
+
+                        @(u.EstadoUsuario == 1
+                            ? Localizer["EstadoActivo"]
+                            : Localizer["EstadoInactivo"])
+
+                    </span>
+
                 </td>
+
+                <td>
+
+                    <!-- EDITAR -->
+                    <a asp-action="Edit"
+                       asp-route-id="@u.IdUsuario"
+                       class="btn btn-sm btn-outline-primary me-1">
+
+                        <i class="bi bi-pencil"></i>
+
+                        @Localizer["BtnEditar"]
+
+                    </a>
+
+                    <!-- CAMBIAR ESTADO -->
+                    <button type="button"
+                            class="btn btn-sm btn-outline-danger btn-cambiar-estado"
+                            data-id="@u.IdUsuario"
+                            data-estado="@(u.EstadoUsuario == 1 ? 0 : 1)">
+
+                        @(u.EstadoUsuario == 1
+                            ? Localizer["BtnDesactivar"]
+                            : Localizer["BtnActivar"])
+
+                    </button>
+
+                </td>
+
             </tr>
         }
+
     </tbody>
+
 </table>
 
+<!-- Token para AJAX -->
+<form id="antiForgeryForm"
+      style="display:none;">
+
+    @Html.AntiForgeryToken()
+
+</form>
+
 @section Scripts {
+
     <script>
-        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
-        document.querySelectorAll('.btn-cambiar-estado').forEach(btn => {
-            btn.addEventListener('click', async function () {
-                const formData = new URLSearchParams();
-                formData.append('id', this.dataset.id);
-                formData.append('nuevoEstado', this.dataset.estado);
-                if (token) formData.append('__RequestVerificationToken', token);
+        const token =
+            document.querySelector(
+                '#antiForgeryForm input[name="__RequestVerificationToken"]'
+            )?.value;
 
-                const response = await fetch('/Usuario/CambiarEstado', { method: 'POST', body: formData });
-                const data = await response.json();
-                if (data.exito) location.reload();
+        document
+            .querySelectorAll('.btn-cambiar-estado')
+            .forEach(btn => {
+
+                btn.addEventListener(
+                    'click',
+                    async function () {
+
+                        const formData =
+                            new URLSearchParams();
+
+                        formData.append(
+                            'id',
+                            this.dataset.id
+                        );
+
+                        formData.append(
+                            'nuevoEstado',
+                            this.dataset.estado
+                        );
+
+                        if (token) {
+
+                            formData.append(
+                                '__RequestVerificationToken',
+                                token
+                            );
+                        }
+
+                        const response =
+                            await fetch(
+                                '/Usuario/CambiarEstado',
+                                {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type':
+                                            'application/x-www-form-urlencoded'
+                                    },
+                                    body: formData
+                                }
+                            );
+
+                        const data =
+                            await response.json();
+
+                        if (data.exito) {
+
+                            location.reload();
+
+                        }
+                        else {
+
+                            alert(data.mensaje);
+
+                        }
+
+                    }
+                );
+
             });
-        });
+
     </script>
 }

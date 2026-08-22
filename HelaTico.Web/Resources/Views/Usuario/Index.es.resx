@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="Title" xml:space="preserve">
+    <value>Usuarios</value>
+  </data>
+
+  <data name="Heading" xml:space="preserve">
+    <value>Administración de Usuarios</value>
+  </data>
+
+  <data name="BtnCrearUsuario" xml:space="preserve">
+    <value>Crear Usuario</value>
+  </data>
+
+  <data name="ColNombre" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+
+  <data name="ColCorreo" xml:space="preserve">
+    <value>Correo</value>
+  </data>
+
+  <data name="ColRol" xml:space="preserve">
+    <value>Rol</value>
+  </data>
+
+  <data name="ColEstado" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+
+  <data name="ColAcciones" xml:space="preserve">
+    <value>Acciones</value>
+  </data>
+
+  <data name="EstadoActivo" xml:space="preserve">
+    <value>Activo</value>
+  </data>
+
+  <data name="EstadoInactivo" xml:space="preserve">
+    <value>Inactivo</value>
+  </data>
+
+  <data name="BtnEditar" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+
+  <data name="BtnDesactivar" xml:space="preserve">
+    <value>Desactivar</value>
+  </data>
+
+  <data name="BtnActivar" xml:space="preserve">
+    <value>Activar</value>
+  </data>
+
+  <data name="MensajeExito" xml:space="preserve">
+    <value>Operación realizada correctamente.</value>
+  </data>
+</root>

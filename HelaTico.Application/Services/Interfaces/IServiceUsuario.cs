@@ -15,6 +15,7 @@ namespace HelaTico.Application.Services.Interfaces
         Task<List<UsuarioDTO>> ObtenerTodosAsync();
         Task<(bool Exito, string Mensaje)> RegistrarClienteAsync(UsuarioDTO dto, string password);
         Task<(bool Exito, string Mensaje)> CrearUsuarioAsync(UsuarioDTO dto, string password);
+        Task<(bool Exito, string Mensaje)> ActualizarUsuarioAsync(UsuarioDTO dto);  
         Task<(bool Exito, string Mensaje)> CambiarEstadoAsync(int idUsuario, int nuevoEstado);
         Task<List<RolDTO>> ObtenerRolesAsync();
     }

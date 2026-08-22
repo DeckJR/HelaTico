@@ -1,0 +1,323 @@
+﻿@model HelaTico.Web.ViewModels.ViewModelEditarUsuario
+
+@{
+    ViewData["Title"] = Localizer["Title"];
+
+    var roles =
+        ViewBag.Roles as List<HelaTico.Application.DTOs.RolDTO>;
+
+    bool esAdministrador =
+        User.IsInRole("Administrador");
+}
+
+<div class="d-flex justify-content-center"
+     style="min-height:85vh; padding-top:40px;">
+
+    <div class="card border-0 shadow-lg"
+         style="width:720px;
+                max-width:100%;
+                border-radius:20px;
+                background:#FFFDF7;
+                overflow:hidden;">
+
+
+        <div class="text-white"
+             style="background:linear-gradient(135deg,#667A56,#526544);
+                    padding:28px 40px;">
+
+            <h2 class="fw-bold mb-1">
+                @Localizer["Heading"]
+            </h2>
+
+            <p class="mb-0"
+               style="opacity:.9; font-size:.95rem;">
+
+                @Localizer["Subtitulo"]
+
+            </p>
+
+        </div>
+
+        <div class="card-body"
+             style="padding:40px;">
+
+            @if (TempData["MensajeExito"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["MensajeExito"]
+                </div>
+            }
+
+            <form asp-action="Edit"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       asp-for="IdUsuario" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger">
+                </div>
+
+
+
+                <div class="mb-3 ps-3"
+                     style="border-left:4px solid #667A56;">
+
+                    <small class="text-uppercase fw-bold"
+                           style="color:#667A56;
+                                  letter-spacing:.5px;">
+
+                        <i class="bi bi-person-vcard"></i>
+
+                        @Localizer["SeccionDatosPersonales"]
+
+                    </small>
+
+                </div>
+
+                <div class="row mt-2 mb-4">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="Nombre"
+                               class="form-label fw-bold">
+
+                            @Localizer["LblNombre"]
+
+                        </label>
+
+                        <input asp-for="Nombre"
+                               class="form-control form-control-lg"
+                               style="border-radius:10px;" />
+
+                        <span asp-validation-for="Nombre"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="Apellido1"
+                               class="form-label fw-bold">
+
+                            @Localizer["LblApellido1"]
+
+                        </label>
+
+                        <input asp-for="Apellido1"
+                               class="form-control form-control-lg"
+                               style="border-radius:10px;" />
+
+                        <span asp-validation-for="Apellido1"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Apellido2"
+                               class="form-label fw-bold">
+
+                            @Localizer["LblApellido2"]
+
+                        </label>
+
+                        <input asp-for="Apellido2"
+                               class="form-control form-control-lg"
+                               style="border-radius:10px;" />
+
+                        <span asp-validation-for="Apellido2"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mb-3 ps-3"
+                     style="border-left:4px solid #B56B6B;">
+
+                    <small class="text-uppercase fw-bold"
+                           style="color:#B56B6B;
+                                  letter-spacing:.5px;">
+
+                        <i class="bi bi-shield-lock"></i>
+
+                        @Localizer["SeccionAcceso"]
+
+                    </small>
+
+                </div>
+
+                <div class="mt-2 mb-4">
+
+                    <label asp-for="Correo"
+                           class="form-label fw-bold">
+
+                        @Localizer["LblCorreo"]
+
+                    </label>
+
+                    <div class="input-group input-group-lg">
+
+                        <span class="input-group-text bg-white"
+                              style="border-radius:10px 0 0 10px;">
+
+                            <i class="bi bi-envelope"></i>
+
+                        </span>
+
+                        <input asp-for="Correo"
+                               class="form-control"
+                               style="border-radius:0 10px 10px 0;"
+                               autocomplete="off" />
+
+                    </div>
+
+                    <span asp-validation-for="Correo"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <div class="mb-3 ps-3"
+                     style="border-left:4px solid #667A56;">
+
+                    <small class="text-uppercase fw-bold"
+                           style="color:#667A56;
+                                  letter-spacing:.5px;">
+
+                        <i class="bi bi-person-badge"></i>
+
+                        @Localizer["SeccionPermisos"]
+
+                    </small>
+
+                </div>
+
+                <div class="mt-2 mb-4">
+
+                    <label asp-for="IdRolUsuario"
+                           class="form-label fw-bold">
+
+                        @Localizer["LblRol"]
+
+                    </label>
+
+                    @if (esAdministrador)
+                    {
+                 
+
+                        <select asp-for="IdRolUsuario"
+                                class="form-select form-select-lg"
+                                style="border-radius:10px;">
+
+                            @if (roles != null)
+                            {
+                                foreach (var rol in roles)
+                                {
+                                    if (rol.IdRolUsuario ==
+                                    Model.IdRolUsuario)
+                                    {
+                                        <option value="@rol.IdRolUsuario"
+                                                selected>
+                                            @rol.Descripcion
+                                        </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@rol.IdRolUsuario">
+                                            @rol.Descripcion
+                                        </option>
+                                    }
+                                }
+                            }
+
+                        </select>
+                    }
+                    else
+                    {
+                     
+
+                        <input type="text"
+                               class="form-control form-control-lg"
+                               style="border-radius:10px;
+                                      background:#f1f1f1;"
+                               value="@Model.DescripcionRol"
+                               disabled />
+
+                 
+                        <input type="hidden"
+                               asp-for="IdRolUsuario" />
+
+                        <small class="text-muted">
+                            @Localizer["RolSoloAdminTexto"]
+                        </small>
+                    }
+
+                    <span asp-validation-for="IdRolUsuario"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn text-white fw-bold flex-grow-1"
+                            style="background:linear-gradient(135deg,#667A56,#526544);
+                                   height:52px;
+                                   border-radius:12px;">
+
+                        <i class="bi bi-check-circle"></i>
+
+                        @Localizer["BtnGuardar"]
+
+                    </button>
+
+                    @if (esAdministrador)
+                    {
+                        <a asp-action="Index"
+                           class="btn btn-outline-secondary fw-bold"
+                           style="height:52px;
+                                  border-radius:12px;
+                                  padding-inline:25px;">
+
+                            @Localizer["BtnCancelar"]
+
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Home"
+                           asp-action="Index"
+                           class="btn btn-outline-secondary fw-bold"
+                           style="height:52px;
+                                  border-radius:12px;
+                                  padding-inline:25px;">
+
+                            @Localizer["BtnCancelar"]
+
+                        </a>
+                    }
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

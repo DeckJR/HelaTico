@@ -1,59 +1,276 @@
 ﻿@model HelaTico.Web.ViewModels.ViewModelCrearUsuario
+
 @{
-    ViewData["Title"] = "Crear Usuario";
-    var roles = (List<HelaTico.Application.DTOs.RolDTO>)ViewBag.Roles;
+    ViewData["Title"] = Localizer["Title"];
+
+    var roles =
+        (List<HelaTico.Application.DTOs.RolDTO>)ViewBag.Roles;
 }
-<h1>Crear Usuario</h1>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-            <div class="mb-3">
-                <label asp-for="Nombre" class="form-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Apellido1" class="form-label"></label>
-                <input asp-for="Apellido1" class="form-control" />
-                <span asp-validation-for="Apellido1" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Apellido2" class="form-label"></label>
-                <input asp-for="Apellido2" class="form-control" />
-                <span asp-validation-for="Apellido2" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Correo" class="form-label"></label>
-                <input asp-for="Correo" class="form-control" autocomplete="off" />
-                <span asp-validation-for="Correo" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Contrasenna" class="form-label">Contraseña</label>
-                <input asp-for="Contrasenna" class="form-control" />
-                <span asp-validation-for="Contrasenna" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="IdRolUsuario" class="form-label">Rol</label>
-                <select asp-for="IdRolUsuario" class="form-select">
-                    <option value="">-- Seleccione --</option>
-                    @foreach (var rol in roles)
-                    {
-                        <option value="@rol.IdRolUsuario">@rol.Descripcion</option>
-                    }
-                </select>
-                <span asp-validation-for="IdRolUsuario" class="text-danger"></span>
-            </div>
+<div class="d-flex justify-content-center align-items-center"
+     style="min-height:80vh; padding:40px 0;">
 
-            <div class="btn-group mt-3">
-                <button type="submit" class="btn btn-success">Guardar</button>
-                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-            </div>
-        </form>
+    <div class="card border-0 shadow-lg"
+         style="width:600px;
+                max-width:100%;
+                border-radius:22px;
+                overflow:hidden;
+                background:#FFFDF7;">
+
+
+
+        <div class="text-center text-white"
+             style="background:linear-gradient(135deg,#667A56,#526544);
+                    padding:30px;">
+
+            <h2 class="fw-bold mb-0">
+                @Localizer["Heading"]
+            </h2>
+
+            <p class="mb-0 mt-2"
+               style="opacity:.9;">
+
+                @Localizer["Subtitulo"]
+
+            </p>
+
+        </div>
+
+        <div class="card-body"
+             style="padding:40px;">
+
+            <form asp-action="Create"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger">
+                </div>
+
+                <div class="mb-3 ps-3"
+                     style="border-left:4px solid #667A56;">
+
+                    <small class="text-uppercase fw-bold"
+                           style="color:#667A56;
+                                  letter-spacing:.5px;">
+
+                        <i class="bi bi-person-vcard"></i>
+
+                        @Localizer["SeccionDatosPersonales"]
+
+                    </small>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="Nombre"
+                               class="form-label fw-bold">
+
+                            @Localizer["LblNombre"]
+
+                        </label>
+
+                        <input asp-for="Nombre"
+                               class="form-control form-control-lg"
+                               style="border-radius:10px;" />
+
+                        <span asp-validation-for="Nombre"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label asp-for="Apellido1"
+                               class="form-label fw-bold">
+
+                            @Localizer["LblApellido1"]
+
+                        </label>
+
+                        <input asp-for="Apellido1"
+                               class="form-control form-control-lg"
+                               style="border-radius:10px;" />
+
+                        <span asp-validation-for="Apellido1"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label asp-for="Apellido2"
+                           class="form-label fw-bold">
+
+                        @Localizer["LblApellido2"]
+
+                    </label>
+
+                    <input asp-for="Apellido2"
+                           class="form-control form-control-lg"
+                           style="border-radius:10px;" />
+
+                    <span asp-validation-for="Apellido2"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+           
+
+                <div class="mb-3 ps-3 mt-4"
+                     style="border-left:4px solid #B56B6B;">
+
+                    <small class="text-uppercase fw-bold"
+                           style="color:#B56B6B;
+                                  letter-spacing:.5px;">
+
+                        <i class="bi bi-shield-lock"></i>
+
+                        @Localizer["SeccionAcceso"]
+
+                    </small>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label asp-for="Correo"
+                           class="form-label fw-bold">
+
+                        <i class="bi bi-envelope"></i>
+
+                        @Localizer["LblCorreo"]
+
+                    </label>
+
+                    <input asp-for="Correo"
+                           class="form-control form-control-lg"
+                           style="border-radius:10px;"
+                           autocomplete="off" />
+
+                    <span asp-validation-for="Correo"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label asp-for="Contrasenna"
+                           class="form-label fw-bold">
+
+                        <i class="bi bi-lock"></i>
+
+                        @Localizer["LblContrasenna"]
+
+                    </label>
+
+                    <input asp-for="Contrasenna"
+                           class="form-control form-control-lg"
+                           style="border-radius:10px;"
+                           type="password"
+                           autocomplete="new-password" />
+
+                    <span asp-validation-for="Contrasenna"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+  
+
+                <div class="mb-3 ps-3"
+                     style="border-left:4px solid #667A56;">
+
+                    <small class="text-uppercase fw-bold"
+                           style="color:#667A56;
+                                  letter-spacing:.5px;">
+
+                        <i class="bi bi-person-badge"></i>
+
+                        @Localizer["SeccionPermisos"]
+
+                    </small>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label asp-for="IdRolUsuario"
+                           class="form-label fw-bold">
+
+                        @Localizer["LblRol"]
+
+                    </label>
+
+                    <select asp-for="IdRolUsuario"
+                            class="form-select form-select-lg"
+                            style="border-radius:10px;">
+
+                        <option value="">
+                            @Localizer["OpcionSeleccione"]
+                        </option>
+
+                        @foreach (var rol in roles)
+                        {
+                            <option value="@rol.IdRolUsuario">
+                                @rol.Descripcion
+                            </option>
+                        }
+
+                    </select>
+
+                    <span asp-validation-for="IdRolUsuario"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+      
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn text-white fw-bold flex-grow-1"
+                            style="background:linear-gradient(135deg,#667A56,#526544);
+                                   height:52px;
+                                   border-radius:12px;">
+
+                        <i class="bi bi-check-circle"></i>
+
+                        @Localizer["BtnGuardar"]
+
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary fw-bold"
+                       style="height:52px;
+                              border-radius:12px;
+                              padding-inline:25px;">
+
+                        @Localizer["BtnCancelar"]
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
     </div>
+
 </div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

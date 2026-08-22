@@ -107,7 +107,25 @@ namespace HelaTico.Application.Services.Implementations
             await _repository.CreateAsync(usuario);
             return (true, "Usuario creado correctamente.");
         }
+        public async Task<(bool Exito, string Mensaje)> ActualizarUsuarioAsync(UsuarioDTO dto)
+        {
+            var usuario = await _repository.FindByIdAsync(dto.IdUsuario);
+            if (usuario == null)
+                return (false, "El usuario no existe.");
 
+            var existente = await _repository.FindByCorreoAsync(dto.Correo);
+            if (existente != null && existente.IdUsuario != dto.IdUsuario)
+                return (false, "Ya existe otro usuario registrado con ese correo.");
+
+            usuario.Nombre = dto.Nombre;
+            usuario.Apellido1 = dto.Apellido1;
+            usuario.Apellido2 = dto.Apellido2;
+            usuario.Correo = dto.Correo;
+            usuario.IdRolUsuario = dto.IdRolUsuario;
+
+            await _repository.UpdateAsync(usuario);
+            return (true, "Usuario actualizado correctamente.");
+        }
         public async Task<(bool Exito, string Mensaje)> CambiarEstadoAsync(int idUsuario, int nuevoEstado)
         {
             var usuario = await _repository.FindByIdAsync(idUsuario);
