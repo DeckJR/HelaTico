@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="ViewTitleDefault" xml:space="preserve"><value>Station</value></data>
+  <data name="Subtitulo" xml:space="preserve"><value>Preparation orders</value></data>
+  <data name="BtnVolver" xml:space="preserve"><value>Back to stations</value></data>
+  <data name="SinOrdenes" xml:space="preserve"><value>There are no orders for this station.</value></data>
+  <data name="PedidoPrefijo" xml:space="preserve"><value>Order #</value></data>
+  <data name="EstadoPendiente" xml:space="preserve"><value>Pending</value></data>
+  <data name="EstadoEnProceso" xml:space="preserve"><value>In progress</value></data>
+  <data name="EstadoFinalizada" xml:space="preserve"><value>Finished</value></data>
+  <data name="LblProducto" xml:space="preserve"><value>Product:</value></data>
+  <data name="LblCantidad" xml:space="preserve"><value>Quantity:</value></data>
+  <data name="LblObservaciones" xml:space="preserve"><value>Notes:</value></data>
+  <data name="SinObservaciones" xml:space="preserve"><value>No notes</value></data>
+  <data name="LblHoraInicio" xml:space="preserve"><value>Start time:</value></data>
+  <data name="LblHoraFin" xml:space="preserve"><value>End time:</value></data>
+  <data name="BtnIniciar" xml:space="preserve"><value>Start preparation</value></data>
+  <data name="BtnFinalizar" xml:space="preserve"><value>Finish preparation</value></data>
+  <data name="TextoFinalizada" xml:space="preserve"><value>Preparation finished</value></data>
+</root>

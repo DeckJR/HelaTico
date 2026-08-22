@@ -57,7 +57,7 @@ namespace HelaTico.Web.Controllers
 
             return usuario.DescripcionRol switch
             {
-                "Cocina" => RedirectToAction("Index", "Cocina"),
+                "Cocina" => RedirectToAction("Index", "Orden"), 
                 _ => RedirectToAction("Index", "Home")
             };
         }

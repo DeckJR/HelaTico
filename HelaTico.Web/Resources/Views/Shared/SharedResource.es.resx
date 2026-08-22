@@ -177,4 +177,7 @@
   <data name="NavUsuarios" xml:space="preserve">
     <value>Usuarios</value>
   </data>
+  <data name="NavEstaciones" xml:space="preserve">
+    <value>Estaciones de Comida</value>
+  </data>
 </root>

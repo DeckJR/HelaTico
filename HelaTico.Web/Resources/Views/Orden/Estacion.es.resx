@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="ViewTitleDefault" xml:space="preserve"><value>Estación</value></data>
+  <data name="Subtitulo" xml:space="preserve"><value>Órdenes de preparación</value></data>
+  <data name="BtnVolver" xml:space="preserve"><value>Volver a estaciones</value></data>
+  <data name="SinOrdenes" xml:space="preserve"><value>No existen órdenes para esta estación.</value></data>
+  <data name="PedidoPrefijo" xml:space="preserve"><value>Pedido #</value></data>
+  <data name="EstadoPendiente" xml:space="preserve"><value>Pendiente</value></data>
+  <data name="EstadoEnProceso" xml:space="preserve"><value>En proceso</value></data>
+  <data name="EstadoFinalizada" xml:space="preserve"><value>Finalizada</value></data>
+  <data name="LblProducto" xml:space="preserve"><value>Producto:</value></data>
+  <data name="LblCantidad" xml:space="preserve"><value>Cantidad:</value></data>
+  <data name="LblObservaciones" xml:space="preserve"><value>Observaciones:</value></data>
+  <data name="SinObservaciones" xml:space="preserve"><value>Sin observaciones</value></data>
+  <data name="LblHoraInicio" xml:space="preserve"><value>Hora inicio:</value></data>
+  <data name="LblHoraFin" xml:space="preserve"><value>Hora fin:</value></data>
+  <data name="BtnIniciar" xml:space="preserve"><value>Iniciar preparación</value></data>
+  <data name="BtnFinalizar" xml:space="preserve"><value>Finalizar preparación</value></data>
+  <data name="TextoFinalizada" xml:space="preserve"><value>Preparación finalizada</value></data>
+</root>

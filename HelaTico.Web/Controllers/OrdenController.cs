@@ -1,91 +1,76 @@
 ﻿using HelaTico.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HelaTico.Web.Controllers
 {
-    [Authorize]
-    public class OrdenController: Controller
+    [Authorize(Roles = "Cocina")]
+    public class OrdenController : Controller
     {
         private readonly IServiceOrden _serviceOrden;
+        private readonly IServiceEstacion _serviceEstacion;
 
-        public OrdenController(IServiceOrden serviceOrden)
+        public OrdenController(
+            IServiceOrden serviceOrden,
+            IServiceEstacion serviceEstacion)
         {
             _serviceOrden = serviceOrden;
+            _serviceEstacion = serviceEstacion;
         }
 
         [HttpGet]
-        public async Task<IActionResult>Index()
+        public async Task<IActionResult> Index()
         {
-            var estaciones =await _serviceOrden.ObtenerEstacionesAsync();
-
+            var estaciones = await _serviceOrden.ObtenerEstacionesAsync();
             return View(estaciones);
         }
 
         [HttpGet]
-        public async Task<IActionResult>Estacion(int id)
+        public async Task<IActionResult> Estacion(int id)
         {
-            var ordenes =await _serviceOrden.ObtenerPorEstacionAsync(id);
+            var estaciones = await _serviceEstacion.ListAsync();
+            var estacion = estaciones.FirstOrDefault(e => e.IdEstacion == id);
 
-            ViewBag.IdEstacion =id;
+            if (estacion == null)
+                return NotFound();
 
-            ViewBag.NombreEstacion =ordenes.FirstOrDefault()?.Estacion??"Estación";
+            var ordenes = await _serviceOrden.ObtenerPorEstacionAsync(id);
+
+            ViewBag.IdEstacion = id;
+            ViewBag.NombreEstacion = estacion.Descripcion;
 
             return View(ordenes);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult>Iniciar(int id)
+        public async Task<IActionResult> Iniciar(int id)
         {
             try
             {
                 await _serviceOrden.IniciarAsync(id);
-
-                return Json(
-                    new
-                    {
-                        exito = true,
-                        mensaje ="Orden iniciada correctamente."
-                    }
-                );
+                return Json(new { exito = true, mensaje = "Orden iniciada correctamente." });
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                return Json(
-                    new
-                    {
-                        exito = false,
-                        mensaje = ex.Message
-                    }
-                );
+                return Json(new { exito = false, mensaje = ex.Message });
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult>Finalizar(int id)
+        public async Task<IActionResult> Finalizar(int id)
         {
             try
             {
                 await _serviceOrden.FinalizarAsync(id);
-
-                return Json(
-                    new
-                    {
-                        exito = true,
-                        mensaje ="Orden finalizada correctamente."
-                    }
-                );
+                return Json(new { exito = true, mensaje = "Orden finalizada correctamente." });
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                return Json(
-                    new
-                    {
-                        exito = false,
-                        mensaje = ex.Message
-                    });
+                return Json(new { exito = false, mensaje = ex.Message });
             }
         }
     }
