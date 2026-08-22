@@ -72,6 +72,7 @@ builder.Services.AddTransient<IServicePedido, ServicePedido>();
 builder.Services.AddTransient<IServiceCarrito, ServiceCarrito>();
 builder.Services.AddTransient<IServiceTipoEntrega,ServiceTipoEntrega>();
 builder.Services.AddTransient<IServiceOrden,ServiceOrden>();
+builder.Services.AddTransient<IServiceFacturaPedido,ServiceFacturaPedido>();
 
 
 //Configurar Automapper 

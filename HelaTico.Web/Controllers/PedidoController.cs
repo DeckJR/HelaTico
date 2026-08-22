@@ -14,12 +14,14 @@ namespace HelaTico.Web.Controllers
         private readonly IServicePedido _servicePedido;
         private readonly IServiceUsuario _serviceUsuario;
         private readonly IServiceTipoEntrega _serviceTipoEntrega;
+        private readonly IServiceFacturaPedido _serviceFacturaPedido;
 
-        public PedidoController(IServicePedido servicePedido,IServiceUsuario serviceUsuario,IServiceTipoEntrega serviceTipoEntrega)
+        public PedidoController(IServicePedido servicePedido,IServiceUsuario serviceUsuario,IServiceTipoEntrega serviceTipoEntrega,IServiceFacturaPedido serviceFacturaPedido)
         {
             _servicePedido = servicePedido;
             _serviceUsuario = serviceUsuario;
             _serviceTipoEntrega = serviceTipoEntrega;
+            _serviceFacturaPedido = serviceFacturaPedido;
         }
 
         private int IdUsuarioLogueado =>int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -232,6 +234,36 @@ namespace HelaTico.Web.Controllers
 
                 return View(dto);
             }
+        }
+        [HttpGet]
+        public async Task<IActionResult> FacturaPdf(int id)
+        {
+            var detalle =await _servicePedido.ObtenerDetalleAsync(id);
+
+            if (detalle == null)
+            {
+                return NotFound();
+            }
+
+            if (User.IsInRole("Cliente"))
+            {
+                var pedidosCliente = await _servicePedido.ObtenerHistorialAsync(IdUsuarioLogueado,true,null,null);
+
+                bool perteneceAlCliente = pedidosCliente.Any(p =>p.IdPedido == id);
+
+                if (!perteneceAlCliente)
+                {
+                    return Forbid();
+                }
+            }
+            else if (!User.IsInRole("Administrador")&&!User.IsInRole("Encargado"))
+            {
+                return Forbid();
+            }
+
+            byte[] pdf = await _serviceFacturaPedido.GenerarFacturaAsync(id);
+
+            return File(pdf,"application/pdf",$"Factura-Pedido-{id}.pdf");
         }
     }
 }
